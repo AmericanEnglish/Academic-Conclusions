@@ -1,7 +1,36 @@
 class Player:
     """Creates the player"""
-    def __init__():
-        pass
+    def __init__(self, name, stats, coords):
+        """(Player, str, list of nums, tuple of nums)"""
+        self.name = name.split()
+        self.stats = stats
+        self.contents = []
+        self.pack = Backpack()
+        self.hp = hp
+        self.pos = coords
+        self.map = 0
+
+    def move(motion):
+        """(str) -> None
+
+        Moves the player in one direction:
+        
+        North
+        South
+        East
+        West
+        
+        All other input is ignored
+        """
+        directions = {
+                    'north': (0,1),
+                    'south':(0,-1), 
+                    'east':(1, 0), 
+                    'west':(-1, 0)
+                    }
+        if motion.lower() in directions:
+            self.pos[0] += directions[motion.lower()][0]
+            self.post[1] += directions[motion.lower()][1]
 
 
 class Backpack:
