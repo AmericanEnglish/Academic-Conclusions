@@ -46,9 +46,9 @@ class Player:
             if thing.lower() == item.name.lower():
                 self.person.append(item)
                 self.pack.remove(item)
-                print('{} was pulled out of your pack'.format(thing))
+                print('{} was pulled out of your pack\n'.format(thing))
                 return
-        print('You lack {} in your pack'.format(thing))
+        print('You lack {} in your pack\n'.format(thing))
 
     def put(self, thing):
         """(str) -> str
@@ -57,13 +57,12 @@ class Player:
         """
 
         for item in self.person:
-            print('player.py: {}'.format(item))
             if thing.lower() == item.name.lower():
                 self.pack.append(item)
                 self.person.remove(item)
-                print('{} was put into the pack'.format(thing))
+                print('{} was put into the pack \n'.format(thing))
                 return
-        print('You do not posses {}'.format(thing))
+        print('You do not posses {} \n'.format(thing))
 
     def pack_view(self):
         """(Backpack)
@@ -71,14 +70,14 @@ class Player:
         Displays a sort list of backpack contents
         """
         if self.pack == []:
-            print('>Pack is empty<')
+            print('>Pack is empty<\n')
         self.pack.sort()
         for item in self.pack:
-            print(item.name)
+            print('{}\n'.format(item.name))
 
     def person_view(self):
         if self.person == []:
-            print('>You have nothing on you<')
+            print('>You have nothing on you<\n')
         self.person.sort()
         for item in self.person:
-            print(item.name)
+            print('{}\n'.format(item.name))
