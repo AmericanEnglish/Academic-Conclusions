@@ -8,9 +8,10 @@ def mainloop():
     protag.person.append(Sword('aSword', 5, 3, (10, 11)))
     while True:
         action = input('ACTION > ')
-        action = action.split()
+        action = action.lower().split()
         if  action[0].lower() == 'quit':
-            return
+            if input('Are you sure? (y/n): ').lower() == 'y':
+                return
         elif action[0] == 'm':
             protag.move(action[1])
         elif action[0] == 'backpack' or action[0] == 'pack':
