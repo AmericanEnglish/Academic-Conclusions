@@ -7,7 +7,7 @@ def mainloop():
     protag = Player('Admin Istrator', [], (0, 0))
     protag.person.append(Sword('aSword', 5, 3, (10, 11)))
     while True:
-        action = input('{} {}>'.format(protag.name[0], protag.name[1]))
+        action = input('ACTION > ')
         action = action.split()
         if  action[0].lower() == 'quit':
             return
