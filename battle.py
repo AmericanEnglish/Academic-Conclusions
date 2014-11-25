@@ -1,7 +1,7 @@
 class Weapon:
     """Generates a weapon object"""
     def __init__(self, name, dmg, mod, durability):
-        """(Weapon, str, num, num, list) -> None
+        """(Weapon, str, num, num, tuple) -> None
         """
         self.name = name
         self.dmg = dmg
@@ -10,7 +10,7 @@ class Weapon:
         self.max = durability[1]
 
 class Sword(Weapon):
-    def __init__(self, title, dmg, mod, durability):
-        super().__init__(title, dmg, mod, durability)
+    def __init__(self, name, dmg, mod, durability):
+        super().__init__(name, dmg, mod, durability)
         self.wtype = 'Sword'
 

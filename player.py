@@ -4,8 +4,8 @@ class Player:
         """(Player, str, list of nums, tuple of nums)"""
         self.name = name.split()
         self.stats = stats
-        self.contents = []
-        self.backpack = Backpack()
+        self.person = []
+        self.pack = []
         self.hp = 0
         self.pos = coords
         self.map = 0
@@ -35,12 +35,6 @@ class Player:
             y = self.pos[1] + directions[motion.lower()][1]
             self.pos = x, y
 
-
-class Backpack:
-    """Creates a backpack"""
-    def __init__(self):
-        self.contents = []
-
     def pull(self, thing):
         """(str) -> Obj
 
@@ -48,10 +42,13 @@ class Backpack:
         the Obj in question. Else returns None meaning item not present
         """
 
-        for item in self.contents:
+        for item in self.pack:
             if thing.lower() == item.name.lower():
-                return item
-        return None
+                self.person.append(item)
+                self.pack.remove(item)
+                print('{} was pulled out of your pack'.format(thing))
+                return
+        print('You lack {} in your pack'.format(thing))
 
     def put(self, thing):
         """(str) -> str
@@ -59,20 +56,29 @@ class Backpack:
         Takes item off of player's person and put it into backpack
         """
 
-        for item in Player.contents:
+        for item in self.person:
+            print('player.py: {}'.format(item))
             if thing.lower() == item.name.lower():
-                self.contents.append(item)
-                del Player.contents[item]
-                return '{} was put into the pack'.format(thing)
-        return None
+                self.pack.append(item)
+                self.person.remove(item)
+                print('{} was put into the pack'.format(thing))
+                return
+        print('You do not posses {}'.format(thing))
 
-    def view(self):
+    def pack_view(self):
         """(Backpack)
 
         Displays a sort list of backpack contents
         """
-        self.contents.sort()
-        for item in contents:
-            print(contents.name)
+        if self.pack == []:
+            print('>Pack is empty<')
+        self.pack.sort()
+        for item in self.pack:
+            print(item.name)
 
-
+    def person_view(self):
+        if self.person == []:
+            print('>You have nothing on you<')
+        self.person.sort()
+        for item in self.person:
+            print(item.name)
