@@ -14,3 +14,6 @@ class Sword(Weapon):
         super().__init__(name, dmg, mod, durability)
         self.wtype = 'Sword'
 
+    def pry(objstr):
+        #roll to force open here
+        pass

@@ -1,5 +1,8 @@
 from player import *
 from battle import *
+from maps import *
+
+materials = {'wood':10}
 
 def mainloop():
     with open('intro', 'r') as intro:

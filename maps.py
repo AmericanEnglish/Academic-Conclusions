@@ -3,26 +3,49 @@ class Mapp:
 
 
 class Room:
-    pass
+    def __init__(self, door, contents)
 
 
 class Interactable:
-    def __init__(self, name, weight, contents, otype):
+    def __init__(self, name, weight, contents, otype, composition, num):
         self.name = name
         self.weight = weight
         self.contents = contents
         self.type = otype
-
+        self.madeof = composition
+        self.num = num
 
 class Door(Interactable):
-    def __init__(self, name, weight, contents, otype, locked):
+    def __init__(self, name, weight, contents, otype, locked, composition, num):
         super().__init__(name, weight, contents, otype)
         self.locked = locked
-    def open():
-        pass
+        if locked:
+            self.lcked = 'locked'
+        else:
+            self.lcked = 'unlocked'
+    
+    def open(thing, toon):
+        thingobj = None
+        for item in toon:
+            if item.name == thing:
+                thingobj = item
+        if thingobj == None:
+            return False
+        
+        if self.locked:
+            print('You try to open the door with the {}'.format(thingobj.name))
+            if isinstance(thingobj, Key):
+                if thingobj.unlock == self.num:
+                    return True
+                return False
+            elif isinstance(thingobj, Sword):
+                return thingobj.pry(self.madeof)
+            return False
+        return True
+
 
     def examine():
-        print('Door appears to made of {} and is {}')
+        print('Door appears to made of {} and is {}'.format(self.madeof, self.lcked))
 
 
 class Table(Interactable):
