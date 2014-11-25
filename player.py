@@ -5,12 +5,12 @@ class Player:
         self.name = name.split()
         self.stats = stats
         self.contents = []
-        self.pack = Backpack()
-        self.hp = hp
+        self.backpack = Backpack()
+        self.hp = 0
         self.pos = coords
         self.map = 0
 
-    def move(motion):
+    def move(self, motion):
         """(str) -> None
 
         Moves the player in one direction:
@@ -28,9 +28,12 @@ class Player:
                     'east':(1, 0), 
                     'west':(-1, 0)
                     }
+        x = self.pos[0]
+        y = self.pos[1]
         if motion.lower() in directions:
-            self.pos[0] += directions[motion.lower()][0]
-            self.post[1] += directions[motion.lower()][1]
+            x = self.pos[0] + directions[motion.lower()][0]
+            y = self.pos[1] + directions[motion.lower()][1]
+            self.pos = x, y
 
 
 class Backpack:
@@ -38,7 +41,7 @@ class Backpack:
     def __init__(self):
         self.contents = []
 
-    def pull(thing):
+    def pull(self, thing):
         """(str) -> Obj
 
         Checks if the item.name is in the pack and if it is then returns
@@ -50,7 +53,7 @@ class Backpack:
                 return item
         return None
 
-    def put(thing):
+    def put(self, thing):
         """(str) -> str
 
         Takes item off of player's person and put it into backpack
@@ -62,4 +65,14 @@ class Backpack:
                 del Player.contents[item]
                 return '{} was put into the pack'.format(thing)
         return None
+
+    def view(self):
+        """(Backpack)
+
+        Displays a sort list of backpack contents
+        """
+        self.contents.sort()
+        for item in contents:
+            print(contents.name)
+
 
