@@ -62,10 +62,23 @@ def maploop(currentmap):
                 if 'door' not in item.name:
                     print(item.name)
             print('')
+        
         elif action[0] == 'ground':
-            print('On the ground you see:')
+            if currentmap.check(protag.pos)[1] == []:
+                print('>There is nothing on the ground<\n')
+            else:
+                print('On the ground you see:')
+                for item in currentmap.check(protag.pos)[1]:
+                    print('{}\n'.format(item.name))
+
+
+        elif action[0] == 'pickup':
             for item in currentmap.check(protag.pos)[1]:
-                print('{}\n'.format(item.name))
+                if action[1] == item.name.lower():
+                    protag.person.append(item)
+                    currentmap.check(protag.pos)[1].remove(item)
+                    print('You picked up {}\n'.format(item.name))
+
         else:
             print('')
 
