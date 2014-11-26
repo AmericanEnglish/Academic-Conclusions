@@ -8,7 +8,7 @@ class Player:
         self.pack = []
         self.hp = 0
         self.pos = coords
-        self.map = start
+        self.map = None
         self.room = None
 
     def move(self, motion):
@@ -74,7 +74,7 @@ class Player:
         #create sorting algorithim
         if self.pack == []:
             print('>Pack is empty<')
-        self.pack.sort()
+        #self.pack.sort()
         for item in self.pack:
             print('{}'.format(item.name))
         print('')

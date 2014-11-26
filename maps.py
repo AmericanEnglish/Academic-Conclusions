@@ -9,25 +9,23 @@ class Mapp:
 
 
 class Room:
-    def __init__(self, door, contents, num, name):
+    def __init__(self, name, door, contents, num):
         self.name = name
         self.num = num
         self.contents = contents
-        self.door
+        self.door = door
 
 
 class Interactable:
-    def __init__(self, name, weight, contents, otype, composition, num):
+    def __init__(self, name, weight, composition, num):
         self.name = name
         self.weight = weight
-        self.contents = contents
-        self.type = otype
         self.madeof = composition
         self.num = num
 
 class Door(Interactable):
-    def __init__(self, name, weight, contents, otype, locked, composition, num):
-        super().__init__(name, weight, contents, otype)
+    def __init__(self, name, weight, locked, composition, num):
+        super().__init__(name, weight, composition, num)
         self.locked = locked
         if locked:
             self.lcked = 'locked'

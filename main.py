@@ -3,10 +3,25 @@ from battle import *
 from maps import *
 
 materials = {'wood':10}
+map1 = Mapp(
+                {(0,0): [
+                            Room('Room',
+                                Door(
+                                    'Medium Door', 
+                                    20, 
+                                    False, 
+                                    'wood',
+                                    1),
+                                [],
+                                1,
+                                )
+                        ]
+                }
+            )
 
 def mainloop():
     while True:
-        action = input('ACTION > ')
+        action = input('=ACTION=> ')
         action = action.lower().strip().split()
         if len(action) < 1:
             print('')
@@ -37,10 +52,15 @@ def mainloop():
             if protag.room != None:
                 print("You're already in {}".format(protag.room.name))
             else:
-                for item in mapp.check(protag.pos):
+                for item in protag.map.check(protag.pos):
                     if action[1] == item.name.lower():                
                             
                             protag.enter(action[1])
+        elif action[0] == 'look':
+            print('Around you see:')
+            for item in protag.map.check(protag.pos):
+                print(item.name)
+            print('')
         else:
             print('')
 
@@ -49,6 +69,7 @@ if __name__ == '__main__':
     with open('intro', 'r') as intro:
         print(intro.read())
     protag = Player('Admin Istrator', [], (0, 0))
+    protag.map = map1
     protag.person.append(Sword('aSword', 5, 3, (10, 11)))
     protag.person.append(Sword('SuperSword', 5, 3, (10, 11)))
     mainloop()
