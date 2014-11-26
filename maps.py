@@ -3,9 +3,13 @@ class Mapp:
 
 
 class Room:
-    def __init__(self, door, contents)
+    def __init__(self, door, contents, num, name):
+        self.name = name
+        self.num = num
+        self.contents = contents
+        self.door
 
-
+        
 class Interactable:
     def __init__(self, name, weight, contents, otype, composition, num):
         self.name = name
@@ -24,7 +28,7 @@ class Door(Interactable):
         else:
             self.lcked = 'unlocked'
     
-    def open(thing, toon):
+    def open(self, thing, toon):
         thingobj = None
         for item in toon:
             if item.name == thing:
@@ -44,7 +48,7 @@ class Door(Interactable):
         return True
 
 
-    def examine():
+    def examine(self):
         print('Door appears to made of {} and is {}'.format(self.madeof, self.lcked))
 
 

@@ -29,7 +29,13 @@ def mainloop():
             protag.pull(action[1])
         elif action[0] == 'examine':
             protag.examine(action[1])
-
+        elif action[0] == 'enter':
+            if protag.room != None:
+                print("You're already in {}".format(protag.room.name))
+            else:
+                for item in mapp.check(protag.pos):
+                    if action[1] == item.name.lower():                
+                            protag.enter(action[1])
         else:
             print('')
 

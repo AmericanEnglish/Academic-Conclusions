@@ -9,6 +9,7 @@ class Player:
         self.hp = 0
         self.pos = coords
         self.map = 0
+        self.room = None
 
     def move(self, motion):
         """(str) -> None
@@ -82,3 +83,8 @@ class Player:
         self.person.sort()
         for item in self.person:
             print('{}\n'.format(item.name))
+
+    def enter(self, roomobj):
+        for item in mapp.check():
+            if roomobj.name == item.name:
+                
