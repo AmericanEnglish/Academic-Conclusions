@@ -100,4 +100,4 @@ class Player:
     def examine(self, thing):
         for item in self.person:
             if item.name == thing:
-                item.examine(self)
+                item.examine()

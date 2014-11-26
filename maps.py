@@ -1,5 +1,6 @@
 class Mapp:
-    def __init__(self, contents):
+    def __init__(self, name, contents):
+        self.name = name
         self.contents = contents
             #contents is a dict of tuple: list objects
             # {(0, 0):[Room, Enemey], (0,1): []} 
@@ -9,56 +10,54 @@ class Mapp:
 
 
 class Room:
-    def __init__(self, name, door, contents, num):
+    def __init__(self, name, contents):
         self.name = name
-        self.num = num
+        #self.num = num
         self.contents = contents
-        self.door = door
 
-    def examine(self, protag):
-        if protag.room == None:
-            print("You examine the {0} and the {0}'s {1}".format(self.name, self.door.name))
-            print("You notice the {}".format(self.door.examine()))
+    def examine(self):
+        print("You examine the building, it is solid\n")
 
 
 class Interactable:
-    def __init__(self, name, weight, composition, num):
+    def __init__(self, name, composition):
+        #(self, name, weight, composition, num)
         self.name = name
-        self.weight = weight
+        #self.weight = weight
         self.madeof = composition
-        self.num = num
+        #self.num = num
 
 class Door(Interactable):
-    def __init__(self, name, weight, locked, composition, num):
-        super().__init__(name, weight, composition, num)
+    def __init__(self, name, locked, composition):
+        super().__init__(name, composition)
         self.locked = locked
         if locked:
             self.lcked = 'locked'
         else:
             self.lcked = 'unlocked'
     
-    def open(self, thing, toon):
-        thingobj = None
-        for item in toon:
-            if item.name == thing:
-                thingobj = item
-        if thingobj == None:
-            return False
-        
-        if self.locked:
-            print('You try to open the door with the {}'.format(thingobj.name))
-            if isinstance(thingobj, Key):
-                if thingobj.unlock == self.num:
-                    return True
-                return False
-            elif isinstance(thingobj, Sword):
-                return thingobj.pry(self.madeof)
-            return False
-        return True
+    #def open(self, thing, toon):
+    #    thingobj = None
+    #    for item in toon:
+    #        if item.name == thing:
+    #            thingobj = item
+    #    if thingobj == None:
+    #        return False
+    #    
+    #    if self.locked:
+    #        print('You try to open the door with the {}'.format(thingobj.name))
+    #        if isinstance(thingobj, Key):
+    #            if thingobj.unlock == self.num:
+    #                return True
+    #            return False
+    #        elif isinstance(thingobj, Sword):
+    #            return thingobj.pry(self.madeof)
+    #        return False
+    #    return True
 
 
     def examine(self):
-        print('door appears to made of {} and is {}'.format(self.madeof, self.lcked))
+        print('Door appears to made of {} and is {}\n'.format(self.madeof, self.lcked))
 
 
 class Table(Interactable):
@@ -70,5 +69,3 @@ class Chair(Interactable):
 class NPC(Interactable):
     pass
 
-def inroom(protag, curroom):
-    pass
