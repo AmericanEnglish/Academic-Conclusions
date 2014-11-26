@@ -97,3 +97,7 @@ class Player:
                     print("You've entered {}\n".format(item.name))
                     self.room = item
 
+    def examine(self, thing):
+        for item in self.person:
+            if item.name == thing:
+                item.examine(self)

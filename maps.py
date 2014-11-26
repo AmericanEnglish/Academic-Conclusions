@@ -15,6 +15,11 @@ class Room:
         self.contents = contents
         self.door = door
 
+    def examine(self, protag):
+        if protag.room == None:
+            print("You examine the {0} and the {0}'s {1}".format(self.name, self.door.name))
+            print("You notice the {}".format(self.door.examine()))
+
 
 class Interactable:
     def __init__(self, name, weight, composition, num):
@@ -53,7 +58,7 @@ class Door(Interactable):
 
 
     def examine(self):
-        print('Door appears to made of {} and is {}'.format(self.madeof, self.lcked))
+        print('door appears to made of {} and is {}'.format(self.madeof, self.lcked))
 
 
 class Table(Interactable):

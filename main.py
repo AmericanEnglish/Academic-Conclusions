@@ -23,7 +23,7 @@ map1 = Mapp(
 
 def mainloop():
     while True:
-        action = input('=ACTION=> ')
+        action = input('=OUTSIDE=> ')
         action = action.lower().strip().split()
 
         if len(action) < 1:
@@ -37,7 +37,7 @@ def mainloop():
             elif action[0] == 'm' and len(action) == 2:
                 protag.move(action[1])
             
-            elif action[0] == 'backpack' or action[0] == 'pack':
+            elif action[0] == 'pack':
                 protag.pack_view()
             
             elif action[0] == 'me':
@@ -49,7 +49,7 @@ def mainloop():
             elif action[0] == 'pull':
                 protag.pull(action[1])
             
-            elif action[0] == 'examine':
+            elif action[0] == 'examine' and len(action) > 1:
                 protag.examine(action[1])
             
             elif action[0] == 'enter':
@@ -74,6 +74,6 @@ if __name__ == '__main__':
         print(intro.read())
     protag = Player('Admin Istrator', [], (0, 0))
     protag.map = map1
-    protag.person.append(Sword('a Sword', 5, 3, (10, 11)))
-    protag.person.append(Sword('Super Sword', 5, 3, (10, 11)))
+    protag.person.append(Sword('aSword', 5, 3, (10, 11)))
+    protag.person.append(Sword('SuperSword', 5, 3, (10, 11)))
     mainloop()

@@ -17,3 +17,6 @@ class Sword(Weapon):
     def pry(objstr):
         #roll to force open here
         pass
+
+    def examine(self, protag):
+        print('YOU EXAMINED {}'.format(self.name))
