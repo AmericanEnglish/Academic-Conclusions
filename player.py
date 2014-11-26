@@ -87,6 +87,13 @@ class Player:
             print('{}'.format(item.name))
         print('')
 
-    def enter(self, roomobj):
-        self.room = roomobj
+    def enter(self, roomname):
+        if self.room != None:
+            print("You're already in {}\n".format(self.room.name))
+        else:
+            for item in self.map.check(self.pos):
+                if roomname == item.name.lower():
+                    self.enter(item)
+                    print("You've entered {}\n".format(item.name))
+                    self.room = item
 

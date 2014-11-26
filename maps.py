@@ -64,3 +64,6 @@ class Chair(Interactable):
 
 class NPC(Interactable):
     pass
+
+def inroom(protag, curroom):
+    pass
