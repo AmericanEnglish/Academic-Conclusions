@@ -50,17 +50,19 @@ def mainloop():
         
         elif action[0] == 'enter':
             if protag.room != None:
-                print("You're already in {}".format(protag.room.name))
+                print("You're already in {}\n".format(protag.room.name))
             else:
                 for item in protag.map.check(protag.pos):
-                    if action[1] == item.name.lower():                
-                            
-                            protag.enter(action[1])
+                    if action[1] == item.name.lower():
+                            protag.enter(item)
+                            print("You've entered {}\n".format(item.name))
+
         elif action[0] == 'look':
             print('Around you see:')
             for item in protag.map.check(protag.pos):
                 print(item.name)
             print('')
+        
         else:
             print('')
 
