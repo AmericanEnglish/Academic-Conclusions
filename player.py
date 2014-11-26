@@ -8,7 +8,7 @@ class Player:
         self.pack = []
         self.hp = 0
         self.pos = coords
-        self.map = 0
+        self.map = start
         self.room = None
 
     def move(self, motion):
@@ -48,7 +48,7 @@ class Player:
             if thing.lower() == item.name.lower():
                 self.person.append(item)
                 self.pack.remove(item)
-                print('{} was pulled out of your pack\n'.format(thing))
+                print('{} was pulled out of your pack\n'.format(item.name))
                 return
         print('You lack {} in your pack\n'.format(thing))
 
@@ -62,7 +62,7 @@ class Player:
             if thing.lower() == item.name.lower():
                 self.pack.append(item)
                 self.person.remove(item)
-                print('{} was put into the pack \n'.format(thing))
+                print('{} was put into the pack \n'.format(item.name))
                 return
         print('You do not posses {} \n'.format(thing))
 
@@ -71,19 +71,22 @@ class Player:
 
         Displays a sort list of backpack contents
         """
+        #create sorting algorithim
         if self.pack == []:
-            print('>Pack is empty<\n')
+            print('>Pack is empty<')
         self.pack.sort()
         for item in self.pack:
-            print('{}\n'.format(item.name))
+            print('{}'.format(item.name))
+        print('')
 
     def person_view(self):
+        #create sorting algoritihim
         if self.person == []:
-            print('>You have nothing on you<\n')
-        self.person.sort()
+            print('>You have nothing on you<')
         for item in self.person:
-            print('{}\n'.format(item.name))
+            print('{}'.format(item.name))
+        print('')
 
     def enter(self, roomobj):
-        
+        self.room = roomobj
 

@@ -1,5 +1,11 @@
 class Mapp:
-    pass
+    def __init__(self, contents):
+        self.contents = contents
+            #contents is a dict of tuple: list objects
+            # {(0, 0):[Room, Enemey], (0,1): []} 
+    
+    def check(self, pos):
+        return self.contents[pos]
 
 
 class Room:
@@ -9,7 +15,7 @@ class Room:
         self.contents = contents
         self.door
 
-        
+
 class Interactable:
     def __init__(self, name, weight, contents, otype, composition, num):
         self.name = name

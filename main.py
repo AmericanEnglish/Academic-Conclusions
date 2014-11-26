@@ -5,10 +5,6 @@ from maps import *
 materials = {'wood':10}
 
 def mainloop():
-    with open('intro', 'r') as intro:
-        print(intro.read())
-    protag = Player('Admin Istrator', [], (0, 0))
-    protag.person.append(Sword('aSword', 5, 3, (10, 11)))
     while True:
         action = input('ACTION > ')
         action = action.lower().strip().split()
@@ -43,10 +39,16 @@ def mainloop():
             else:
                 for item in mapp.check(protag.pos):
                     if action[1] == item.name.lower():                
+                            
                             protag.enter(action[1])
         else:
             print('')
 
 
 if __name__ == '__main__':
+    with open('intro', 'r') as intro:
+        print(intro.read())
+    protag = Player('Admin Istrator', [], (0, 0))
+    protag.person.append(Sword('aSword', 5, 3, (10, 11)))
+    protag.person.append(Sword('SuperSword', 5, 3, (10, 11)))
     mainloop()
