@@ -10,10 +10,11 @@ class Mapp:
 
 
 class Room:
-    def __init__(self, name, contents):
+    def __init__(self, name, contents, door):
         self.name = name
         #self.num = num
         self.contents = contents
+        self.door = door
 
     def examine(self):
         print("You examine the building, it is solid\n")
