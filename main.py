@@ -6,7 +6,8 @@ materials = {'wood':10}
 map1 = Mapp('Small Town',
                 {(0,0): [[
                             Room('A Room',
-                                [[],[]],
+                                [[Table('Garbage Table', 'wood', [Sword('Meow Blade')])],
+                                [Sword('Plain')]],
                                  Door('Room Door', False, 'wood'))],[Sword('Cooler Sword')]],
                 (0,1): [[],[]]
                 }
@@ -48,17 +49,15 @@ def maploop(currentmap):
             protag.examine(action[1])
         
         elif action[0] == 'enter':
-            print('marker1')
             for item in currentmap.check(protag.pos)[0]:
-                print('marker2', item.name)
                 if action[1] == item.name.lower():
                     roomloop(protag, item)
 
         elif action[0] == 'exit':
-            print("You're already outside!\n")
+            print(">You're already outside!<\n")
 
         elif action[0] == 'look':
-            print('Around you see:')
+            print('>Around you see<')
             for item in currentmap.check(protag.pos)[0]:
                 if 'door' not in item.name:
                     print(item.name)
@@ -68,7 +67,7 @@ def maploop(currentmap):
             if currentmap.check(protag.pos)[1] == []:
                 print('>There is nothing on the ground<\n')
             else:
-                print('On the ground you see:')
+                print('>On the ground you see<')
                 for item in currentmap.check(protag.pos)[1]:
                     print('{}\n'.format(item.name))
 
@@ -85,6 +84,7 @@ def maploop(currentmap):
 
 def roomloop(protag, roomobj):
     protag.room = roomobj
+    print("You entered {}\n".format(roomobj.name))
     while True:
         action = input('={}=>'.format(roomobj.name))
         action = action.lower().strip().split()
@@ -94,7 +94,7 @@ def roomloop(protag, roomobj):
         elif len(action) < 1:
             print('')
 
-        elif action[0] == 'pack':
+        if action[0] == 'pack':
             protag.pack_view()
         
         elif action[0] == 'me':
@@ -114,15 +114,15 @@ def roomloop(protag, roomobj):
             protag.examine(action[1])
         
         elif action[0] == 'enter':
-            print("You're already in {}\n".format(roomobj.name))
+            print(">You're already in the {}<\n".format(roomobj.name))
         
         elif action[0] == 'exit':
-            print("You exit {}\n".format(roomobj.name))
+            print(">You exit the {}<\n".format(roomobj.name))
             return
 
         elif action[0] == 'look':
-            print('Around you see:')
-            for item in roomobj.contents:
+            print('>Around you see<')
+            for item in roomobj.contents[0]:
                 print(item.name)
             print('')
         
@@ -130,9 +130,19 @@ def roomloop(protag, roomobj):
             if roomobj.contents[1] == []:
                 print('>There is nothing on the ground<\n')
             else:
-                print('On the ground you see:')
-                for item in roomobj.contents[0]:
+                print('>On the ground you see<')
+                for item in roomobj.contents[1]:
                     print('{}\n'.format(item.name))
+
+        elif action[0] == 'pickup':
+            for item in roomobj.contents[1]:
+                if action[1] == item.name.lower():
+                    protag.person.append(item)
+                    roomobj.contents[1].remove(item)
+                    print('You picked up {}\n'.format(item.name))
+
+        else:
+            print('Not a valid command, type help for help')
 
 
 if __name__ == '__main__':
@@ -140,6 +150,4 @@ if __name__ == '__main__':
         print(intro.read())
     protag = Player('Admin Istrator', [], (0, 0))
     protag.map = map1
-    protag.person.append(Sword('a Sword'))
-    protag.person.append(Sword('Super Sword'))
     maploop(protag.map)

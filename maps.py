@@ -62,7 +62,10 @@ class Door(Interactable):
 
 
 class Table(Interactable):
-    pass
+    def __init__(self, name, composition, contents):
+        self.contents = contents
+        self.madeof = composition
+        self.name = name
 
 class Chair(Interactable):
     pass
