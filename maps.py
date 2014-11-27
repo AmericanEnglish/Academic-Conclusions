@@ -67,6 +67,15 @@ class Table(Interactable):
         self.madeof = composition
         self.name = name
 
+    def examine(self):
+        if self.contents == []:
+            print('{} is made of {} and is empty'.format(self.name, self.madeof))
+        else:
+            print('>On the {} {} is<'.format(self.madeof, self.name))
+            for item in self.contents:
+                print('{}'.format(item.name))
+            print('')
+
 class Chair(Interactable):
     pass
 

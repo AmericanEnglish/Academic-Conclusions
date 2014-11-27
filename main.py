@@ -79,14 +79,21 @@ def maploop(currentmap):
                     currentmap.check(protag.pos)[1].remove(item)
                     print('You picked up {}\n'.format(item.name))
 
+        elif action[0] == 'drop':
+            for item in protag.person:
+                if action[1] == item.name.lower():
+                    protag.person.remove(item)
+                    currentmap.check(protag.pos)[1].append(item)
+                    print('You dropped {} on the ground\n'.format(item.name))
+
         else:
             print('')
 
-def roomloop(protag, roomobj):
-    protag.room = roomobj
-    print("You entered {}\n".format(roomobj.name))
+def roomloop(protag, currentroom):
+    protag.room = currentroom
+    print("You entered {}\n".format(currentroom.name))
     while True:
-        action = input('={}=>'.format(roomobj.name))
+        action = input('={}=> '.format(currentroom.name))
         action = action.lower().strip().split()
         if len(action) > 1:
             action = [action[0], ' '.join(action[1:])]
@@ -107,39 +114,48 @@ def roomloop(protag, roomobj):
             protag.pull(action[1])
         
         elif action[0] == 'examine' and len(action) == 2:
-            for item in roomobj[0]:
+            for item in currentroom.contents[0]:
                 if action[1] in item.name.lower():
                     item.examine()
                     break
             protag.examine(action[1])
         
         elif action[0] == 'enter':
-            print(">You're already in the {}<\n".format(roomobj.name))
+            print(">You're already in the {}<\n".format(currentroom.name))
         
         elif action[0] == 'exit':
-            print(">You exit the {}<\n".format(roomobj.name))
+            print(">You exit the {}<\n".format(currentroom.name))
             return
 
         elif action[0] == 'look':
             print('>Around you see<')
-            for item in roomobj.contents[0]:
+            for item in currentroom.contents[0]:
                 print(item.name)
             print('')
         
         elif action[0] == 'ground':
-            if roomobj.contents[1] == []:
+            if currentroom.contents[1] == []:
                 print('>There is nothing on the ground<\n')
             else:
                 print('>On the ground you see<')
-                for item in roomobj.contents[1]:
-                    print('{}\n'.format(item.name))
+                for item in currentroom.contents[1]:
+                    print('{}'.format(item.name))
+                print('')
 
         elif action[0] == 'pickup':
-            for item in roomobj.contents[1]:
+            for item in currentroom.contents[1]:
                 if action[1] == item.name.lower():
                     protag.person.append(item)
-                    roomobj.contents[1].remove(item)
-                    print('You picked up {}\n'.format(item.name))
+                    currentroom.contents[1].remove(item)
+                    print('>You picked up {}<\n'.format(item.name))
+
+        elif action[0] == 'drop':
+            for item in protag.person:
+                if action[1] == item.name.lower():
+                    protag.person.remove(item)
+                    currentroom.contents[1].append(item)
+                    print('>You dropped {} on the ground<'.format(item.name))
+            print('')
 
         else:
             print('Not a valid command, type help for help')
