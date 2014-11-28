@@ -112,6 +112,11 @@ def maploop(currentmap):
             print('Not a valid command\n')
 
 def roomloop(protag, currentroom):
+    """(Player, Room) -> None
+
+    This function is used for a player's interaction with the room and its 
+    contents. Although some 'action' words are the same the objects some
+    interactions are not exactly the same."""
     protag.room = currentroom
     print("You entered {}\n".format(currentroom.name))
     while True:
@@ -207,6 +212,7 @@ def main(protag):
 
 
 if __name__ == '__main__':
+    print('')
     with open('intro', 'r') as intro:
         print(intro.read())
     protag = Player('Admin Istrator', [], (0, 0))
