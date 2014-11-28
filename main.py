@@ -14,6 +14,12 @@ map1 = Mapp('Small Town',
             )
 
 def maploop(currentmap):
+    """(Mapp) -> None
+
+    These function is used for running movement and actions on a generic
+    Mapp object. The protag is stored in the global frame and is then
+    used and mutated in relation to the Mapp object and the commands that
+    are input by the user."""
     inmap = True
     while inmap:
         action = input('={}=> '.format(currentmap.name))
@@ -43,21 +49,27 @@ def maploop(currentmap):
             protag.pull(action[1])
         
         elif action[0] == 'examine' and len(action) == 2:
+            # check to make sure item / room / door in question is in the area
             for item in currentmap.check(protag.pos)[0]:
                 if isinstance(item, Room) and 'door' in action[1]:
                     item.door.examine()
                     break
+                # if the item in question isn't a door it's a room
                 elif action[1] == item.name.lower():
                     item.examine()
                     break
+            # if item is neither a door or room, search's player's person
             protag.examine(action[1])
             print('')
 
         
         elif action[0] == 'enter' and len(action) > 1:
+            # checks for any rooms in the area that might be enterable
             for item in currentmap.check(protag.pos)[0]:
+                # allows for room entry
                 if action[1] == item.name.lower() and isinstance(item, Room):
                     roomloop(protag, item)
+                # allows for Mapps to be entered
                 elif action[1] == item.name.lower() and isinstance(item, Mapp):
                     inmap = False
                     protag.map = item
@@ -68,8 +80,7 @@ def maploop(currentmap):
         elif action[0] == 'look':
             print('>Around you see<')
             for item in currentmap.check(protag.pos)[0]:
-                if 'door' not in item.name:
-                    print(item.name)
+                print(item.name)
             print('')
         
         elif action[0] == 'ground':
@@ -84,6 +95,7 @@ def maploop(currentmap):
         elif action[0] == 'pickup':
             for item in currentmap.check(protag.pos)[1]:
                 if action[1] == item.name.lower():
+                    # this will be put into the Player methods later
                     protag.person.append(item)
                     currentmap.check(protag.pos)[1].remove(item)
                     print('You picked up {}\n'.format(item.name))
@@ -91,6 +103,7 @@ def maploop(currentmap):
         elif action[0] == 'drop':
             for item in protag.person:
                 if action[1] == item.name.lower():
+                    # this will be put into the player methods later
                     protag.person.remove(item)
                     currentmap.check(protag.pos)[1].append(item)
                     print('You dropped {} on the ground\n'.format(item.name))
@@ -166,13 +179,19 @@ def roomloop(protag, currentroom):
                     print('>You dropped {} on the ground<'.format(item.name))
             print('')
         elif action[0] == 'take':
+            # take requires a second marker called from. This requiers action
+            # to be reconfigured
             action = ' '.join(action).split()
             action = [action[0],
                     ' '.join(action[1:action.index('from')]),
                     ' '.join(action[action.index('from') + 1:])]
             for item in currentroom.contents[0]:
                 if action[2] == item.name.lower():
-                    pass
+                    # will be added as table/object method later
+                    for thing in item.contents:
+                        if thing == action[1]:
+                            protag.person.append(thing)
+                            item.contents.remove(thing)
 
         else:
             print('Not a valid command, type help for help')
@@ -188,5 +207,4 @@ if __name__ == '__main__':
     with open('intro', 'r') as intro:
         print(intro.read())
     protag = Player('Admin Istrator', [], (0, 0))
-    protag.map = map1
-    main(protag.map)
+    main(protag)
