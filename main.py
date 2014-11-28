@@ -1,8 +1,8 @@
 from player import *
 from battle import *
 from maps import *
-
 materials = {'wood':10}
+
 map1 = Mapp('Small Town',
                 {(0,0): [[
                             Room('A Room',
@@ -14,15 +14,16 @@ map1 = Mapp('Small Town',
             )
 
 def maploop(currentmap):
-    while True:
+    inmap = True
+    while inmap:
         action = input('={}=> '.format(currentmap.name))
         action = action.lower().strip().split()
         if len(action) > 1:
             action = [action[0], ' '.join(action[1:])]
-        elif len(action) < 1:
+        if len(action) < 1:
             print('')
         
-        if  action[0].lower() == 'quit':
+        elif  action[0].lower() == 'quit':
             if input('Are you sure? (y/n): ').lower() == 'y':
                 return
         
@@ -43,15 +44,23 @@ def maploop(currentmap):
         
         elif action[0] == 'examine' and len(action) == 2:
             for item in currentmap.check(protag.pos)[0]:
-                if action[1] in item.name.lower():
+                if isinstance(item, Room) and 'door' in action[1]:
+                    item.door.examine()
+                    break
+                elif action[1] == item.name.lower():
                     item.examine()
                     break
             protag.examine(action[1])
+            print('')
+
         
-        elif action[0] == 'enter':
+        elif action[0] == 'enter' and len(action) > 1:
             for item in currentmap.check(protag.pos)[0]:
-                if action[1] == item.name.lower():
+                if action[1] == item.name.lower() and isinstance(item, Room):
                     roomloop(protag, item)
+                elif action[1] == item.name.lower() and isinstance(item, Mapp):
+                    inmap = False
+                    protag.map = item
 
         elif action[0] == 'exit':
             print(">You're already outside!<\n")
@@ -69,8 +78,8 @@ def maploop(currentmap):
             else:
                 print('>On the ground you see<')
                 for item in currentmap.check(protag.pos)[1]:
-                    print('{}\n'.format(item.name))
-
+                    print('{}'.format(item.name))
+                print('')
 
         elif action[0] == 'pickup':
             for item in currentmap.check(protag.pos)[1]:
@@ -87,7 +96,7 @@ def maploop(currentmap):
                     print('You dropped {} on the ground\n'.format(item.name))
 
         else:
-            print('')
+            print('Not a valid command\n')
 
 def roomloop(protag, currentroom):
     protag.room = currentroom
@@ -98,10 +107,10 @@ def roomloop(protag, currentroom):
         if len(action) > 1:
             action = [action[0], ' '.join(action[1:])]
         
-        elif len(action) < 1:
+        if len(action) < 1:
             print('')
 
-        if action[0] == 'pack':
+        elif action[0] == 'pack':
             protag.pack_view()
         
         elif action[0] == 'me':
@@ -156,9 +165,23 @@ def roomloop(protag, currentroom):
                     currentroom.contents[1].append(item)
                     print('>You dropped {} on the ground<'.format(item.name))
             print('')
+        elif action[0] == 'take':
+            action = ' '.join(action).split()
+            action = [action[0],
+                    ' '.join(action[1:action.index('from')]),
+                    ' '.join(action[action.index('from') + 1:])]
+            for item in currentroom.contents[0]:
+                if action[2] == item.name.lower():
+                    pass
 
         else:
             print('Not a valid command, type help for help')
+
+def main(protag):
+    protag.map = map1
+    while True:
+        maploop(protag.map)
+
 
 
 if __name__ == '__main__':
@@ -166,4 +189,4 @@ if __name__ == '__main__':
         print(intro.read())
     protag = Player('Admin Istrator', [], (0, 0))
     protag.map = map1
-    maploop(protag.map)
+    main(protag.map)
