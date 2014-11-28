@@ -92,30 +92,33 @@ class NPC():
         self.keyitem = keyitem
         with open(dialogfile, 'r') as scrapfile:
             for line in scrapfile:
-                line.split()
+                line = line.split()
                 if line[0] == 'NAME':
-                    self.name = line[1].strip()
+                    self.name = ' '.join(line[1:]).strip()
                 elif line[0] == 'NEWTXT':
                     self.dialog.append(temp)
                     temp = ''
                 elif line[0] == 'DIALOG':
-                    temp += ' '.join(line[1:])
+                    temp += '{}\n'.format(' '.join(line[1:]))
                 elif line[0] == 'KEY':
                     key = True
                     break
+            self.dialog.append(temp)
             if key:
                 self.keyconvo = scrapfile.read()
 
     def talk(self, protag):
-        if keyitem != None:
+        if self.keyitem != None:
             for item in protag.person:
-                if item.name.lower() == self.keyitem.name:
-                    print(self.keyconvo)
-                    self.dialog = 'Thank you so much for you help'
-        elif self.dialog == 'Thank you so much for you help':
-            print(self.dialog)
+                if item.name.lower() == self.keyitem.lower():
+                    protag.person.remove(item)
+                    self.dialog = ['Thank you so much for you help']
+                    return self.keyconvo
+        if self.dialog == ['Thank you so much for you help\n']:
+            return self.dialog[0]
 
-        elif self.convo < len(self.dialog):
-            print(self.dialog[self.convo])
-            if self.convo < len(self.convo) - 1:
-                self.convo += 1
+        elif self.convo < len(self.dialog) - 1:
+            self.convo += 1
+            return self.dialog[self.convo - 1]
+        return self.dialog[self.convo]
+

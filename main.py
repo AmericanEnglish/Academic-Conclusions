@@ -8,7 +8,7 @@ map1 = Mapp('Small Town',
                             Room('A Room',
                                 [[Table('Garbage Table', 'wood', [Sword('Meow Blade')])],
                                 [Sword('Plain')]],
-                                 Door('Room Door', False, 'wood'))],[Sword('Cooler Sword')]],
+                                 Door('Room Door', False, 'wood')), NPC('Mother', 'mother.char', 'Cooler Sword')],[Sword('Cooler Sword')]],
                 (0,1): [[],[]]
                 }
             )
@@ -73,6 +73,7 @@ def maploop(currentmap):
                 elif action[1] == item.name.lower() and isinstance(item, Mapp):
                     inmap = False
                     protag.map = item
+            print('')
 
         elif action[0] == 'exit':
             print(">You're already outside!<\n")
@@ -107,9 +108,29 @@ def maploop(currentmap):
                     protag.person.remove(item)
                     currentmap.check(protag.pos)[1].append(item)
                     print('You dropped {} on the ground\n'.format(item.name))
-
+        
+        elif action[0] == 'talk':
+            somevar = 0
+            if len(action) > 1:
+                for item in currentmap.check(protag.pos)[0]:
+                    somevar += 1
+                    if isinstance(item, NPC) and action[1] == item.name.lower():
+                        somevar -= 1
+                        print('<>{}:\n{}'.format(item.name, item.talk(protag)))
+                if somevar == len(currentmap.check(protag.pos)[0]):
+                    print('')
+                
+            else:
+                somevar = 0
+                for item in currentmap.check(protag.pos)[0]:
+                    somevar += 1
+                    if isinstance(item, NPC):
+                        somevar -= 1
+                        print('<>{}:\n{}'.format(item.name, item.talk(protag)))
+                if somevar == len(currentmap.check(protag.pos)[0]):
+                    print('')
         else:
-            print('Not a valid command\n')
+            print('Not a valid command, type help for help\n')
 
 def roomloop(protag, currentroom):
     """(Player, Room) -> None
@@ -184,6 +205,7 @@ def roomloop(protag, currentroom):
                     currentroom.contents[1].append(item)
                     print('>You dropped {} on the ground<'.format(item.name))
             print('')
+        
         elif action[0] == 'take':
             # take requires a second marker called from. This requiers action
             # to be reconfigured
@@ -202,7 +224,7 @@ def roomloop(protag, currentroom):
             print('')
 
         else:
-            print('Not a valid command, type help for help')
+            print('Not a valid command, type help for help\n')
 
 def main(protag):
     protag.map = map1
