@@ -17,10 +17,11 @@ class Room:
         self.door = door
 
     def examine(self):
-        print("You examine the building, it is solid\n")
+        print("You examine the building, it is solid")
 
 
 class Interactable:
+    
     def __init__(self, name, composition):
         #(self, name, weight, composition, num)
         self.name = name
@@ -29,6 +30,7 @@ class Interactable:
         #self.num = num
 
 class Door(Interactable):
+    
     def __init__(self, name, locked, composition):
         super().__init__(name, composition)
         self.locked = locked
@@ -58,7 +60,7 @@ class Door(Interactable):
 
 
     def examine(self):
-        print('Door appears to made of {} and is {}\n'.format(self.madeof, self.lcked))
+        print('Door appears to made of {} and is {}'.format(self.madeof, self.lcked))
 
 
 class Table(Interactable):
@@ -81,4 +83,3 @@ class Chair(Interactable):
 
 class NPC(Interactable):
     pass
-
