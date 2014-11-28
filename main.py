@@ -141,6 +141,7 @@ def roomloop(protag, currentroom):
                     item.examine()
                     break
             protag.examine(action[1])
+            print('')
         
         elif action[0] == 'enter':
             print(">You're already in the {}<\n".format(currentroom.name))
@@ -189,9 +190,11 @@ def roomloop(protag, currentroom):
                 if action[2] == item.name.lower():
                     # will be added as table/object method later
                     for thing in item.contents:
-                        if thing == action[1]:
+                        if thing.name.lower() == action[1]:
                             protag.person.append(thing)
                             item.contents.remove(thing)
+                            print('You took {} from {}'.format(thing.name, item.name))
+            print('')
 
         else:
             print('Not a valid command, type help for help')
