@@ -82,14 +82,36 @@ class Chair(Interactable):
     pass
 
 class NPC():
-    
+    """Generates NPC objects"""
     def __init__(self, name, dialogfile, keyitem=None):
+        """(str, file.ext, str) -> None
+
+        NPCs need a name and a file containing their dialogue trees. The
+        dialogues in the file will be in the correct order such that the
+        first talk is informative, the second is either a small reminder
+        or perhaps exhibits annoyance of the character and in some cases
+        a refusal to repeat.
+
+        Coversations that are trigger by keyitems are at the end are marked
+        by the word KEY and all dialogue should be typed as to how it will
+        appear in the interpreter. NPCs without key items will ignore all
+        key item dialogue and just act as direction givers.
+
+        NAME name
+        DIALOGUE pew pew pew pew
+        NEWTXT
+        DIALOGUE meow meow meow
+        KEY
+        Thank you for finding my animal
+
+        """
         self.name = name
         self.dialog = []
         temp = ''
         key = False
         self.convo = 0
         self.keyitem = keyitem
+        # dissects character's dialogue file
         with open(dialogfile, 'r') as scrapfile:
             for line in scrapfile:
                 line = line.split()
@@ -108,12 +130,15 @@ class NPC():
                 self.keyconvo = scrapfile.read()
 
     def talk(self, protag):
+        # if NPC has key item checks player's person, display new dialogue
         if self.keyitem != None:
             for item in protag.person:
                 if item.name.lower() == self.keyitem.lower():
                     protag.person.remove(item)
                     self.dialog = ['Thank you so much for you help']
                     return self.keyconvo
+        # if player has item in question they are thanked and no additional
+        # dialogue needed
         if self.dialog == ['Thank you so much for you help\n']:
             return self.dialog[0]
 

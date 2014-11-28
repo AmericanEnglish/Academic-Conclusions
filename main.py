@@ -110,16 +110,18 @@ def maploop(currentmap):
                     print('You dropped {} on the ground\n'.format(item.name))
         
         elif action[0] == 'talk':
+            # if user types wrong name somevar will help print a newline
             somevar = 0
             if len(action) > 1:
                 for item in currentmap.check(protag.pos)[0]:
                     somevar += 1
                     if isinstance(item, NPC) and action[1] == item.name.lower():
+                        #somevar now knows an NPC was found and no extra \n
                         somevar -= 1
                         print('<>{}:\n{}'.format(item.name, item.talk(protag)))
                 if somevar == len(currentmap.check(protag.pos)[0]):
                     print('')
-                
+             # if just talk is typed, protag talks to NPCs in area.   
             else:
                 somevar = 0
                 for item in currentmap.check(protag.pos)[0]:
