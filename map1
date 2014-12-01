@@ -1,10 +1,11 @@
 NAME Lolknoob
-
-DIMX 0 2
-DIMY 0 2
+DIMX 0 1
+DIMY 0 1
 START 0 0
 
-ROOM 0 0 Crypt DOOR Crypt Door 1 wood
-INSI TABLE Old Table
-SPEC
-SPEC GROUND WEAPON Sword Horse
+ROOM 0 0 Sample_Room Door_name 1 wood
+NPC 0 0 mother.char
+RNPC 0 0 mother.char Sample_Room
+
+INSI Sample_Room CONT 0 0 Table_Old wood
+SPEC Sample_Room Table_Old INTER 0 0 Sword wood

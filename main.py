@@ -2,15 +2,16 @@ from player import *
 from battle import *
 from maps import *
 
-map1 = Mapp('Small Town',
-                {(0,0): [[
-                            Room('A Room',
-                                [[Table('Garbage Table', 'wood', [Sword('Meow Blade')])],
-                                [Sword('Plain')]],
-                                 Door('Room Door', False, 'wood')), NPC('Mother', 'mother.char', 'Cooler Sword')],[Sword('Cooler Sword')]],
-                (0,1): [[],[]]
-                }
-            )
+# map1 = Mapp('Small Town',
+#                 {(0,0): [[
+#                             Room('A Room',
+#                                 [[Table('Garbage Table', 'wood', [Sword('Meow Blade')])],
+#                                 [Sword('Plain')]],
+#                                  Door('Room Door', False, 'wood')), NPC('Mother', 'mother.char', 'Cooler Sword')],[Sword('Cooler Sword')]],
+#                 (0,1): [[],[]]
+#                 }
+#             )
+map1 = Mapp('map11')
 
 def maploop(currentmap):
     """(Mapp) -> None
