@@ -1,6 +1,5 @@
 from player import *
 from maps import *
-from random import choice
 
 # map1 = Mapp('Small Town',
 #                 {(0,0): [[
@@ -11,7 +10,7 @@ from random import choice
 #                 (0,1): [[],[]]
 #                 }
 #             )
-map1 = Mapp('testmap.bak')
+map1 = Mapp('testmap')
 
 def maploop(currentmap):
     """(Mapp) -> None
@@ -35,12 +34,24 @@ def maploop(currentmap):
         
         elif action[0] == 'm':
             protag.move(action[1])
-            if protag.pos[0] > currentmap.x or protag.pos[0] < 0:
-                print('You were eaten by wolves')
-                return True
+            if protag.pos[0] > currentmap.x or protag.pos[0] < -1:
+                # Provides a warning if the map is left
+                if protag.pos[0] > currentmap.x + 1 or protag.pos[0] < -1:
+                    print('You were eaten by wolves')
+                    return True
+                elif protag.pos[0] == currentmap.x + 1 or protag.pos[0] == -1:
+                    print('You have left the saftey of the {}, move farther and you might not move'.format(
+                                                        currentmap.name))
+                    print('at all. Quickly there is no time, head back from whence you came.')
             elif protag.pos[1] > currentmap.y or protag.pos[1] < 0:
-                print('You were eaten by cannibals')
-                return True
+                # Provides a warning if the map is left
+                if protag.pos[1] == currentmap.y + 1 or protag.pos[1] == -1:
+                    print('You have left the saftey of the {}, move farther and you might not move'.format(
+                                                        currentmap.name))
+                    print('at all. Quickly there is not time, move back from whence you came.')
+                elif protag.pos[1] > currentmap + 1 or protag.pos[1] < -1:
+                    print('You were eaten by cannibals')
+                    return True
         
         elif action[0] == 'pack':
             protag.pack_view()
@@ -220,18 +231,19 @@ def roomloop(protag, currentroom):
         elif action[0] == 'take':
             # take requires a second marker called from. This requiers action
             # to be reconfigured
-            action = ' '.join(action).split()
-            action = [action[0],
-                    ' '.join(action[1:action.index('from')]),
-                    ' '.join(action[action.index('from') + 1:])]
-            for item in currentroom.contents[0]:
-                if action[2] == item.name.lower():
-                    # will be added as table/object method later
-                    for thing in item.contents:
-                        if thing.name.lower() == action[1]:
-                            protag.person.append(thing)
-                            item.contents.remove(thing)
-                            print('You took {} from {}'.format(thing.name, item.name))
+            if 'from' in action:
+                action = ' '.join(action).split()
+                action = [action[0],
+                        ' '.join(action[1:action.index('from')]),
+                        ' '.join(action[action.index('from') + 1:])]
+                for item in currentroom.contents[0]:
+                    if action[2] == item.name.lower():
+                        # will be added as table/object method later
+                        for thing in item.contents:
+                            if thing.name.lower() == action[1]:
+                                protag.person.append(thing)
+                                item.contents.remove(thing)
+                                print('You took {} from {}'.format(thing.name, item.name))
             print('')
         
         elif action[0] == 'talk':
