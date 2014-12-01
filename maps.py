@@ -29,6 +29,8 @@ class Mapp:
                     else:
                         doorkey = None
                     x, y = int(line[1]), int(line[2])
+                    self.x = x
+                    self.y = y
                     running[(x, y)][0].append(Room(line[3], [[],[]], Door(line[4], line[5].isalpha(), line[6], doorkey)))
                 
                 elif line[0] == 'INTER':
@@ -99,7 +101,6 @@ class Mapp:
                         if isinstance(item, Room) and item.name.lower() == line[4].lower():
                             item.contents[0].append(NPC(line[3]))
         self.contents = running
-
     def check(self, pos):
         return self.contents[pos]
 
