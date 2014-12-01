@@ -267,7 +267,20 @@ def main(protag):
     death = False
     while death != True:
         death = maploop(protag.map)
+    print('----Score: {}----\n'.format(score(protag)))
+    answer = input('Try again?: ')
+    if answer[0].lower() == 'y':
+        main(protag)
+    else:
+        print('Better luck next time!')
 
+def score(protag):
+    score = 0
+    for item in protag.person:
+        score += item.score
+    for item in protag.pack:
+        score += item.score
+    return score
 
 if __name__ == '__main__':
     print('')
