@@ -80,9 +80,6 @@ class Container(Interactable):
                 print('{}'.format(item.name))
             print('')
 
-class Chair(Interactable):
-    pass
-
 class NPC():
     """Generates NPC objects"""
     def __init__(self, name, dialogfile, keyitem=None):
@@ -151,7 +148,6 @@ class NPC():
 
 
 def map_gen(filename):
-    pass
     running = {}
     with open(filename, 'r') as somefile:
         mapname = somefile.readline().strip().split()[1]
@@ -210,13 +206,23 @@ def map_gen(filename):
                         # Put interactable on ground in room
                         if isinstance(item, Room) and line[2] == 'INTER':
                             item.contents[1].append(Interactable(line[5], line[6]))
+                            break
                         # Puts container inside room
                         elif isinstance(item, Room) and line[2] == 'CONT':
                             item.contents[0].append(Container(line[5], line[6], []))
+                            break
                         elif isinstance(item, Container):
                             item.contents.append(Interactable(line[5], line[6]))
-
+                            break
 
             elif line[0] == 'SPEC':
-                # SPEC ROOMNAME
-                pass
+                # SPEC ROOMNAME CONTNAME INTER X Y NAME COMP
+                #  0      1        2       3   4 5  6    7
+                x, y = line[4], line[5]
+                for item in running[(x, y)]:
+                    if item.name.lower() == line[1].lower():
+                        for entity in item.contents[0]:
+                            if entity.name.lower() == line[2].lower():
+                                entity.append(Interactable(line[6], line[7]))
+                                break
+                        break
