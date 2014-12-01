@@ -121,7 +121,7 @@ def maploop(currentmap):
                         print('<>{}:\n{}'.format(item.name, item.talk(protag)))
                 if somevar == len(currentmap.check(protag.pos)[0]):
                     print('')
-            # if just talk is typed, protag talks to NPCs in area.   
+            # if just talk is typed, protag talks to all NPCs in area.   
             else:
                 somevar = 0
                 for item in currentmap.check(protag.pos)[0]:
@@ -237,7 +237,7 @@ def roomloop(protag, currentroom):
                         print('<>{}:\n{}'.format(item.name, item.talk(protag)))
                 if somevar == len(currentroom.contents[0]):
                     print('')
-            # if just talk is typed, protag talks to NPCs in area.   
+            # if just talk is typed, protag talks to all NPCs in area.   
             else:
                 somevar = 0
                 for item in ccurrentroom.contents[0]:
@@ -251,12 +251,12 @@ def roomloop(protag, currentroom):
         else:
             print('Not a valid command, type help for help\n')
 
+
 def main(protag):
     protag.map = map1
     protag.pos = protag.map.start
     while True:
         maploop(protag.map)
-
 
 
 if __name__ == '__main__':
@@ -268,5 +268,5 @@ if __name__ == '__main__':
         name = input('What shall you be called? *')
         choice = input('*{}*\nAre you sure? (y/n)'.format(name))
 
-    protag = Player(name, [], (0, 0))
+    protag = Player(name, (0, 0))
     main(protag)
