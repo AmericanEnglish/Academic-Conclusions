@@ -4,25 +4,29 @@ class Mapp:
             # {(0, 0):[[Room, Enemey][Ground Things, Here]], (0,1): [[],[]]} 
         running = {}
         with open(filename, 'r') as somefile:
-            self.name = somefile.readline().strip().split('_')[1]
+            self.name = somefile.readline().strip().split(',')[1]
             
-            nextline = somefile.readline().strip().split('_')
-            dimensionx = (int(nextline[1]), int((nextline[2])))
+            nextline = somefile.readline().strip().split(',')
+            dimensionx = (int(nextline[1].strip()), int((nextline[2].strip())))
             self.x = dimensionx[1]
 
-            nextline = somefile.readline().strip().split('_')
-            dimensiony = (int(nextline[1]), int(nextline[2]))
+            nextline = somefile.readline().strip().split(',')
+            dimensiony = (int(nextline[1].strip()), int(nextline[2].strip()))
             self.y = dimensiony[1]
 
-            nextline = somefile.readline().strip().split('_')
-            self.start = (int(nextline[1]), int(nextline[2]))
+            nextline = somefile.readline().strip().split(',')
+            self.start = (int(nextline[1].strip()), int(nextline[2].strip()))
             #generates empty map contents and all the coordinates
             for x in range(dimensionx[1] + 1):
                 for y in range(dimensiony[1] + 1):
                     running[(x , y)] = [[],[]]
 
-            for line in somefile:
-                line = line.strip().split('_')
+            for aline in somefile:
+                aline = aline.strip().split(',')
+                line = []
+                for item in aline:
+                    line.append(item.strip())
+
                 if line[0] == 'ROOM':
                     # ROOM X Y NAME DOORNAME LOCKED? COMP DOORKEY
                     #  0   1 2  3      4        5     6      7
@@ -104,6 +108,13 @@ class Mapp:
     def check(self, pos):
         return self.contents[pos]
 
+    def link(self, somemap, coordinates):
+        """(Mapp, Mapp, tuple of ints) -> None
+
+        Links two existing maps together so that you can travel from one 
+        map to another using the enter function in the main.py"""
+        self.contents[coordinates][0].append(somemap)
+
 
 class Room:
     def __init__(self, name, contents, door):
@@ -130,6 +141,8 @@ class Interactable:
         print(self.name, self.madeof)
         print("You examine the {}, it is made of {}".format(self.name, self.madeof))
 
+    def __str__(self):
+        return '{} {}'.format(self.madeof, self.name)
 class Door(Interactable):
     
     def __init__(self, name, locked, composition, key=None):
@@ -144,7 +157,7 @@ class Door(Interactable):
     def open(self, protag):
         if self.locked:
             for item in protag.person:
-                if self.key.lower() == item.name.lower():
+                if self.key.lower() == str(item).lower():
                     self.locked = False
                     self.lcked = 'unlocked'
                     print('You unlocked the {} with {}'.format(self.name, self.key))
@@ -228,6 +241,7 @@ class NPC():
                 if item.name.lower() == self.keyitem.lower():
                     protag.person.remove(item)
                     self.dialog = ['Thank you so much for your help\n']
+                    progtag.gold += 10
                     return self.keyconvo
         # if player has item in question they are thanked and no additional
         # dialogue needed
