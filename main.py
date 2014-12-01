@@ -10,6 +10,10 @@ from maps import *
 #                 (0,1): [[],[]]
 #                 }
 #             )
+materialvalue = {
+                'wood':10, 'stone':15, 'metal': 20, 'gold':30, 'flesh':-30,
+                'bone':-20, 'meat':-10, 'evil':-5, 'cursed':-50
+                }
 map1 = Mapp('testmap')
 
 def maploop(currentmap):
@@ -42,14 +46,14 @@ def maploop(currentmap):
                 elif protag.pos[0] == currentmap.x + 1 or protag.pos[0] == -1:
                     print('You have left the saftey of the {}, move farther and you might not move'.format(
                                                         currentmap.name))
-                    print('at all. Quickly there is no time, head back from whence you came.')
+                    print('at all. Quickly there is no time, head back from whence you came.\n')
             elif protag.pos[1] > currentmap.y or protag.pos[1] < 0:
                 # Provides a warning if the map is left
                 if protag.pos[1] == currentmap.y + 1 or protag.pos[1] == -1:
                     print('You have left the saftey of the {}, move farther and you might not move'.format(
                                                         currentmap.name))
-                    print('at all. Quickly there is not time, move back from whence you came.')
-                elif protag.pos[1] > currentmap + 1 or protag.pos[1] < -1:
+                    print('at all. Quickly there is not time, move back from whence you came.\n')
+                elif protag.pos[1] > currentmap.y + 1 or protag.pos[1] < -1:
                     print('You were eaten by cannibals')
                     return True
         
@@ -289,9 +293,9 @@ def main(protag):
 def score(protag):
     score = 0
     for item in protag.person:
-        score += item.score
+        score += materialvalue[item.madeof]
     for item in protag.pack:
-        score += item.score
+        score += materialvalue[item.score]
     return score
 
 if __name__ == '__main__':
