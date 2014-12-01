@@ -245,7 +245,7 @@ def roomloop(protag, currentroom):
                     if isinstance(item, NPC):
                         somevar -= 1
                         print('<>{}:\n{}'.format(item.name, item.talk(protag)))
-                if somevar == len(ccurrentroom.contents[0]):
+                if somevar == len(currentroom.contents[0]):
                     print('')
         
         else:
@@ -253,6 +253,7 @@ def roomloop(protag, currentroom):
 
 def main(protag):
     protag.map = map1
+    protag.pos = protag.map.start
     while True:
         maploop(protag.map)
 
@@ -262,5 +263,10 @@ if __name__ == '__main__':
     print('')
     with open('intro', 'r') as intro:
         print(intro.read())
-    protag = Player('Admin Istrator', [], (0, 0))
+    choice = 'No'
+    while choice.lower()[0] != 'y':
+        name = input('What shall you be called? *')
+        choice = input('*{}*\nAre you sure? (y/n)'.format(name))
+
+    protag = Player(name, [], (0, 0))
     main(protag)
