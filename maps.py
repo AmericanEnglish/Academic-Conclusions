@@ -147,3 +147,23 @@ class NPC():
             return self.dialog[self.convo - 1]
         return self.dialog[self.convo]
 
+
+def map_gen(filename):
+    pass
+    running = {}
+    with open(filename, 'r') as somefile:
+        mapname = somefile.readline().strip().split()[1]
+        nextline = somefile.readline().strip()
+        dimensionx = (int(nextline[1]), int((nextline[2])))
+        nextline = somefile.readline().strip()
+        dimensiony = (int(nextline[1]), int(nextline[2]))
+        nextline = somefile.readline().strip().split()
+        #generates empty map contents and all the coordinates
+        for x in range(dimensionx[1] + 1):
+            for y in range(dimensiony[1] + 1):
+                running[(x , y)] = [[],[]]
+
+        for line in somefile:
+            splitline = line.split()
+            if splitline[0] = 'ROOM':
+                pass
