@@ -4,7 +4,7 @@ class Mapp:
             # {(0, 0):[[Room, Enemey][Ground Things, Here]], (0,1): [[],[]]} 
         running = {}
         with open(filename, 'r') as somefile:
-            self.name = somefile.readline().strip().split(',')[1]
+            self.name = somefile.readline().strip().split(',')[1].strip()
             
             nextline = somefile.readline().strip().split(',')
             dimensionx = (int(nextline[1].strip()), int((nextline[2].strip())))
@@ -206,6 +206,7 @@ class NPC():
         DIALOGUE pew pew pew pew
         NEWTXT
         DIALOGUE meow meow meow
+        KEYITEM KITTY
         KEY
         Thank you for finding my animal
 
@@ -223,6 +224,8 @@ class NPC():
                 elif line[0] == 'NEWTXT':
                     self.dialog.append(temp)
                     temp = ''
+                elif line[0] == 'GIVE':
+                    self.give.append(Interactable(line[1], line[2]))
                 elif line[0] == 'KEYITEM':
                     self.keyitem = ' '.join(line[1:])
                 elif line[0] == 'DIALOG':
@@ -240,8 +243,10 @@ class NPC():
             for item in protag.person:
                 if item.name.lower() == self.keyitem.lower():
                     protag.person.remove(item)
-                    self.dialog = ['Thank you so much for your help\n']
+                    self.dialog = ['Thank you {} for your help\n'.format(protag.name)]
                     progtag.gold += 10
+                    if self.give != None:
+                        protag.append(self.give)
                     return self.keyconvo
         # if player has item in question they are thanked and no additional
         # dialogue needed
