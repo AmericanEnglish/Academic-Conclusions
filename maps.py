@@ -65,7 +65,7 @@ class Door(Interactable):
         print('Door appears to made of {} and is {}'.format(self.madeof, self.lcked))
 
 
-class Cont(Interactable):
+class Container(Interactable):
     def __init__(self, name, composition, contents):
         self.contents = contents
         self.madeof = composition
@@ -174,14 +174,14 @@ def map_gen(filename):
                 # INTER GROUND X Y NAME COMP
                 #   0     1    2 3  4    5
                 if line[1] == 'GROUND':
-                    x = line[2]
-                    y = line[3]
+                    x = int(line[2])
+                    y = int(line[3])
                     name = line[4].replace('_', ' ')
                     composition = line [5]
                     running[(x, y)][1].append(Interactable(name, composition))
                 else:
-                    x = line[1]
-                    y = line[2]
+                    x = int(line[1])
+                    y = int(line[2])
                     name = line[3].replace('_', ' ')
                     composition = line [4]
                     running[(x, y)][0].append(Interactable(name, composition))
@@ -193,10 +193,30 @@ def map_gen(filename):
                     keyitem = line[5]
                 else:
                     keyitem = None
-                running[(line[1], line[2])][0].append(
+                running[((int(line[1]), int(line[2])))][0].append(
                             NPC(line[3].replace('_', ' '), line[4], keyitem))
 
             elif line[0] == 'CONT':
                 # CONT X Y NAME COMP
                 #  0   1 2  3    4
-                running(line[1], linep[2])
+                running[((int(line[1]), int(line[2])))][0].append(Container(line[3], line[4]. []))
+
+            elif line[0] == 'INSI':
+                # INSIDE CONTNAME OBJCLASS X Y NAME COMP
+                #   0       1       2      3 4  5    6 
+                x, y = int(line[3]), int(line[4])
+                for item in running[(x, y)][0]:
+                    if item.name.lower() == line[1].lower():
+                        # Put interactable on ground in room
+                        if isinstance(item, Room) and line[2] == 'INTER':
+                            item.contents[1].append(Interactable(line[5], line[6]))
+                        # Puts container inside room
+                        elif isinstance(item, Room) and line[2] == 'CONT':
+                            item.contents[0].append(Container(line[5], line[6], []))
+                        elif isinstance(item, Container):
+                            item.contents.append(Interactable(line[5], line[6]))
+
+
+            elif line[0] == 'SPEC':
+                # SPEC ROOMNAME
+                pass
