@@ -8,10 +8,12 @@ class Mapp:
             
             nextline = somefile.readline().strip().split('_')
             dimensionx = (int(nextline[1]), int((nextline[2])))
-            
+            self.x = dimensionx[1]
+
             nextline = somefile.readline().strip().split('_')
             dimensiony = (int(nextline[1]), int(nextline[2]))
-            
+            self.y = dimensiony[1]
+
             nextline = somefile.readline().strip().split('_')
             self.start = (int(nextline[1]), int(nextline[2]))
             #generates empty map contents and all the coordinates
@@ -29,8 +31,6 @@ class Mapp:
                     else:
                         doorkey = None
                     x, y = int(line[1]), int(line[2])
-                    self.x = x
-                    self.y = y
                     running[(x, y)][0].append(Room(line[3], [[],[]], Door(line[4], line[5].isalpha(), line[6], doorkey)))
                 
                 elif line[0] == 'INTER':

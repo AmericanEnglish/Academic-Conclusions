@@ -1,6 +1,6 @@
 from player import *
-from battle import *
 from maps import *
+from random import choice
 
 # map1 = Mapp('Small Town',
 #                 {(0,0): [[
@@ -31,10 +31,16 @@ def maploop(currentmap):
         
         elif  action[0].lower() == 'quit':
             if input('Are you sure? (y/n): ').lower() == 'y':
-                return
+                return True
         
         elif action[0] == 'm':
             protag.move(action[1])
+            if protag.pos[0] > currentmap.x or protag.pos[0] < 0:
+                print('You were eaten by wolves')
+                return True
+            elif protag.pos[1] > currentmap.y or protag.pos[1] < 0:
+                print('You were eaten by cannibals')
+                return True
         
         elif action[0] == 'pack':
             protag.pack_view()
@@ -258,8 +264,9 @@ def roomloop(protag, currentroom):
 def main(protag):
     protag.map = map1
     protag.pos = protag.map.start
-    while True:
-        maploop(protag.map)
+    death = False
+    while death != True:
+        death = maploop(protag.map)
 
 
 if __name__ == '__main__':
