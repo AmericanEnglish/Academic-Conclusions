@@ -1,9 +1,8 @@
 class Player:
     """Creates the player"""
-    def __init__(self, name, stats, coords):
+    def __init__(self, name, coords):
         """(Player, str, list of nums, tuple of nums)"""
         self.name = name
-        self.stats = stats
         self.person = []
         self.pack = []
         self.hp = 0
