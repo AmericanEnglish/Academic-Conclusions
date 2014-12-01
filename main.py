@@ -1,7 +1,6 @@
 from player import *
 from battle import *
 from maps import *
-materials = {'wood':10}
 
 map1 = Mapp('Small Town',
                 {(0,0): [[
