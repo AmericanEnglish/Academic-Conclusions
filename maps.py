@@ -1,9 +1,10 @@
 class Mapp:
-    def __init__(self, name, contents):
+    def __init__(self, name, contents, start):
         self.name = name
         self.contents = contents
+        self.start = start
             #contents is a dict of tuple: list objects
-            # {(0, 0):[Room, Enemey], (0,1): []} 
+            # {(0, 0):[[Room, Enemey][Ground Things, Here]], (0,1): [[],[]]} 
     
     def check(self, pos):
         return self.contents[pos]
@@ -31,9 +32,10 @@ class Interactable:
 
 class Door(Interactable):
     
-    def __init__(self, name, locked, composition):
+    def __init__(self, name, locked, composition, key=None):
         super().__init__(name, composition)
         self.locked = locked
+        self.key = key
         if locked:
             self.lcked = 'locked'
         else:
@@ -63,7 +65,7 @@ class Door(Interactable):
         print('Door appears to made of {} and is {}'.format(self.madeof, self.lcked))
 
 
-class Table(Interactable):
+class Cont(Interactable):
     def __init__(self, name, composition, contents):
         self.contents = contents
         self.madeof = composition
@@ -153,10 +155,13 @@ def map_gen(filename):
     running = {}
     with open(filename, 'r') as somefile:
         mapname = somefile.readline().strip().split()[1]
+        
         nextline = somefile.readline().strip()
         dimensionx = (int(nextline[1]), int((nextline[2])))
+        
         nextline = somefile.readline().strip()
         dimensiony = (int(nextline[1]), int(nextline[2]))
+        
         nextline = somefile.readline().strip().split()
         #generates empty map contents and all the coordinates
         for x in range(dimensionx[1] + 1):
@@ -164,6 +169,34 @@ def map_gen(filename):
                 running[(x , y)] = [[],[]]
 
         for line in somefile:
-            splitline = line.split()
-            if splitline[0] = 'ROOM':
-                pass
+            line = line.strip().split()
+            if line[0] = 'INTER':
+                # INTER GROUND X Y NAME COMP
+                #   0     1    2 3  4    5
+                if line[1] == 'GROUND':
+                    x = line[2]
+                    y = line[3]
+                    name = line[4].replace('_', ' ')
+                    composition = line [5]
+                    running[(x, y)][1].append(Interactable(name, composition))
+                else:
+                    x = line[1]
+                    y = line[2]
+                    name = line[3].replace('_', ' ')
+                    composition = line [4]
+                    running[(x, y)][0].append(Interactable(name, composition))
+
+            elif line[0] == 'NPC':
+                # NPC X Y NAME FILE KEYITEM
+                #  0  1 2  3    4     5
+                if len(line) == 5:
+                    keyitem = line[5]
+                else:
+                    keyitem = None
+                running[(line[1], line[2])][0].append(
+                            NPC(line[3].replace('_', ' '), line[4], keyitem))
+
+            elif line[0] == 'CONT':
+                # CONT X Y NAME COMP
+                #  0   1 2  3    4
+                running(line[1], linep[2])
