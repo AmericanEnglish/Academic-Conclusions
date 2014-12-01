@@ -1,11 +1,97 @@
 class Mapp:
-    def __init__(self, name, contents, start):
+    def __init__(self, name, filename, start):
         self.name = name
-        self.contents = contents
         self.start = start
             #contents is a dict of tuple: list objects
             # {(0, 0):[[Room, Enemey][Ground Things, Here]], (0,1): [[],[]]} 
-    
+        running = {}
+        with open(filename, 'r') as somefile:
+            mapname = somefile.readline().strip().split()[1]
+            
+            nextline = somefile.readline().strip()
+            dimensionx = (int(nextline[1]), int((nextline[2])))
+            
+            nextline = somefile.readline().strip()
+            dimensiony = (int(nextline[1]), int(nextline[2]))
+            
+            nextline = somefile.readline().strip().split()
+            #generates empty map contents and all the coordinates
+            for x in range(dimensionx[1] + 1):
+                for y in range(dimensiony[1] + 1):
+                    running[(x , y)] = [[],[]]
+
+            for line in somefile:
+                line = line.strip().split()
+                if line[0] == 'ROOM':
+                    # ROOM X Y NAME DOORKEY DOORNAME LOCKED? COMP
+                    #  0   1 2  3      4       5        6      7
+                    x, y = int(line[1]), int(line[2])
+                    running[(x, y)] = 
+                elif line[0] == 'INTER':
+                    # INTER GROUND X Y NAME COMP
+                    #   0     1    2 3  4    5
+                    if line[1] == 'GROUND':
+                        x, y = int(line[2]), int(line[3])
+                        name = line[4]
+                        composition = line [5]
+                        running[(x, y)][1].append(Interactable(name, composition))
+                    else:
+                        # INTER X Y NAME COMP
+                        #   0   1 2  3    4
+                        x = int(line[1])
+                        y = int(line[2])
+                        name = line[3]
+                        composition = line [4]
+                        running[(x, y)][0].append(Interactable(name, composition))
+
+                elif line[0] == 'NPC':
+                    # NPC X Y NAME FILE KEYITEM
+                    #  0  1 2  3    4     5
+                    x, y = int(line[1]), int(line[2])
+                    if len(line) == 5:
+                        keyitem = line[5]
+                    else:
+                        keyitem = None
+                    running[(x, y)][0].append(
+                                NPC(line[3], line[4], keyitem))
+
+                elif line[0] == 'CONT':
+                    # CONT X Y NAME COMP
+                    #  0   1 2  3    4
+                    x, y = int(line[1], int(line[2]))
+                    running[(x, y)][0].append(Container(line[3], line[4], []))
+
+                elif line[0] == 'INSI':
+                    # INSIDE CONTNAME OBJCLASS X Y NAME COMP
+                    #   0       1       2      3 4  5    6 
+                    x, y = int(line[3]), int(line[4])
+                    for item in running[(x, y)][0]:
+                        if item.name.lower() == line[1].lower():
+                            # Put interactable on ground in room
+                            if isinstance(item, Room) and line[2] == 'INTER':
+                                item.contents[1].append(Interactable(line[5], line[6]))
+                                break
+                            # Puts container inside room
+                            elif isinstance(item, Room) and line[2] == 'CONT':
+                                item.contents[0].append(Container(line[5], line[6], []))
+                                break
+                            elif isinstance(item, Container):
+                                item.contents.append(Interactable(line[5], line[6]))
+                                break
+
+                elif line[0] == 'SPEC':
+                    # SPEC ROOMNAME CONTNAME INTER X Y NAME COMP
+                    #  0      1        2       3   4 5  6    7
+                    x, y = line[4], line[5]
+                    for item in running[(x, y)]:
+                        if item.name.lower() == line[1].lower():
+                            for entity in item.contents[0]:
+                                if entity.name.lower() == line[2].lower():
+                                    entity.append(Interactable(line[6], line[7]))
+                                    break
+                            break
+        self.contents = running
+
     def check(self, pos):
         return self.contents[pos]
 
@@ -145,86 +231,3 @@ class NPC():
             self.convo += 1
             return self.dialog[self.convo - 1]
         return self.dialog[self.convo]
-
-
-def map_gen(filename):
-    running = {}
-    with open(filename, 'r') as somefile:
-        mapname = somefile.readline().strip().split()[1]
-        
-        nextline = somefile.readline().strip()
-        dimensionx = (int(nextline[1]), int((nextline[2])))
-        
-        nextline = somefile.readline().strip()
-        dimensiony = (int(nextline[1]), int(nextline[2]))
-        
-        nextline = somefile.readline().strip().split()
-        #generates empty map contents and all the coordinates
-        for x in range(dimensionx[1] + 1):
-            for y in range(dimensiony[1] + 1):
-                running[(x , y)] = [[],[]]
-
-        for line in somefile:
-            line = line.strip().split()
-            if line[0] == 'INTER':
-                # INTER GROUND X Y NAME COMP
-                #   0     1    2 3  4    5
-                if line[1] == 'GROUND':
-                    x = int(line[2])
-                    y = int(line[3])
-                    name = line[4].replace('_', ' ')
-                    composition = line [5]
-                    running[(x, y)][1].append(Interactable(name, composition))
-                else:
-                    x = int(line[1])
-                    y = int(line[2])
-                    name = line[3].replace('_', ' ')
-                    composition = line [4]
-                    running[(x, y)][0].append(Interactable(name, composition))
-
-            elif line[0] == 'NPC':
-                # NPC X Y NAME FILE KEYITEM
-                #  0  1 2  3    4     5
-                x, y = int(line[1]), int(line[2])
-                if len(line) == 5:
-                    keyitem = line[5]
-                else:
-                    keyitem = None
-                running[(x, y)][0].append(
-                            NPC(line[3].replace('_', ' '), line[4], keyitem))
-
-            elif line[0] == 'CONT':
-                # CONT X Y NAME COMP
-                #  0   1 2  3    4
-                x, y = int(line[1], int(line[2]))
-                running[(x, y)][0].append(Container(line[3], line[4], []))
-
-            elif line[0] == 'INSI':
-                # INSIDE CONTNAME OBJCLASS X Y NAME COMP
-                #   0       1       2      3 4  5    6 
-                x, y = int(line[3]), int(line[4])
-                for item in running[(x, y)][0]:
-                    if item.name.lower() == line[1].lower():
-                        # Put interactable on ground in room
-                        if isinstance(item, Room) and line[2] == 'INTER':
-                            item.contents[1].append(Interactable(line[5], line[6]))
-                            break
-                        # Puts container inside room
-                        elif isinstance(item, Room) and line[2] == 'CONT':
-                            item.contents[0].append(Container(line[5], line[6], []))
-                            break
-                        elif isinstance(item, Container):
-                            item.contents.append(Interactable(line[5], line[6]))
-                            break
-
-            elif line[0] == 'SPEC':
-                # SPEC ROOMNAME CONTNAME INTER X Y NAME COMP
-                #  0      1        2       3   4 5  6    7
-                x, y = line[4], line[5]
-                for item in running[(x, y)]:
-                    if item.name.lower() == line[1].lower():
-                        for entity in item.contents[0]:
-                            if entity.name.lower() == line[2].lower():
-                                entity.append(Interactable(line[6], line[7]))
-                                break
-                        break
