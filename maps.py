@@ -166,7 +166,7 @@ def map_gen(filename):
 
         for line in somefile:
             line = line.strip().split()
-            if line[0] = 'INTER':
+            if line[0] == 'INTER':
                 # INTER GROUND X Y NAME COMP
                 #   0     1    2 3  4    5
                 if line[1] == 'GROUND':
@@ -185,17 +185,19 @@ def map_gen(filename):
             elif line[0] == 'NPC':
                 # NPC X Y NAME FILE KEYITEM
                 #  0  1 2  3    4     5
+                x, y = int(line[1]), int(line[2])
                 if len(line) == 5:
                     keyitem = line[5]
                 else:
                     keyitem = None
-                running[((int(line[1]), int(line[2])))][0].append(
+                running[(x, y)][0].append(
                             NPC(line[3].replace('_', ' '), line[4], keyitem))
 
             elif line[0] == 'CONT':
                 # CONT X Y NAME COMP
                 #  0   1 2  3    4
-                running[((int(line[1]), int(line[2])))][0].append(Container(line[3], line[4]. []))
+                x, y = int(line[1], int(line[2]))
+                running[(x, y)][0].append(Container(line[3], line[4], []))
 
             elif line[0] == 'INSI':
                 # INSIDE CONTNAME OBJCLASS X Y NAME COMP
