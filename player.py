@@ -8,6 +8,8 @@ class Player:
         self.pos = coords
         self.map = None
         self.room = None
+        self.gold = 0
+        self.totalmoves = 0
 
     def move(self, motion):
         """(str) -> None
@@ -21,6 +23,9 @@ class Player:
         
         All other input is ignored
         """
+        
+        
+        self.totalmoves += 1
         directions = {
                     'north': (0,1),
                     'south':(0,-1), 
