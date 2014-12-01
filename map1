@@ -1,0 +1,10 @@
+NAME Lolknoob
+
+DIMX 0 2
+DIMY 0 2
+START 0 0
+
+ROOM 0 0 Crypt DOOR Crypt Door 1 wood
+INSI TABLE Old Table
+SPEC
+SPEC GROUND WEAPON Sword Horse

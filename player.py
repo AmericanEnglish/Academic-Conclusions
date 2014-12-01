@@ -5,7 +5,6 @@ class Player:
         self.name = name
         self.person = []
         self.pack = []
-        self.hp = 0
         self.pos = coords
         self.map = None
         self.room = None

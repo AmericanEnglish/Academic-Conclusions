@@ -23,10 +23,15 @@ class Mapp:
             for line in somefile:
                 line = line.strip().split()
                 if line[0] == 'ROOM':
-                    # ROOM X Y NAME DOORKEY DOORNAME LOCKED? COMP
-                    #  0   1 2  3      4       5        6      7
+                    # ROOM X Y NAME DOORNAME LOCKED? COMP DOORKEY
+                    #  0   1 2  3      4        5     6      7
+                    if len(line) == 7:
+                        doorkey = line[7]
+                    else:
+                        doorkey = None
                     x, y = int(line[1]), int(line[2])
-                    running[(x, y)] = 
+                    running[(x, y)][0].append(Room(line[3], [], Door(line[4], line[5].isalpha(), line[6], doorkey)))
+                
                 elif line[0] == 'INTER':
                     # INTER GROUND X Y NAME COMP
                     #   0     1    2 3  4    5
@@ -52,8 +57,7 @@ class Mapp:
                         keyitem = line[5]
                     else:
                         keyitem = None
-                    running[(x, y)][0].append(
-                                NPC(line[3], line[4], keyitem))
+                    running[(x, y)][0].append(NPC(line[3], line[4], keyitem))
 
                 elif line[0] == 'CONT':
                     # CONT X Y NAME COMP
@@ -67,7 +71,7 @@ class Mapp:
                     x, y = int(line[3]), int(line[4])
                     for item in running[(x, y)][0]:
                         if item.name.lower() == line[1].lower():
-                            # Put interactable on ground in room
+                            # Puts interactable on ground in room
                             if isinstance(item, Room) and line[2] == 'INTER':
                                 item.contents[1].append(Interactable(line[5], line[6]))
                                 break
@@ -75,6 +79,7 @@ class Mapp:
                             elif isinstance(item, Room) and line[2] == 'CONT':
                                 item.contents[0].append(Container(line[5], line[6], []))
                                 break
+                            # Puts interactable in container on map
                             elif isinstance(item, Container):
                                 item.contents.append(Interactable(line[5], line[6]))
                                 break
@@ -90,6 +95,18 @@ class Mapp:
                                     entity.append(Interactable(line[6], line[7]))
                                     break
                             break
+
+                elif line[0] == 'RNPC':
+                    # NPC X Y NAME FILE ROOMNAME KEYITEM
+                    #  0  1 2  3    4      5       6
+                    if len(line) == 6:
+                        keyitem = line[6]
+                    else:
+                        keyitem = None
+                    x, y = int(line[1]), int(line[2])
+                    for item in running[(x, y)][0]:
+                        if isinstance(item, Room) and item.name.lower() == line[5].lower():
+                            item[0].append(NPC(line[3], line[4], keyitem))
         self.contents = running
 
     def check(self, pos):
@@ -127,25 +144,19 @@ class Door(Interactable):
         else:
             self.lcked = 'unlocked'
     
-    #def open(self, thing, toon):
-    #    thingobj = None
-    #    for item in toon:
-    #        if item.name == thing:
-    #            thingobj = item
-    #    if thingobj == None:
-    #        return False
-    #    
-    #    if self.locked:
-    #        print('You try to open the door with the {}'.format(thingobj.name))
-    #        if isinstance(thingobj, Key):
-    #            if thingobj.unlock == self.num:
-    #                return True
-    #            return False
-    #        elif isinstance(thingobj, Sword):
-    #            return thingobj.pry(self.madeof)
-    #        return False
-    #    return True
+    def open(self, protag):
+        if self.locked:
+            for item in protag.person:
+                if key.lower() == item.name.lower():
+                    self.locked = False
+                    self.lcked = 'unlocked'
+                    print('You unlocked the {}\n'.format(self.name))
+                    return True
 
+            print('The {} is locked\n'.format(self.name))
+            return False
+        else:
+            return True
 
     def examine(self):
         print('Door appears to made of {} and is {}'.format(self.madeof, self.lcked))

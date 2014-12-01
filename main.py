@@ -140,6 +140,9 @@ def roomloop(protag, currentroom):
     contents. Although some 'action' words are the same the objects some
     interactions are not exactly the same."""
     protag.room = currentroom
+    #If the door is locked they are 'kicked' from the room
+    if not currentroom.door.open(protag):
+        return
     print("You entered {}\n".format(currentroom.name))
     while True:
         action = input('={}=> '.format(currentroom.name))
@@ -239,7 +242,7 @@ def roomloop(protag, currentroom):
             # if just talk is typed, protag talks to all NPCs in area.   
             else:
                 somevar = 0
-                for item in ccurrentroom.contents[0]:
+                for item in currentroom.contents[0]:
                     somevar += 1
                     if isinstance(item, NPC):
                         somevar -= 1
