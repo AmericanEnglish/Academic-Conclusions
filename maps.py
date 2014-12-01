@@ -247,7 +247,7 @@ class NPC():
         # dialogue needed
         if self.dialog == ['Thank you so much for your help\n']:
             return self.dialog[0]
-
+            # Allows for several 'hint' like dialogs
         elif self.convo < len(self.dialog) - 1:
             self.convo += 1
             return self.dialog[self.convo - 1]
