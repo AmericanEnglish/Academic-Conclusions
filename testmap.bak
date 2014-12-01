@@ -1,0 +1,12 @@
+NAME_test map
+DIMX_0_2
+DIMY_0_2
+START_0_0
+
+ROOM_0_1_Crypt_Crypt Door_y_stone_chisel
+#_Key_location,_Mutable
+INTER_GROUND_0_0_chisel_stone
+INSI_Crypt_CONT_0_1_grave_stone
+SPEC_Crypt_grave_INTER_0_1_skull_bone
+INSI_Crypt_INTER_0_1_body_flesh
+INTER_GROUND_0_0_random cat_meow bits

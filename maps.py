@@ -37,7 +37,7 @@ class Mapp:
                     if line[1] == 'GROUND':
                         x, y = int(line[2]), int(line[3])
                         name = line[4]
-                        composition = line [5]
+                        composition = line[5]
                         running[(x, y)][1].append(Interactable(name, composition))
                     else:
                         # INTER X Y NAME COMP
@@ -125,6 +125,10 @@ class Interactable:
         self.madeof = composition
         #self.num = num
 
+    def examine(self):
+        print(self.name, self.madeof)
+        print("You examine the {}, it is made of {}".format(self.name, self.madeof))
+
 class Door(Interactable):
     
     def __init__(self, name, locked, composition, key=None):
@@ -139,13 +143,13 @@ class Door(Interactable):
     def open(self, protag):
         if self.locked:
             for item in protag.person:
-                if key.lower() == item.name.lower():
+                if self.key.lower() == item.name.lower():
                     self.locked = False
                     self.lcked = 'unlocked'
-                    print('You unlocked the {}\n'.format(self.name))
+                    print('You unlocked the {} with {}'.format(self.name, self.key))
                     return True
 
-            print('The {} is locked\n'.format(self.name))
+            print('The {} is locked'.format(self.name))
             return False
         else:
             return True

@@ -34,6 +34,8 @@ class Player:
             y = self.pos[1] + directions[motion.lower()][1]
             self.pos = x, y
             print('You have moved {}\n'.format(motion))
+        else:
+            print('')
 
     def pull(self, thing):
         """(str) -> Obj

@@ -11,7 +11,7 @@ from maps import *
 #                 (0,1): [[],[]]
 #                 }
 #             )
-map1 = Mapp('map11')
+map1 = Mapp('testmap.bak')
 
 def maploop(currentmap):
     """(Mapp) -> None
@@ -269,7 +269,7 @@ if __name__ == '__main__':
     choice = 'No'
     while choice.lower()[0] != 'y':
         name = input('What shall you be called? *')
-        choice = input('*{}*\nAre you sure? (y/n)'.format(name))
+        choice = input('*{}*\nAre you sure? (y/n): '.format(name))
 
     protag = Player(name, (0, 0))
     main(protag)
