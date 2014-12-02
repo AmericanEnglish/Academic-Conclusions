@@ -141,7 +141,9 @@ class Interactable:
         print("You examine the {}, it is made of {}\n".format(self.name, self.madeof))
 
     def __str__(self):
-        return '{} {}'.format(self.madeof, self.name)
+        return '{} {}'.format(self.madeof, self.name).title()
+
+
 class Door(Interactable):
     
     def __init__(self, name, locked, composition, key=None):
@@ -228,7 +230,6 @@ class NPC():
                     self.give = Interactable(line[1], line[2])
                 elif line[0] == 'KEYITEM':
                     self.keyitem = ' '.join(line[1:])
-                    print(self.keyitem)
                 elif line[0] == 'DIALOG':
                     temp += '{}\n'.format(' '.join(line[1:]))
                 elif line[0] == 'KEY':
@@ -265,5 +266,5 @@ class NPC():
 
 materialvalue = {
                 'wood':10, 'stone':15, 'metal': 20, 'gold':30, 'flesh':-30,
-                'bone':-20, 'meat':-10, 'evil':-5, 'cursed':-50
+                'bone':-20, 'meat':-10, 'evil':-5, 'cursed':-50, 'cat':0
                 }
