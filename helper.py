@@ -116,9 +116,12 @@ def writemaps():
                 fileout.write('INTER, GROUND, {}, {}, {}, {}\n'.format(x, y, name, composition))
 
             elif answer == 'npc':
-                x, y = input('x y:')
+                x, y = input('x y: ').split()
                 npc = input('Filename: ')
                 fileout.write('NPC, {}, {}, {}\n'.format(x, y, npc))
 
             else:
                 break
+
+if __name__ == '__main__':
+    writemaps()
