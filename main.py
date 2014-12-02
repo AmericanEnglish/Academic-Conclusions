@@ -10,10 +10,8 @@ from maps import *
 #                 (0,1): [[],[]]
 #                 }
 #             )
-materialvalue = {
-                'wood':10, 'stone':15, 'metal': 20, 'gold':30, 'flesh':-30,
-                'bone':-20, 'meat':-10, 'evil':-5, 'cursed':-50
-                }
+
+
 map1 = Mapp('testmap')
 
 def maploop(currentmap):
@@ -49,13 +47,13 @@ def maploop(currentmap):
                     print('at all. Quickly there is no time, head back from whence you came.\n')
             elif protag.pos[1] > currentmap.y or protag.pos[1] < 0:
                 # Provides a warning if the map is left
-                if protag.pos[1] == currentmap.y + 1 or protag.pos[1] == -1:
+                if protag.pos[1] > currentmap.y + 1 or protag.pos[1] < -1:
+                    print('You were eaten by cannibals')
+                    return True
+                elif protag.pos[1] == currentmap.y + 1 or protag.pos[1] == -1:
                     print('You have left the saftey of the {}, move farther and you might not move'.format(
                                                         currentmap.name))
                     print('at all. Quickly there is not time, move back from whence you came.\n')
-                elif protag.pos[1] > currentmap.y + 1 or protag.pos[1] < -1:
-                    print('You were eaten by cannibals')
-                    return True
         
         elif action[0] == 'pack':
             protag.pack_view()
@@ -81,7 +79,6 @@ def maploop(currentmap):
                     break
             # if item is neither a door or room, search's player's person
             protag.examine(action[1])
-            print('')
 
         
         elif action[0] == 'enter' and len(action) > 1:
@@ -114,7 +111,7 @@ def maploop(currentmap):
                     print('{}'.format(item.name))
                 print('')
 
-        elif action[0] == 'pickup':
+        elif action[0] == 'pickup' and len(action) == 2:
             for item in currentmap.check(protag.pos)[1]:
                 if action[1] == item.name.lower():
                     # this will be put into the Player methods later
@@ -296,7 +293,7 @@ def score(protag):
         score += materialvalue[item.madeof]
     for item in protag.pack:
         score += materialvalue[item.score]
-    return score
+    return score + player.score
 
 if __name__ == '__main__':
     print('')
