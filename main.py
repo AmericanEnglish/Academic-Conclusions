@@ -1,16 +1,7 @@
 from player import *
 from maps import *
-
-# map1 = Mapp('Small Town',
-#                 {(0,0): [[
-#                             Room('A Room',
-#                                 [[Table('Garbage Table', 'wood', [Sword('Meow Blade')])],
-#                                 [Sword('Plain')]],
-#                                  Door('Room Door', False, 'wood')), NPC('Mother', 'mother.char', 'Cooler Sword')],[Sword('Cooler Sword')]],
-#                 (0,1): [[],[]]
-#                 }
-#             )
-
+from time import perf_counter
+from helper import helpcom
 
 map1 = Mapp('testmap')
 
@@ -36,7 +27,7 @@ def maploop(currentmap):
         
         elif action[0] == 'm':
             protag.move(action[1])
-            if protag.pos[0] > currentmap.x or protag.pos[0] < -1:
+            if protag.pos[0] > currentmap.x or protag.pos[0] < 0:
                 # Provides a warning if the map is left
                 if protag.pos[0] > currentmap.x + 1 or protag.pos[0] < -1:
                     print('You were eaten by wolves')
@@ -53,7 +44,7 @@ def maploop(currentmap):
                 elif protag.pos[1] == currentmap.y + 1 or protag.pos[1] == -1:
                     print('You have left the saftey of the {}, move farther and you might not move'.format(
                                                         currentmap.name))
-                    print('at all. Quickly there is not time, move back from whence you came.\n')
+                    print('at all. Quickly there is no time, move back from whence you came.\n')
         
         elif action[0] == 'pack':
             protag.pack_view()
@@ -97,11 +88,16 @@ def maploop(currentmap):
             print(">You're already outside!<\n")
 
         elif action[0] == 'look':
-            print('>Around you see<')
-            for item in currentmap.check(protag.pos)[0]:
-                print(item.name)
-            print('')
-        
+            if protag.pos[0] < currentmap.x + 1 and protag.pos[0] >= 0:
+                if protag.pos[1] < currentmap.y + 1 and protag.pos[1] >= 0:
+                    print('>Around you see<')
+                    for item in currentmap.check(protag.pos)[0]:
+                        print(item.name)
+                    print('')
+            else:
+                print('You took to long and were eaten by wolves AND cannibals')
+                return True
+            
         elif action[0] == 'ground':
             if currentmap.check(protag.pos)[1] == []:
                 print('>There is nothing on the ground<\n')
@@ -113,11 +109,14 @@ def maploop(currentmap):
 
         elif action[0] == 'pickup' and len(action) == 2:
             for item in currentmap.check(protag.pos)[1]:
-                if action[1] == item.name.lower():
-                    # this will be put into the Player methods later
+                if action[1] == item.name.lower() and len(protag.person) < 5:
+                    # this will be put into the Player methods later, maybe
                     protag.person.append(item)
                     currentmap.check(protag.pos)[1].remove(item)
                     print('You picked up {}\n'.format(item.name))
+                elif len(protag.person) >= 5:
+                    print('You fumble the {} and it falls back on the ground.'.format(item.name))
+                    print('It would seem you are carrying too much in your hands to hold anymore.')
 
         elif action[0] == 'drop':
             for item in protag.person:
@@ -148,9 +147,27 @@ def maploop(currentmap):
                         somevar -= 1
                         print('<>{}:\n{}'.format(item.name, item.talk(protag)))
                 if somevar == len(currentmap.check(protag.pos)[0]):
-                    print('')
+                    print('Not a valid command, type help for help\n')
+        
+        elif action[0] == 'take':
+            # take requires a second marker called from. This requiers action
+            # to be reconfigured
+            if 'from' in action:
+                action = ' '.join(action).split()
+                action = [action[0],
+                        ' '.join(action[1:action.index('from')]),
+                        ' '.join(action[action.index('from') + 1:])]
+                for item in currentmap.contents[protag.pos][0]:
+                    if action[2] == item.name.lower():
+                        # will be added as table/object method later
+                        for thing in item.contents:
+                            if thing.name.lower() == action[1]:
+                                protag.person.append(thing)
+                                item.contents.remove(thing)
+                                print('You took {} from {}'.format(thing.name, item.name))
         else:
             print('Not a valid command, type help for help\n')
+    main(protag)
 
 def roomloop(protag, currentroom):
     """(Player, Room) -> None
@@ -274,6 +291,7 @@ def roomloop(protag, currentroom):
             print('Not a valid command, type help for help\n')
 
 
+
 def main(protag):
     protag.map = map1
     protag.pos = protag.map.start
@@ -293,15 +311,21 @@ def score(protag):
         score += materialvalue[item.madeof]
     for item in protag.pack:
         score += materialvalue[item.score]
-    return score + player.score
+    return score + protag.score
 
 if __name__ == '__main__':
     print('')
     with open('intro', 'r') as intro:
-        print(intro.read())
+        print(intro.readline().strip())
+        for line in intro:
+            t1 = perf_counter()
+            t2 = t1 
+            while t2 - t1 < 2:
+                t2 = perf_counter()
+            print(line, end='')    
     choice = 'No'
     while choice.lower()[0] != 'y':
-        name = input('What shall you be called? *')
+        name = input(' Can you at least tell me your name before I go? ')
         choice = input('*{}*\nAre you sure? (y/n): '.format(name))
 
     protag = Player(name, (0, 0))
