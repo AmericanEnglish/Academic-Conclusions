@@ -1,0 +1,8 @@
+NAME Lola
+DIALOG Have you seen my cat? I thought I saw him near a grave somewhere . . .
+NEWTXT
+DIALOG Is that you mittens?
+GIVE teddy stone
+KEYITEM cat cat
+KEY
+ERHMAHGERD MITTENS! Don't ever run from me again, OR I'LL MURDER YOU LITTLE CAT!!!!
