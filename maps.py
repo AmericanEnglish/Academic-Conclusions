@@ -138,8 +138,7 @@ class Interactable:
         #self.num = num
 
     def examine(self):
-        print(self.name, self.madeof)
-        print("You examine the {}, it is made of {}".format(self.name, self.madeof))
+        print("You examine the {}, it is made of {}\n".format(self.name, self.madeof))
 
     def __str__(self):
         return '{} {}'.format(self.madeof, self.name)
@@ -215,6 +214,7 @@ class NPC():
         temp = ''
         key = False
         self.convo = 0
+        self.give = None
         # dissects character's dialogue file
         with open(dialogfile, 'r') as scrapfile:
             for line in scrapfile:
@@ -225,9 +225,10 @@ class NPC():
                     self.dialog.append(temp)
                     temp = ''
                 elif line[0] == 'GIVE':
-                    self.give.append(Interactable(line[1], line[2]))
+                    self.give = Interactable(line[1], line[2])
                 elif line[0] == 'KEYITEM':
                     self.keyitem = ' '.join(line[1:])
+                    print(self.keyitem)
                 elif line[0] == 'DIALOG':
                     temp += '{}\n'.format(' '.join(line[1:]))
                 elif line[0] == 'KEY':
@@ -241,12 +242,13 @@ class NPC():
         # if NPC has key item checks player's person, display new dialogue
         if self.keyitem != None:
             for item in protag.person:
-                if item.name.lower() == self.keyitem.lower():
+                if str(item).lower() == self.keyitem.lower():
                     protag.person.remove(item)
                     self.dialog = ['Thank you {} for your help\n'.format(protag.name)]
-                    progtag.gold += 10
+                    protag.score += materialvalue[item.madeof] + 10
                     if self.give != None:
-                        protag.append(self.give)
+                        protag.person.append(self.give)
+                        print("You've obtained a {}".format(str(self.give)))
                     return self.keyconvo
         # if player has item in question they are thanked and no additional
         # dialogue needed
@@ -257,3 +259,11 @@ class NPC():
             self.convo += 1
             return self.dialog[self.convo - 1]
         return self.dialog[self.convo]
+
+    def examine(self):
+        print('They step away from you leery of your intentions')
+
+materialvalue = {
+                'wood':10, 'stone':15, 'metal': 20, 'gold':30, 'flesh':-30,
+                'bone':-20, 'meat':-10, 'evil':-5, 'cursed':-50
+                }
