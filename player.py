@@ -8,7 +8,7 @@ class Player:
         self.pos = coords
         self.map = None
         self.room = None
-        self.gold = 0
+        self.score = 0
         self.totalmoves = 0
 
     def move(self, motion):
@@ -40,7 +40,7 @@ class Player:
             self.pos = x, y
             print('You have moved {}\n'.format(motion))
         else:
-            print('')
+            print('Not a valid command, type help for help')
 
     def pull(self, thing):
         """(str) -> Obj
@@ -81,7 +81,7 @@ class Player:
             print('>Pack is empty<')
         #self.pack.sort()
         for item in self.pack:
-            print('{}'.format(item.name))
+            print('{}'.format(str(item).title()))
         print('')
 
     def person_view(self):
@@ -89,10 +89,15 @@ class Player:
         if self.person == []:
             print('>You have nothing on you<')
         for item in self.person:
-            print('{}'.format(item.name))
+            print('{}'.format(str(item).title()))
         print('')
 
     def examine(self, thing):
+        tracking = 0
         for item in self.person:
             if item.name.lower() == thing:
                 item.examine()
+            else:
+                tracking += 1
+        if tracking == len(self.person):
+            print('Not a valid command, type help for help')
