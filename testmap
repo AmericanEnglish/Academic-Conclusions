@@ -1,7 +1,0 @@
-NAME, test map
-DIMX, 0, 2
-DIMY, 0, 2
-START, 0, 0
-
-ROOM, 0, 0, Crypt, Crypt Door, 1, stone
-INTER, GROUND, 0, 0, key, stone
