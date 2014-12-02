@@ -123,5 +123,12 @@ def writemaps():
             else:
                 break
 
+def helpcom(string):
+    with open('commandhelp', 'r') as helpfile:
+        for line in helpfile:
+            line = line.split('=').strip()
+
+            if line[0] == string:
+                print("{}: {}".format(line[0], line[1]))
 if __name__ == '__main__':
     writemaps()
