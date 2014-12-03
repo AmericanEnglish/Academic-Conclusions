@@ -115,6 +115,8 @@ class Mapp:
         map to another using the enter function in the main.py"""
         self.contents[coordinates][0].append(somemap)
 
+    def examine(self):
+        print('You see a path leading to a {}'.format(self.name))
 
 class Room:
     def __init__(self, name, contents, door):
