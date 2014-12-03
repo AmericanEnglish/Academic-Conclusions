@@ -165,6 +165,10 @@ def maploop(currentmap):
                                 protag.person.append(thing)
                                 item.contents.remove(thing)
                                 print('You took {} from {}'.format(thing.name, item.name))
+        
+        elif action[0] == 'help' and len(action) == 2:
+            helpcom(action[1])
+        
         else:
             print('Not a valid command, type help for help\n')
     main(protag)
@@ -286,6 +290,9 @@ def roomloop(protag, currentroom):
                         print('<>{}:\n{}'.format(item.name, item.talk(protag)))
                 if somevar == len(currentroom.contents[0]):
                     print('')
+
+        elif action[0] == 'help' and len(action) == 2:
+            helpcom(action[1])
         
         else:
             print('Not a valid command, type help for help\n')
