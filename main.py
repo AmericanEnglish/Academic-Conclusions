@@ -56,7 +56,11 @@ def maploop(currentmap):
             protag.put(action[1])
         
         elif action[0] == 'pull':
-            protag.pull(action[1])
+            if len(protag.person) < 5:
+                protag.pull(action[1])
+            else:
+                print("As you try to pull {} from your pack, you can't seem to grab it")
+                print("perhaps you should put items into your pack first. Free up those hands")
         
         elif action[0] == 'examine' and len(action) == 2:
             # check to make sure item / room / door in question is in the area
@@ -82,6 +86,7 @@ def maploop(currentmap):
                 elif action[1] == item.name.lower() and isinstance(item, Mapp):
                     inmap = False
                     protag.map = item
+                    protag.pos = item.start
             print('')
 
         elif action[0] == 'exit':
@@ -114,7 +119,7 @@ def maploop(currentmap):
                     protag.person.append(item)
                     currentmap.check(protag.pos)[1].remove(item)
                     print('You picked up {}\n'.format(item.name))
-                elif len(protag.person) >= 5:
+                elif action[1] == item.name.lower() and len(protag.person) >= 5:
                     print('You fumble the {} and it falls back on the ground.'.format(item.name))
                     print('It would seem you are carrying too much in your hands to hold anymore.')
 
@@ -336,7 +341,7 @@ if __name__ == '__main__':
     choice = 'No'
     while choice.lower()[0] != 'y':
         name = input(' Can you at least tell me your name before I go? ')
-        choice = input('*{}*\nAre you sure? (y/n): '.format(name))
+        choice = input("""*{}*\nAre you sure? (y/n): """.format(name))
 
-    protag = Player(name, (0, 0))
+    protag = Player(name, map0.start)
     main(protag)

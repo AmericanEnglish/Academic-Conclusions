@@ -82,7 +82,7 @@ def writemaps():
                 fodder = input('{} Contents? (y/n): '.format(name))
                 if fodder == 'y':
                     while True:
-                        objtype = input('CONT, INTER, NPC: ')
+                        objtype = input('CONT, INTER, NPC: ').lower()
                         if objtype == 'cont':
                             contname = input('Container name: ')
                             composition = input('Composition: ')
@@ -124,7 +124,7 @@ def writemaps():
                 break
 
 def helpcom(string):
-    with open('commandhelp', 'r') as helpfile:
+    with open('help', 'r') as helpfile:
         for line in helpfile:
             line = line.split('=').strip()
 

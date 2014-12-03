@@ -1,0 +1,7 @@
+NAME, Small Town
+DIMX, 0, 0
+DIMY, 0, 2
+START, 0, 1
+
+ROOM, 0, 2, Cabin, Cabin Door, 1, wood
+RNPC, 0, 2, chars/oracle, Cabin
