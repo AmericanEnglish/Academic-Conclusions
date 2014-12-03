@@ -129,7 +129,7 @@ def helpcom(string):
             line = line.split('=').strip()
 
             if line[0] == string:
-                print("{}: {}".format(line[0], line[1]))
+                print("{}: {}\n".format(line[0], line[1]))
             else:
                 print('Command not found\n')
 if __name__ == '__main__':
