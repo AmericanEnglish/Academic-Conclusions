@@ -1,3 +1,5 @@
+from main.py import score
+
 class Mapp:
     def __init__(self, filename):
             #contents is a dict of tuple: list objects
@@ -244,6 +246,16 @@ class NPC():
 
     def talk(self, protag):
         # if NPC has key item checks player's person, display new dialogue
+        if self.keyitem == 'glass key':
+            for item in protag.person:
+                if str(item).lower() == self.keyitem.lower():
+                    protag.person.append(self.give)
+                    print("You've obtained a {}".format(self.give))
+                    print(self.keyconvo)
+                    print(score(protag))
+                    print('Run game again to play.')
+                    exit()
+        
         if self.keyitem != None:
             for item in protag.person:
                 if str(item).lower() == self.keyitem.lower():
