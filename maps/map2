@@ -1,0 +1,24 @@
+NAME, Crypt
+DIMX, 0, 2
+DIMY, 0, 2
+START, 1, 1
+
+NPC, 1, 1, chars/crazylady
+
+CONT, 0, 0, Chest, wood
+ROOM, 0, 2, Crypt Room, Room Door, y, steel, steel key 2
+# Key location, Mutable
+INTER, GROUND, 1, 0, key 2, steel
+INSI, Crypt Room, CONT, 0, 2, Barrel, bone
+SPEC, Crypt Room, Barrel, INTER, 0, 2, skull, bone
+SPEC, Crypt Room, Barrel, INTER, 0, 2, arm, bone
+SPEC, Crypt Room, Barrel, INTER, 0, 2, leg, bone
+SPEC, Crypt Room, Barrel, INTER, 0, 2, pelvic bone, bone
+INSI, Crypt Room, INTER, 0, 2, Coin, gold
+INSI, Crypt Room, INTER, 0, 2, Chisel, wood
+ROOM, 2, 1, Cursed Room, Cursed Door, y, curse, curse key 3
+# Key location, Mutable
+INTER, GROUND, 2, 2, key 3, curse
+INSI, Cursed Room, INTER, 2, 1, Necklace, curse
+INSI, Cursed Room, INTER, 2, 1, flask, curse
+INSI, Cursed Room, INTER, 2, 1, shoe, glass

@@ -269,6 +269,6 @@ class NPC():
 
 materialvalue = {
                 'wood':10, 'stone':15, 'metal': 20, 'gold':30, 'flesh':-30,
-                'bone':-20, 'meat':-10, 'evil':-5, 'cursed':-50, 'cat':0,
-                'paper': 40, 'glass': 20, 'platinum': 100
+                'bone':-20, 'meat':-10, 'evil':-5, 'curse':-50, 'cat':0,
+                'paper': 40, 'glass': 20, 'platinum': 100, 'cursed':-50
                 }

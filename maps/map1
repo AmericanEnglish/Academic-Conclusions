@@ -3,9 +3,9 @@ DIMX, 0, 2
 DIMY, 0, 2
 START, 2, 0
 
-ROOM, 0, 0, Crypt, Crypt Door, y, stone, stone key
+ROOM, 0, 0, Crypt, Crypt Door, y, stone, stone key 1
 # Key location, Mutable
-INTER, GROUND, 0, 2, key, stone
+INTER, GROUND, 0, 2, key 1, stone
 INSI, Crypt, CONT, 0, 0, Urn, stone
 SPEC, Crypt, Urn, INTER, 0, 0, skull, bone
 SPEC, Crypt, Urn, INTER, 0, 0, hand, bone
