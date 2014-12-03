@@ -1,11 +1,16 @@
-NAME Lolknoob
-DIMX 0 1
-DIMY 0 1
-START 0 0
+NAME, Graveyard
+DIMX, 0, 2
+DIMY, 0, 2
+START, 2, 0
 
-ROOM 0 0 Sample_Room Door_name 1 wood
-NPC 0 0 mother.char
-RNPC 0 0 mother.char Sample_Room
-
-INSI Sample_Room CONT 0 0 Table_Old wood
-SPEC Sample_Room Table_Old INTER 0 0 Sword wood
+ROOM, 0, 0, Crypt, Crypt Door, y, stone, stone key
+# Key location, Mutable
+INTER, GROUND, 0, 2, key, stone
+INSI, Crypt, CONT, 0, 0, Urn, stone
+SPEC, Crypt, Urn, INTER, 0, 0, skull, bone
+SPEC, Crypt, Urn, INTER, 0, 0, hand, bone
+INSI, Crypt, INTER, 0, 0, cat, cat
+NPC, 2, 1, chars/mourner
+CONT, 0, 1, Grave, stone
+INSI, Grave, INTER, 0, 1, bone, bone
+NPC, 1, 0, chars/oldman

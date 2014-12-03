@@ -100,4 +100,4 @@ class Player:
             else:
                 tracking += 1
         if tracking == len(self.person):
-            print('Not a valid command, type help for help')
+            print('')

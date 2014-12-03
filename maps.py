@@ -183,7 +183,7 @@ class Container(Interactable):
         if self.contents == []:
             print('{} is made of {} and is empty'.format(self.name, self.madeof))
         else:
-            print('>On the {} {} is<'.format(self.madeof, self.name))
+            print('>Contents of the {} {} are<'.format(self.madeof, self.name))
             for item in self.contents:
                 print('{}'.format(item.name))
 
@@ -217,6 +217,7 @@ class NPC():
         key = False
         self.convo = 0
         self.give = None
+        self.keyitem = None
         # dissects character's dialogue file
         with open(dialogfile, 'r') as scrapfile:
             for line in scrapfile:

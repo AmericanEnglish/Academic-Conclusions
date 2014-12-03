@@ -126,11 +126,10 @@ def writemaps():
 def helpcom(string):
     with open('help', 'r') as helpfile:
         for line in helpfile:
-            line = line.split('=').strip()
+            line = line.strip().split('=')
 
             if line[0] == string:
-                print("{}: {}\n".format(line[0], line[1]))
-            else:
-                print('Command not found\n')
+                return "{}: {}\n".format(line[0], line[1])
+        return 'Command not found\n'
 if __name__ == '__main__':
     writemaps()

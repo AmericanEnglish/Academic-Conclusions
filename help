@@ -1,4 +1,4 @@
-m=This function only works outside of rooms, typing this inside of a room while result in an invalid command. You can move North, East, South, and West. Example command: [m north] or [m NORTH]
+m=This function only works outside of rooms, typing this inside of a room while \nresult in an invalid command. You can move North, East, South, and West. \nExample command: [m north] or [m NORTH]
 pack=This action checks your backpack. Your backpack has no capacity
 help=This displays the help ... You should know better
 me=This displays the contents of what your holding in your hands. NPCs won't check your pack but they can definitely spot what your holding

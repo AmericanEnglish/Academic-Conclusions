@@ -4,6 +4,9 @@ from time import perf_counter
 from helper import helpcom
 
 map0 = Mapp('maps/map0')
+map1 = Mapp('maps/map1')
+map0.link(map1, (0, 0))
+map1.link(map0, (2, 0))
 
 def maploop(currentmap):
     """(Mapp) -> None
@@ -175,11 +178,11 @@ def maploop(currentmap):
                                 print('You took {} from {}'.format(thing.name, item.name))
         
         elif action[0] == 'help' and len(action) == 2:
-            helpcom(action[1])
+            print(helpcom(action[1]))
         
         else:
             print('Not a valid command, type help for help\n')
-    main(protag)
+    main(protag, protag.map)
 
 def roomloop(protag, currentroom):
     """(Player, Room) -> None
@@ -300,7 +303,7 @@ def roomloop(protag, currentroom):
                     print('')
 
         elif action[0] == 'help' and len(action) == 2:
-            helpcom(action[1])
+            print(helpcom(action[1]))
         
         else:
             print('Not a valid command, type help for help\n')
