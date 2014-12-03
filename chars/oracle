@@ -3,10 +3,10 @@ DIALOG Hello there, you look familiar, do I know you? . . . Not much a talker
 DIALOG I see. Either way you look like you might need some help. Now on a normal
 DIALOG day I might just give you some money and tell you to do it in the faith of
 DIALOG the lord but I have no time. I'll give you one hundred gold if you retrieve
-DIALOG and item for me. I need a small glass like key from the graveyard. Fetch it.
+DIALOG an item for me. I need a small glass-like key from the graveyard. Fetch it.
 NEWTXT
 DIALOG I'm a clergy I can't just go robbing graves! I'm pretty sure it's on the 3rd
-DIALOG floor or something. Just grab it an hurry back, time is of the essence.
+DIALOG floor or something. Just grab it and hurry back, time is of the essence.
 GIVE coin platinum
 KEYITEM glass key
 KEY

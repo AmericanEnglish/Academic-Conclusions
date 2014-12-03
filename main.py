@@ -3,7 +3,7 @@ from maps import *
 from time import perf_counter
 from helper import helpcom
 
-map1 = Mapp('testmap')
+map0 = Mapp('maps/map0')
 
 def maploop(currentmap):
     """(Mapp) -> None
@@ -99,6 +99,9 @@ def maploop(currentmap):
                     for item in currentmap.check(protag.pos)[0]:
                         print(item.name)
                     print('')
+                else:
+                    print('You took to long and were eaten by wolves AND cannibals')
+                    return True
             else:
                 print('You took to long and were eaten by wolves AND cannibals')
                 return True
@@ -304,8 +307,8 @@ def roomloop(protag, currentroom):
 
 
 
-def main(protag):
-    protag.map = map1
+def main(protag, startingmap):
+    protag.map = startingmap
     protag.pos = protag.map.start
     death = False
     while death != True:
@@ -313,7 +316,7 @@ def main(protag):
     print('----Score: {}----\n'.format(score(protag)))
     answer = input('Try again?: ')
     if answer[0].lower() == 'y':
-        main(protag)
+        main(protag, map0)
     else:
         print('Better luck next time!')
 
@@ -330,18 +333,18 @@ def score(protag):
 
 if __name__ == '__main__':
     print('')
-    with open('intro', 'r') as intro:
-        print(intro.readline().strip())
-        for line in intro:
-            t1 = perf_counter()
-            t2 = t1 
-            while t2 - t1 < 2:
-                t2 = perf_counter()
-            print(line, end='')    
+    # with open('intro', 'r') as intro:
+    #     print(intro.readline().strip())
+    #     for line in intro:
+    #         t1 = perf_counter()
+    #         t2 = t1 
+    #         while t2 - t1 < 2:
+    #             t2 = perf_counter()
+    #         print(line, end='')    
     choice = 'No'
     while choice.lower()[0] != 'y':
         name = input(' Can you at least tell me your name before I go? ')
         choice = input("""*{}*\nAre you sure? (y/n): """.format(name))
 
     protag = Player(name, map0.start)
-    main(protag)
+    main(protag, map0)
