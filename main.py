@@ -6,11 +6,13 @@ from helper import helpcom
 map0 = Mapp('maps/map0')
 map1 = Mapp('maps/map1')
 map2 = Mapp('maps/map2')
+map3 = Mapp('maps/map3')
 map0.link(map1, (0, 0))
 map1.link(map0, (2, 0))
 map1.link(map2, (2, 2))
 map2.link(map1, (1, 0))
-
+map2.link(map3, (1, 2))
+map3.link(map2, (0, 0))
 
 def maploop(currentmap):
     """(Mapp) -> None
