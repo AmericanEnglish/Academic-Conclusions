@@ -308,9 +308,12 @@ def main(protag):
 def score(protag):
     score = 0
     for item in protag.person:
+        print('{}: {}'.format(str(item), materialvalue[item.madeof]))
         score += materialvalue[item.madeof]
     for item in protag.pack:
+        print('{}: {}'.format(str(item), materialvalue[item.madeof]))
         score += materialvalue[item.score]
+    print('Goodness Points: {}'.format(protag.score))
     return score + protag.score
 
 if __name__ == '__main__':

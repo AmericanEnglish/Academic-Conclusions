@@ -130,5 +130,7 @@ def helpcom(string):
 
             if line[0] == string:
                 print("{}: {}".format(line[0], line[1]))
+            else:
+                print('Command not found\n')
 if __name__ == '__main__':
     writemaps()
