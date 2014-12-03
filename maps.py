@@ -246,7 +246,7 @@ class NPC():
 
     def talk(self, protag):
         # if NPC has key item checks player's person, display new dialogue
-        if self.keyitem == 'glass key':
+        if self.keyitem == 'glass key 5':
             for item in protag.person:
                 if str(item).lower() == self.keyitem.lower():
                     protag.person.append(self.give)

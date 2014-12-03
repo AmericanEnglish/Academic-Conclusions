@@ -8,6 +8,6 @@ NEWTXT
 DIALOG I'm a clergy I can't just go robbing graves! I'm pretty sure it's on the 3rd
 DIALOG floor or something. Just grab it and hurry back, time is of the essence.
 GIVE coin platinum
-KEYITEM glass key
+KEYITEM glass key 5
 KEY
 Aaaaaah yes, this is the key I was looking for. You have your money, now make haste from my presence.
