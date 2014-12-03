@@ -1,0 +1,9 @@
+NAME Upset Woman
+DIALOG Have you seen my son? He went into the crypt earlier to look for food
+DIALOG he hasn't come back in a while i'm upset something might have happened
+NEWTXT
+DIALOG No matter what I need my son back, I think he lost his teddy, if you
+DIALOG find it give it to him for me.
+KEYITEM paper note
+KEY
+You found him! I'm just glad he's ok, the note said he'll be out in a minute
