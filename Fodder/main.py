@@ -1,3 +1,4 @@
+import psycopg2
 from player import *
 from maps import *
 from time import perf_counter

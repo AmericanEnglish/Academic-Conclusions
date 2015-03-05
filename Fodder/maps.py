@@ -1,3 +1,5 @@
+import psycopg2
+
 class Mapp:
     def __init__(self, filename):
             #contents is a dict of tuple: list objects
