@@ -2,6 +2,8 @@ from player import *
 from maps import *
 from time import perf_counter
 from helper import helpcom
+from introduction import *
+
 
 map0 = Mapp('maps/map0')
 map1 = Mapp('maps/map1')
@@ -348,19 +350,6 @@ materialvalue = {
                 }
 
 if __name__ == '__main__':
-    print('')
-    with open('intro', 'r') as intro:
-        print(intro.readline().strip())
-        for line in intro:
-            t1 = perf_counter()
-            t2 = t1 
-            while t2 - t1 < 2:
-                t2 = perf_counter()
-            print(line, end='')    
-    choice = 'No'
-    while choice.lower()[0] != 'y':
-        name = input(' Can you at least tell me your name before I go? ')
-        choice = input("""*{}*\nAre you sure? (y/n): """.format(name))
-
+    name = introduction()
     protag = Player(name, map0.start)
     main(protag, map0)
