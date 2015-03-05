@@ -1,4 +1,3 @@
-from main.py import score
 
 class Mapp:
     def __init__(self, filename):
