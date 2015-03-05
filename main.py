@@ -109,10 +109,10 @@ def maploop(currentmap):
                         print(item.name)
                     print('')
                 else:
-                    print('You took to long and were eaten by wolves AND cannibals')
+                    print('You took too long and were eaten by wolves AND cannibals')
                     return True
             else:
-                print('You took to long and were eaten by wolves AND cannibals')
+                print('You took too long and were eaten by wolves AND cannibals')
                 return True
             
         elif action[0] == 'ground':
@@ -339,6 +339,13 @@ def score(protag):
         score += materialvalue[item.score]
     print('Goodness Points: {}'.format(protag.score))
     return score + protag.score
+
+materialvalue = {
+                'wood':10, 'stone':15, 'metal': 20, 'gold':30, 'flesh':-30,
+                'bone':-20, 'meat':-10, 'evil':-5, 'curse':-50, 'cat':0,
+                'paper': 40, 'glass': 20, 'platinum': 100, 'cursed':-50,
+                'cloth':15
+                }
 
 if __name__ == '__main__':
     print('')
