@@ -5,6 +5,17 @@ from time import perf_counter
 from helper import helpcom
 from introduction import *
 
+#for home use
+con = psycopg2.connect(host='120.0.0.1', database='localhost', user='postgres', password='password')
+
+#for class use
+#con = psycopg2.connect(host='120.0.0.1', database='cs350', user='student', password='student')
+cursor = con.cursor()
+try:
+    with open('data/tables.sql', 'r') as execution:
+        cur.execute(execution.read())
+except:
+    print('Database Exists: Begin')
 
 map0 = Mapp('maps/map0')
 map1 = Mapp('maps/map1')
