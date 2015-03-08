@@ -6,7 +6,7 @@ from helper import helpcom
 from introduction import *
 
 #for home use
-con = psycopg2.connect(host='120.0.0.1', database='localhost', user='postgres', password='password')
+con = psycopg2.connect(host='120.0.0.1', database='postgres', user='postgres', password='password')
 
 #for class use
 #con = psycopg2.connect(host='120.0.0.1', database='cs350', user='student', password='student')
@@ -17,16 +17,9 @@ try:
 except:
     print('Database Exists: Begin')
 
-map0 = Mapp('maps/map0')
-map1 = Mapp('maps/map1')
-map2 = Mapp('maps/map2')
-map3 = Mapp('maps/map3')
-map0.link(map1, (0, 0))
-map1.link(map0, (2, 0))
-map1.link(map2, (2, 2))
-map2.link(map1, (1, 0))
-map2.link(map3, (1, 2))
-map3.link(map2, (0, 0))
+cur.close()
+maps = Mapp(con)
+
 
 def maploop(currentmap):
     """(Mapp) -> None
