@@ -12,7 +12,7 @@ con = psycopg2.connect(host='120.0.0.1', database='postgres', user='postgres', p
 #for class use
 #con = psycopg2.connect(host='120.0.0.1', database='cs350', user='student', password='student')
 cursor = con.cursor()
-if 'donotdelete' in listdir():
+if 'donotdelete' in listdir('.'):
     with open('donotdelete', 'a+') as test:
         fod = test.read()
         if 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' in fod:
