@@ -25,14 +25,15 @@ if 'donotdelete' in listdir('.'):
         elif 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' not in fod:
             with open('data/tables.sql', 'r') as execution:
                 cur.execute(execution.read())
-            test.append('\nR28gZ28gcG93ZXIgcmFuZ2Vycw==')
+            test.write('\nR28gZ28gcG93ZXIgcmFuZ2Vycw==')
 else:
     print('Creating database . . .')
     with open('data/tables.sql', 'r') as execution:
         cur.execute(execution.read())
+    with open('donotdelete', 'w') as test:
+        test.write('R28gZ28gcG93ZXIgcmFuZ2Vycw==\n')
 
 
-cur.close()
 maps = Mapp(con)
 
 
