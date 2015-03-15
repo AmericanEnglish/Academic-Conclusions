@@ -12,17 +12,25 @@ con = psycopg2.connect(host='120.0.0.1', database='postgres', user='postgres', p
 #for class use
 #con = psycopg2.connect(host='120.0.0.1', database='cs350', user='student', password='student')
 cursor = con.cursor()
-if 'donotdelete' not in listdir():
+if 'donotdelete' in listdir():
     with open('donotdelete', 'a+') as test:
-        if 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' in test.read():
-            test.seek(0)
-            pass
-        elif 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' not in test.read():
+        fod = test.read()
+        if 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' in fod:
+            answer = input('Start a new game? (y/n)').lower()
+            if 'y' in answer :
+                with open('data/eraseall.sql') as nukedata:
+                    cur.execute(nukedata.read())
+                with open('data/tables.sql', 'r') as execution:
+                    cur.execute(execution.read())
+        elif 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' not in fod:
             with open('data/tables.sql', 'r') as execution:
                 cur.execute(execution.read())
             test.append('\nR28gZ28gcG93ZXIgcmFuZ2Vycw==')
 else:
-    print('Database Exists: Begin')
+    print('Creating database . . .')
+    with open('data/tables.sql', 'r') as execution:
+        cur.execute(execution.read())
+
 
 cur.close()
 maps = Mapp(con)
