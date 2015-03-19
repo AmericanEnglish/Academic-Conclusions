@@ -1,3 +1,4 @@
+from time import perf_counter
 def introduction():
     print('')
     with open('intro', 'r') as intro:

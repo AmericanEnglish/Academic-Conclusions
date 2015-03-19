@@ -324,7 +324,7 @@ def roomloop(protag, currentroom):
             else:
                 somevar = 0
                 for item in currentroom.contents[0]:
-                    somevar += 1
+                    somevar += perf_counter()
                     if isinstance(item, NPC):
                         somevar -= 1
                         print('<>{}:\n{}'.format(item.name, item.talk(protag)))
