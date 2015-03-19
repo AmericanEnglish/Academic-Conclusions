@@ -21,7 +21,7 @@ CREATE TABLE items
 	y INTEGER,
 	map INTEGER,
 	value MONEY,
-	PRIMARY KEY (name, id),
+	PRIMARY KEY (name, id, x, y),
 	UNIQUE (id)
 );
 
@@ -50,10 +50,6 @@ CREATE TABLE npc
 	PRIMARY KEY (name)
 );
 
-CREATE TABLE ground
-(
-	filler BOOLEAN,
-);
 -- DROP TABLE inventory;
 -- DROP TABLE pack;
 -- DROP TABLE items;
