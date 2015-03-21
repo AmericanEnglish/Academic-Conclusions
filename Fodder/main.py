@@ -7,7 +7,7 @@ from helper import helpcom
 from introduction import *
 
 #for home use
-con = psycopg2.connect(host='120.0.0.1', database='postgres', user='postgres', password='password')
+con = psycopg2.connect(host='120.0.0.1', database='cs350', user='postgres', password='password')
 
 #for class use
 #con = psycopg2.connect(host='120.0.0.1', database='cs350', user='student', password='student')
@@ -362,13 +362,6 @@ def score(protag):
         score += materialvalue[item.score]
     print('Goodness Points: {}'.format(protag.score))
     return score + protag.score
-
-materialvalue = {
-                'wood':10, 'stone':15, 'metal': 20, 'gold':30, 'flesh':-30,
-                'bone':-20, 'meat':-10, 'evil':-5, 'curse':-50, 'cat':0,
-                'paper': 40, 'glass': 20, 'platinum': 100, 'cursed':-50,
-                'cloth':15
-                }
 
 if __name__ == '__main__':
     name = introduction()
