@@ -31,8 +31,11 @@ Functions:
 - m
     - m *direction*
     - This function only works outside of rooms, typing this inside of a room while \nresult in an invalid command. You can move North, East, South, and West.
-- pack=This action checks your backpack. Your backpack has no capacity
-- me=This displays the contents of what your holding in your hands. NPCs won't check your pack but they can definitely spot what your holding
+- pack
+    - pack
+    - This action checks your backpack. Your backpack has no capacity
+- me
+    - This displays the contents of what your holding in your hands. NPCs won't check your pack but they can definitely spot what your holding
 - put
     - put *item*
     - Puts an item into your backpack.
