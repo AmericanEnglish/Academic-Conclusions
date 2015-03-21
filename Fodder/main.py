@@ -6,10 +6,7 @@ from time import perf_counter
 from helper import helpcom
 from introduction import *
 
-#for home use
 
-#for class use
-#con = psycopg2.connect(host='120.0.0.1', database='cs350', user='student', password='student')
 def startup():
     answer = input('Is this your first time running "Academic Conclusions"?\n(y/n):').lower()
     default = input('Use default server login?\n(y/n): ').lower()
@@ -32,7 +29,7 @@ def startup():
     except psycopg2.Error as problem:
         print(problem.diag.message_primary)
         return False
-        
+
     if answer[0] == 'y':
         with open('tables.sql') as tables:
             cur.execute(tables.read())
@@ -371,9 +368,11 @@ def score(protag):
 
 if __name__ == '__main__':
     if input('Do you have PostgreSQL 9.4.1 installed?').lower()[0] == 'y':    
-        name = introduction()
-        protag = Player(name, map0.start)
-        main(protag, map0)
+        ready = startup()
+        if ready:
+            name = introduction()
+            protag = Player(name, map0.start)
+            main(protag, map0)
     else:
         print('Please install PostgreSQL 9.4.1 or later')
         print('http://www.postgresql.org/download/')
