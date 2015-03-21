@@ -19,9 +19,9 @@ This program was coded in python3.4 and uses the following additional packages:
 
 ## Finally . . .
 To run the program simply:
-'''
+```
 $ python3.4 Academic-Conclusions/main.py
-'''
+```
 
 ### In-game Information
 Functions:
