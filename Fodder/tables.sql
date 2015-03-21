@@ -7,7 +7,6 @@ CREATE TABLE items
     y INTEGER,
     map INTEGER,
     description VARCHAR,
-    -- value MONEY,
     PRIMARY KEY (id)
     FOREIGN KEY (name)
         REFERENCES item_worth (name)
@@ -37,8 +36,9 @@ CREATE TABLE npcconditionals
 CREATE TABLE item_worth
 (
     name VARCHAR(20)
-    price MONEY
+    value MONEY
     PRIMARY KEY (name)
 );
--- DROP TABLE items;
--- DROP TABLE containers;
+
+--DROP TABLE containers;
+--DROP TABLE items;
