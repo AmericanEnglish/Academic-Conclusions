@@ -7,34 +7,48 @@ from helper import helpcom
 from introduction import *
 
 #for home use
-con = psycopg2.connect(host='120.0.0.1', database='cs350', user='postgres', password='password')
 
 #for class use
 #con = psycopg2.connect(host='120.0.0.1', database='cs350', user='student', password='student')
-cursor = con.cursor()
-if 'donotdelete' in listdir('.'):
-    with open('donotdelete', 'a+') as test:
-        fod = test.read()
-        if 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' in fod:
-            answer = input('Start a new game? (y/n)').lower()
-            if 'y' in answer :
-                with open('data/eraseall.sql') as nukedata:
-                    cur.execute(nukedata.read())
-                with open('data/tables.sql', 'r') as execution:
-                    cur.execute(execution.read())
-        elif 'R28gZ28gcG93ZXIgcmFuZ2Vycw==' not in fod:
-            with open('data/tables.sql', 'r') as execution:
-                cur.execute(execution.read())
-            test.write('\nR28gZ28gcG93ZXIgcmFuZ2Vycw==')
-else:
-    print('Creating database . . .')
-    with open('data/tables.sql', 'r') as execution:
-        cur.execute(execution.read())
-    with open('donotdelete', 'w') as test:
-        test.write('R28gZ28gcG93ZXIgcmFuZ2Vycw==\n')
+def startup():
+    answer = input('Is this your first time running "Academic Conclusions"?\n(y/n):').lower()
+    default = input('Use default server login?\n(y/n): ').lower()
+    if default[0] == 'n':
+        zhost = input('PostgreSQL Host IP: ')
+        zdatabase = input('PostgreSQL Database Name: ')
+        zuser = input('Username: ')
+        zpass = input('Password: ')
+    else:
+        zhost='120.0.0.1'
+        zdatabase='cs350'
+        zuser='student'
+        zpassword='student'
+    print('Connecting . . .')
+    
+    try:
+        con = psycopg2.connect(host=zhost, database=zdatabase, user=zuser, password=zpass)
+        cur = con.cursor()
+        print('Connnected! Ready for use!')
+    except psycopg2.Error as problem:
+        print(problem.diag.message_primary)
+        return False
+        
+    if answer[0] == 'y':
+        with open('tables.sql') as tables:
+            cur.execute(tables.read())
+            con.commit()
+        with open('data.sql') as data_to_use:
+            cur.execute(data_to_use.read())
+            con.commit()
+    
+    elif answer[0] == 'n':      
+        answer = input('New Game?\n(y/n): ').lower()
+        if answer == 'y':
+            with open('refresh.sql') as refresh:
+                cur.execute(refresh.read())
+                con.commit()
+    return True
 
-
-maps = Mapp(con)
 
 
 def maploop(currentmap):
@@ -356,6 +370,10 @@ def score(protag):
     pass
 
 if __name__ == '__main__':
-    name = introduction()
-    protag = Player(name, map0.start)
-    main(protag, map0)
+    if input('Do you have PostgreSQL 9.4.1 installed?').lower()[0] == 'y':    
+        name = introduction()
+        protag = Player(name, map0.start)
+        main(protag, map0)
+    else:
+        print('Please install PostgreSQL 9.4.1 or later')
+        print('http://www.postgresql.org/download/')
