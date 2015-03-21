@@ -54,7 +54,10 @@ CREATE TABLE npcs
     x INTEGER,
     y INTEGER,
     map VARCHAR(20),
+    room_id VARCHAR(20),
     PRIMARY KEY (name)
+    FOREIGN KEY (room_id)
+        REFERENCES containers (id)
 );
 
 CREATE TABLE item_worth
