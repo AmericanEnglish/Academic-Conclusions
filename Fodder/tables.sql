@@ -19,18 +19,42 @@ CREATE TABLE containers
     x INTEGER NOT NULL,
     y INTEGER NOT NULL,
     keys_item_id INTEGER,
-    map INTEGER, 
+    map INTEGER,
+--    room_id INTEGER
     PRIMARY KEY (id),
     FOREIGN KEY (keys_item_id)
         REFERENCES items (id)
+--  FOREIGN KEY (room_id)
+--      REFERENCES containers (id)
 );
+
+-- These tables will not be altered after initial insertion
 
 CREATE TABLE npcconditionals
 (
     npc_name VARCHAR(20),
     condition VARCHAR,
-    action VARCHAR,
+    action VARCHAR, --This is a python command such as protag.give(thing)
     PRIMARY KEY (npc_name, condition)
+);
+
+CREATE TABLE npc_dialogue
+(
+    npc_name VARCHAR(20),
+    counter INTEGER,
+    dialogue VARCHAR
+    PRIMARY KEY (npc_name, counter)
+    FOREIGN KEY (npc_name)
+        REFERENCES npcs (name)
+);
+
+CREATE TABLE npcs
+(
+    name VARCHAR(20),
+    x INTEGER,
+    y INTEGER,
+    map VARCHAR(20),
+    PRIMARY KEY (name)
 );
 
 CREATE TABLE item_worth
