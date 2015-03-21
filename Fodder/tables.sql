@@ -1,4 +1,3 @@
---Player's Personal Items
 CREATE TABLE items
 (
     id INTEGER NOT NULL,
