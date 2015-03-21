@@ -353,15 +353,8 @@ def roomloop(protag, currentroom):
 def main(protag, startingmap):
     protag.map = startingmap
     protag.pos = protag.map.start
-    death = False
-    while death != True:
-        death = maploop(protag.map)
-    print('----Score: {}----\n'.format(score(protag)))
-    answer = input('Try again?: ')
-    if answer[0].lower() == 'y':
-        main(protag, map0)
-    else:
-        print('Better luck next time!')
+    while protag.death != True:
+        maploop(protag.map)
 
 def score(protag):
     pass

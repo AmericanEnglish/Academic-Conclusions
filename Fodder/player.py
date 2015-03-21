@@ -10,7 +10,8 @@ class Player:
         self.room = None
         self.score = 0
         self.totalmoves = 0
-
+        self.death = False
+        
     def move(self, motion):
         """(str) -> None
 
