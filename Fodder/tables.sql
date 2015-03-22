@@ -6,7 +6,7 @@ CREATE TABLE items
     y INTEGER,
     map INTEGER,
     description VARCHAR,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
     FOREIGN KEY (name)
         REFERENCES item_worth (name)
 );
