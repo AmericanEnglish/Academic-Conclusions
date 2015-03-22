@@ -15,10 +15,10 @@ def startup():
         zuser = input('Username: ')
         zpass = input('Password: ')
     else:
-        zhost='120.0.0.1'
+        zhost='localhost'
         zdatabase='cs350'
         zuser='student'
-        zpassword='student'
+        zpass='student'
     print('Connecting . . .')
     
     try:
@@ -26,7 +26,7 @@ def startup():
         cur = con.cursor()
         print('Connnected! Ready for use!')
     except psycopg2.Error as problem:
-        print(problem.diag.message_primary)
+        print(problem)
         return False
 
     if answer[0] == 'y':
