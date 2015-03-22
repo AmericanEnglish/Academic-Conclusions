@@ -55,7 +55,7 @@ def maploop(currentmap):
     used and mutated in relation to the Mapp object and the commands that
     are input by the user."""
     inmap = True
-    while inmap:
+    while inmap and not protag.death:
         action = input('={}=> '.format(currentmap.name))
         action = action.lower().strip().split()
         if len(action) > 1:
@@ -69,24 +69,6 @@ def maploop(currentmap):
         
         elif action[0] == 'm':
             protag.move(action[1])
-            if protag.pos[0] > currentmap.x or protag.pos[0] < 0:
-                # Provides a warning if the map is left
-                if protag.pos[0] > currentmap.x + 1 or protag.pos[0] < -1:
-                    print('You were eaten by wolves')
-                    return True
-                elif protag.pos[0] == currentmap.x + 1 or protag.pos[0] == -1:
-                    print('You have left the saftey of the {}, move farther and you might not move'.format(
-                                                        currentmap.name))
-                    print('at all. Quickly there is no time, head back from whence you came.\n')
-            elif protag.pos[1] > currentmap.y or protag.pos[1] < 0:
-                # Provides a warning if the map is left
-                if protag.pos[1] > currentmap.y + 1 or protag.pos[1] < -1:
-                    print('You were eaten by cannibals')
-                    return True
-                elif protag.pos[1] == currentmap.y + 1 or protag.pos[1] == -1:
-                    print('You have left the saftey of the {}, move farther and you might not move'.format(
-                                                        currentmap.name))
-                    print('at all. Quickly there is no time, move back from whence you came.\n')
         
         elif action[0] == 'pack':
             protag.pack_view()
