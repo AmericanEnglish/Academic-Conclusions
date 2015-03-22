@@ -11,6 +11,7 @@ CREATE TABLE items
         REFERENCES item_worth (name)
 );
 
+-- These tables will not be altered after initial insertion
 CREATE TABLE containers
 ( 
     id INTEGER,
@@ -26,8 +27,6 @@ CREATE TABLE containers
 --  FOREIGN KEY (room_id)
 --      REFERENCES containers (id)
 );
-
--- These tables will not be altered after initial insertion
 
 CREATE TABLE npcconditionals
 (
