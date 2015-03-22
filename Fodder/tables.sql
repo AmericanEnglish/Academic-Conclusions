@@ -5,10 +5,13 @@ CREATE TABLE items
     x INTEGER,
     y INTEGER,
     map INTEGER,
+    container_id INTEGER,
     description VARCHAR,
     PRIMARY KEY (id),
     FOREIGN KEY (name)
-        REFERENCES item_worth (name)
+        REFERENCES item_worth (name),
+    FOREIGN KEY (container_id)
+        REFERENCES containers (id)
 );
 
 -- These tables will not be altered after initial insertion
@@ -20,6 +23,7 @@ CREATE TABLE containers
     y INTEGER NOT NULL,
     keys_item_id INTEGER,
     map INTEGER,
+    type VARCHAR(20),
 --    room_id INTEGER
     PRIMARY KEY (id),
     FOREIGN KEY (keys_item_id)
