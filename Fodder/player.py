@@ -11,7 +11,7 @@ class Player:
         self.score = 0
         self.totalmoves = 0
         self.death = False
-        
+
     def move(self, motion):
         """(str) -> None
 
@@ -24,7 +24,6 @@ class Player:
         
         All other input is ignored
         """
-        
         
         self.totalmoves += 1
         directions = {
@@ -40,6 +39,24 @@ class Player:
             y = self.pos[1] + directions[motion.lower()][1]
             self.pos = x, y
             print('You have moved {}\n'.format(motion))
+            if self.pos[0] > self.map.x or self.pos[0] < 0:
+                # Provides a warning if the map is left
+                if self.pos[0] > self.map.x + 1 or self.pos[0] < -1:
+                    print('You were eaten by wolves')
+                    return True
+                elif self.pos[0] == self.map.x + 1 or self.pos[0] == -1:
+                    print('You have left the saftey of the {}, move farther and you might not move'.format(
+                                                        self.map.name))
+                    print('at all. Quickly there is no time, head back from whence you came.\n')
+            elif self.pos[1] > self.map.y or self.pos[1] < 0:
+                # Provides a warning if the map is left
+                if self.pos[1] > self.map.y + 1 or self.pos[1] < -1:
+                    print('You were eaten by cannibals')
+                    return True
+                elif self.pos[1] == self.map.y + 1 or self.pos[1] == -1:
+                    print('You have left the saftey of the {}, move farther and you might not move'.format(
+                                                        self.map.name))
+                    print('at all. Quickly there is no time, move back from whence you came.\n')
         else:
             print('Not a valid command, type help for help')
 
