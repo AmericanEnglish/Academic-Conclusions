@@ -3,8 +3,7 @@ from os import listdir
 from player import *
 from maps import *
 from time import perf_counter
-from helper import helpcom
-from introduction import *
+# from introduction import *
 
 
 def startup():
@@ -217,8 +216,8 @@ def maploop(currentmap):
                                 item.contents.remove(thing)
                                 print('You took {} from {}'.format(thing.name, item.name))
         
-        elif action[0] == 'help' and len(action) == 2:
-            print(helpcom(action[1]))
+        # elif action[0] == 'help' and len(action) == 2:
+        #     print(helpcom(action[1]))
         
         else:
             print('Not a valid command, type help for help\n')
@@ -342,8 +341,8 @@ def roomloop(protag, currentroom):
                 if somevar == len(currentroom.contents[0]):
                     print('')
 
-        elif action[0] == 'help' and len(action) == 2:
-            print(helpcom(action[1]))
+        # elif action[0] == 'help' and len(action) == 2:
+        #     print(helpcom(action[1]))
         
         else:
             print('Not a valid command, type help for help\n')
@@ -360,10 +359,11 @@ def score(protag):
     pass
 
 if __name__ == '__main__':
-    if input('Do you have PostgreSQL 9.4.1 installed?').lower()[0] == 'y':    
+    if input('Do you have PostgreSQL 9.4.1 installed?\n(y/n):').lower()[0] == 'y':    
         ready = startup()
         if ready:
-            name = introduction()
+            exit() #to be deleted
+            # name = introduction()
             protag = Player(name, map0.start)
             main(protag, map0)
     else:
