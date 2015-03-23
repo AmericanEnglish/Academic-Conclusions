@@ -5,6 +5,7 @@ CREATE TABLE items
     x INTEGER,
     y INTEGER,
     map INTEGER,
+    ground BOOLEAN,
     container_id INTEGER,
     description VARCHAR,
     PRIMARY KEY (id),
@@ -18,12 +19,13 @@ CREATE TABLE items
 CREATE TABLE containers
 ( 
     id INTEGER,
-    locked BOOLEAN,
+    -- locked BOOLEAN,
     x INTEGER NOT NULL,
     y INTEGER NOT NULL,
     keys_item_id INTEGER,
     map INTEGER,
     type VARCHAR(20),
+    description VARCHAR,
 --    room_id INTEGER
     PRIMARY KEY (id),
     FOREIGN KEY (keys_item_id)
@@ -32,7 +34,7 @@ CREATE TABLE containers
 --      REFERENCES containers (id)
 );
 
-CREATE TABLE npcconditionals
+CREATE TABLE npc_conditionals
 (
     npc_name VARCHAR(20),
     condition VARCHAR,
@@ -57,6 +59,7 @@ CREATE TABLE npcs
     y INTEGER,
     map VARCHAR(20),
     room_id VARCHAR(20),
+    description VARCHAR,
     PRIMARY KEY (name)
     FOREIGN KEY (room_id)
         REFERENCES containers (id)
