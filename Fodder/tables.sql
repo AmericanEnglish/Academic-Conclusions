@@ -84,8 +84,8 @@ CREATE TABLE maps
 
 CREATE TABLE item_worth
 (
-    name VARCHAR(20)
-    value MONEY
+    name VARCHAR(20),
+    value MONEY,
     PRIMARY KEY (name)
 );
 
