@@ -12,8 +12,8 @@ CREATE TABLE items
         REFERENCES item_worth (name),
     FOREIGN KEY (container_id)
         REFERENCES containers (id),
-    FOREIGN KEY map_name
-        REFERENCES map (name)
+    FOREIGN KEY (map_name)
+        REFERENCES maps (name)
 );
 
 -- These tables will not be altered after initial insertion
@@ -34,7 +34,7 @@ CREATE TABLE containers
         REFERENCES containers (id)
         ON UPDATE SET NULL,
     FOREIGN KEY (map_name)
-        REFERENCES map (name)
+        REFERENCES maps (name)
 );
 
 CREATE TABLE npc_conditionals
@@ -51,8 +51,8 @@ CREATE TABLE npc_dialogue
 (
     npc_name VARCHAR(20),
     counter INTEGER,
-    dialogue VARCHAR
-    PRIMARY KEY (npc_name, counter)
+    dialogue VARCHAR,
+    PRIMARY KEY (npc_name, counter),
     FOREIGN KEY (npc_name)
         REFERENCES npcs (name)
 );
@@ -66,11 +66,10 @@ CREATE TABLE npcs
     room_id INTEGER,
     description VARCHAR,
     PRIMARY KEY (name),
-    FOREIGN KEY room_id
+    FOREIGN KEY (room_id)
         REFERENCES containers (id),
-    FOREIGN KEY map_name
+    FOREIGN KEY (map_name)
         REFERENCES maps (name)
-
 );
 
 CREATE TABLE maps
