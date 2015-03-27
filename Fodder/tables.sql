@@ -1,12 +1,11 @@
 CREATE TABLE items
 (
     id INTEGER NOT NULL,
-    name VARCHAR(20) NOT NULL,
-    x INTEGER,
-    y INTEGER,
-    map INTEGER,
-    ground BOOLEAN,
-    container_id INTEGER,
+    name VARCHAR(20),
+    x INTEGER, -- If both x and y are NULL 
+    y INTEGER, -- then item must be on the ground in a room
+    -- map INTEGER,
+    container_id INTEGER, -- If NULL then item is on ground
     description VARCHAR,
     PRIMARY KEY (id),
     FOREIGN KEY (name)
