@@ -29,9 +29,10 @@ CREATE TABLE containers
     unlock_item_id INTEGER,
     PRIMARY KEY (id),
     FOREIGN KEY (unlock_item_id)
-        REFERENCES items (id)
+        REFERENCES items (id),
     FOREIGN KEY (parent_container_id)
         REFERENCES containers (id)
+        ON UPDATE SET NULL,
     FOREIGN KEY (map_name)
         REFERENCES map (name)
 );
@@ -41,7 +42,9 @@ CREATE TABLE npc_conditionals
     npc_name VARCHAR(20),
     condition VARCHAR,
     action VARCHAR, --This is a python command such as protag.give(thing)
-    PRIMARY KEY (npc_name, condition)
+    PRIMARY KEY (npc_name, condition),
+    FOREIGN KEY (npc_name)
+        REFERENCES npcs (name)
 );
 
 CREATE TABLE npc_dialogue
@@ -57,14 +60,25 @@ CREATE TABLE npc_dialogue
 CREATE TABLE npcs
 (
     name VARCHAR(20),
-    x INTEGER,
-    y INTEGER,
-    map VARCHAR(20),
-    room_id VARCHAR(20),
+    x INTEGER, -- If x, y are null then the npc is
+    y INTEGER, -- in a room.
+    map_name VARCHAR(20),
+    description VARCHAR,
+    PRIMARY KEY (name),
+    FOREIGN KEY room_id
+        REFERENCES containers (id),
+    FOREIGN KEY map_name
+        REFERENCES maps (name)
+
+);
+
+CREATE TABLE maps
+(
+    name VARCHAR(20),
+    max_x INTEGER,
+    max_y INTEGER,
     description VARCHAR,
     PRIMARY KEY (name)
-    FOREIGN KEY (room_id)
-        REFERENCES containers (id)
 );
 
 CREATE TABLE item_worth
