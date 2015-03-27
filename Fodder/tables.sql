@@ -63,6 +63,7 @@ CREATE TABLE npcs
     x INTEGER, -- If x, y are null then the npc is
     y INTEGER, -- in a room.
     map_name VARCHAR(20),
+    room_id INTEGER,
     description VARCHAR,
     PRIMARY KEY (name),
     FOREIGN KEY room_id
