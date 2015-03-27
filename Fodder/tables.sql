@@ -4,21 +4,22 @@ CREATE TABLE items
     name VARCHAR(20),
     x INTEGER, -- If both x and y are NULL 
     y INTEGER, -- then item must be on the ground in a room
-    -- map INTEGER,
+    map_name INTEGER,
     container_id INTEGER, -- If NULL then item is on ground
     description VARCHAR,
     PRIMARY KEY (id),
     FOREIGN KEY (name)
         REFERENCES item_worth (name),
     FOREIGN KEY (container_id)
-        REFERENCES containers (id)
+        REFERENCES containers (id),
+    FOREIGN KEY map_name
+        REFERENCES map (name)
 );
 
 -- These tables will not be altered after initial insertion
 CREATE TABLE containers
 ( 
     id INTEGER,
-    -- locked BOOLEAN,
     x INTEGER NOT NULL,
     y INTEGER NOT NULL,
     keys_item_id INTEGER,
