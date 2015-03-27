@@ -4,7 +4,7 @@ CREATE TABLE items
     name VARCHAR(20),
     x INTEGER, -- If both x and y are NULL 
     y INTEGER, -- then item must be on the ground in a room
-    map_name INTEGER,
+    map_name VARCHAR(20),
     container_id INTEGER, -- If NULL then item is on ground
     description VARCHAR,
     PRIMARY KEY (id),
@@ -20,18 +20,20 @@ CREATE TABLE items
 CREATE TABLE containers
 ( 
     id INTEGER,
-    x INTEGER NOT NULL,
-    y INTEGER NOT NULL,
-    keys_item_id INTEGER,
-    map INTEGER,
-    type VARCHAR(20),
+    name VARCHAR(20),
+    x INTEGER, -- If x, y are NULL then container is in a room
+    y INTEGER, -- Noting that rooms can also be 'containers'
+    map_name VARCHAR(20),
+    parent_container_id INTEGER,
     description VARCHAR,
---    room_id INTEGER
+    unlock_item_id INTEGER,
     PRIMARY KEY (id),
-    FOREIGN KEY (keys_item_id)
+    FOREIGN KEY (unlock_item_id)
         REFERENCES items (id)
---  FOREIGN KEY (room_id)
---      REFERENCES containers (id)
+    FOREIGN KEY (parent_container_id)
+        REFERENCES containers (id)
+    FOREIGN KEY (map_name)
+        REFERENCES map (name)
 );
 
 CREATE TABLE npc_conditionals
