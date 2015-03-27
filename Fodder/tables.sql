@@ -8,12 +8,14 @@ CREATE TABLE maps
     PRIMARY KEY (name)
 );
 
+
 CREATE TABLE item_worth
 (
     name VARCHAR(20),
     value MONEY,
     PRIMARY KEY (name)
 );
+
 
 -- Table of changing values
 CREATE TABLE items
@@ -33,6 +35,7 @@ CREATE TABLE items
     FOREIGN KEY (map_name)
         REFERENCES maps (name)
 );
+
 
 CREATE TABLE containers
 ( 
@@ -54,6 +57,7 @@ CREATE TABLE containers
         REFERENCES maps (name)
 );
 
+
 -- Alter table is required because of FK overlaps
 ALTER TABLE items
 	ADD container_id INTEGER;
@@ -62,6 +66,7 @@ ALTER TABLE items
 	ADD CONSTRAINT container_must_exist
 		FOREIGN KEY (container_id)
         	REFERENCES containers (id);
+
 
 -- npcs are static and unchanging
 CREATE TABLE npcs
@@ -79,6 +84,7 @@ CREATE TABLE npcs
         REFERENCES maps (name)
 );
 
+
 CREATE TABLE npc_conditionals
 (
     npc_name VARCHAR(20),
@@ -88,6 +94,7 @@ CREATE TABLE npc_conditionals
     FOREIGN KEY (npc_name)
         REFERENCES npcs (name)
 );
+
 
 CREATE TABLE npc_dialogue
 (
@@ -99,7 +106,3 @@ CREATE TABLE npc_dialogue
         REFERENCES npcs (name)
 );
 
-
-
---DROP TABLE containers;
---DROP TABLE items;
