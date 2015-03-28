@@ -105,4 +105,3 @@ CREATE TABLE npc_dialogue
     FOREIGN KEY (npc_name)
         REFERENCES npcs (name)
 );
-
