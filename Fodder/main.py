@@ -1,6 +1,5 @@
 import psycopg2
 import getpass
-from os import listdir
 from player import *
 from maps import *
 from time import perf_counter
