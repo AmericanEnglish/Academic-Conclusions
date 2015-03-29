@@ -1,8 +1,10 @@
 import psycopg2
+import getpass
 from os import listdir
 from player import *
 from maps import *
 from time import perf_counter
+
 # from introduction import *
 
 
@@ -13,7 +15,7 @@ def startup():
         zhost = input('PostgreSQL Host IP: ')
         zdatabase = input('PostgreSQL Database Name: ')
         zuser = input('Username: ')
-        zpass = input('Password: ')
+        zpass = getpass.getpass('Password: ')
     else:
         zhost='localhost'
         zdatabase='cs350'
