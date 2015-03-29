@@ -1,3 +1,5 @@
+import psycopg2
+
 class Player:
     """Creates the player"""
     def __init__(self, name, coords):
