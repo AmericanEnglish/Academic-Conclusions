@@ -110,6 +110,7 @@ CREATE TABLE npc_dialogue
 CREATE TABLE inventory
 (
     item_id INTEGER,
+    backpack BOOLEAN,
     PRIMARY KEY (item_id),
     FOREIGN KEY (item_id)
         REFERENCES items (id)
