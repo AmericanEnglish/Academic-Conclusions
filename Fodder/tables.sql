@@ -105,3 +105,24 @@ CREATE TABLE npc_dialogue
     FOREIGN KEY (npc_name)
         REFERENCES npcs (name)
 );
+
+-- Inventory tables
+CREATE TABLE inventory
+(
+    item_id INTEGER,
+    PRIMARY KEY (item_id),
+    FOREIGN KEY (item_id)
+        REFERENCES items (id)
+);
+
+
+CREATE TABLE npc_inventory
+(
+    npc_name VARCHAR(20),
+    item_id INTEGER,
+    PRIMARY KEY (npc_name, item_id),
+    FOREIGN KEY (npc_name)
+        REFERENCES npc (name),
+    FOREIGN KEY (item_id)
+        REFERENCES item (id)
+);
