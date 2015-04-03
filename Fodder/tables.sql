@@ -25,10 +25,11 @@ CREATE TABLE items
     x INTEGER, -- If both x and y are NULL 
     y INTEGER, -- then item must be on the ground in a room
     map_name VARCHAR(20),
+    worth_type VARCHAR(20),
     -- container_id INTEGER, -- If NULL then item is on ground
     description VARCHAR,
     PRIMARY KEY (id),
-    FOREIGN KEY (name)
+    FOREIGN KEY (base_name)
         REFERENCES item_worth (name),
     -- FOREIGN KEY (container_id)
     --     REFERENCES containers (id),
@@ -109,21 +110,12 @@ CREATE TABLE npc_dialogue
 -- Inventory tables
 CREATE TABLE inventory
 (
+    name VARCHAR(20),-- If NULL = Player's item
     item_id INTEGER,
     backpack BOOLEAN,
     PRIMARY KEY (item_id),
     FOREIGN KEY (item_id)
         REFERENCES items (id)
-);
-
-
-CREATE TABLE npc_inventory
-(
-    npc_name VARCHAR(20),
-    item_id INTEGER,
-    PRIMARY KEY (npc_name, item_id),
-    FOREIGN KEY (npc_name)
-        REFERENCES npc (name),
-    FOREIGN KEY (item_id)
-        REFERENCES item (id)
+    FOREIGN KEY (name)
+        REFERENCES npcs(name)
 );
