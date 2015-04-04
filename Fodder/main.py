@@ -98,7 +98,7 @@ def maploop(currentmap):
             protag.look()
 
         elif action[0] == 'ground':
-            player.ground()
+            protag.ground()
 
         elif action[0] == 'pickup' and len(action) == 2:
             protag.pickup(action[1])
