@@ -47,6 +47,7 @@ CREATE TABLE containers
     map_name VARCHAR(20),
     parent_container_id INTEGER,
     description VARCHAR,
+    room_flag BOOLEAN,
     unlock_item_id INTEGER,
     PRIMARY KEY (id),
     FOREIGN KEY (unlock_item_id)
@@ -110,7 +111,7 @@ CREATE TABLE npc_dialogue
 -- Inventory tables
 CREATE TABLE inventory
 (
-    name VARCHAR(20),-- If NULL = Player's item
+    name VARCHAR(20),-- If NULL then Player's item
     item_id INTEGER,
     backpack BOOLEAN,
     PRIMARY KEY (item_id),
