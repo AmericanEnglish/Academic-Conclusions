@@ -47,8 +47,8 @@ CREATE TABLE containers
     map_name VARCHAR(20),
     parent_container_id INTEGER,
     description VARCHAR,
-    room_flag BOOLEAN,
     unlock_item_id INTEGER,
+    room_flag BOOLEAN,
     PRIMARY KEY (id),
     FOREIGN KEY (unlock_item_id)
         REFERENCES items (id),

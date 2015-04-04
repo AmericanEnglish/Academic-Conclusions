@@ -81,107 +81,35 @@ def maploop(currentmap):
             protag.put(action[1])
         
         elif action[0] == 'pull':
-            if len(protag.person) < 5:
-                protag.pull(action[1])
-            else:
-                print("As you try to pull {} from your pack, you can't seem to grab it")
-                print("perhaps you should put items into your pack first. Free up those hands")
+            protag.pull(action[1])
         
         elif action[0] == 'examine' and len(action) == 2:
             # check to make sure item / room / door in question is in the area
-            for item in currentmap.check(protag.pos)[0]:
-                if isinstance(item, Room) and 'door' in action[1]:
-                    item.door.examine()
-                    break
-                # if the item in question isn't a door it's a room
-                elif action[1] == item.name.lower():
-                    item.examine()
-                    break
-            # if item is neither a door or room, search's player's person
             protag.examine(action[1])
 
-        
         elif action[0] == 'enter' and len(action) > 1:
             # checks for any rooms in the area that might be enterable
-            for item in currentmap.check(protag.pos)[0]:
-                # allows for room entry
-                if action[1] == item.name.lower() and isinstance(item, Room):
-                    roomloop(protag, item)
-                # allows for Mapps to be entered
-                elif action[1] == item.name.lower() and isinstance(item, Mapp):
-                    inmap = False
-                    protag.map = item
-                    protag.pos = item.start
-            print('')
+            player.enter(action[1])
 
         elif action[0] == 'exit':
             print(">You're already outside!<\n")
 
         elif action[0] == 'look':
-            if protag.pos[0] < currentmap.x + 1 and protag.pos[0] >= 0:
-                if protag.pos[1] < currentmap.y + 1 and protag.pos[1] >= 0:
-                    print('>Around you see<')
-                    for item in currentmap.check(protag.pos)[0]:
-                        print(item.name)
-                    print('')
-                else:
-                    print('You took too long and were eaten by wolves AND cannibals')
-                    return True
-            else:
-                print('You took too long and were eaten by wolves AND cannibals')
-                return True
-            
+            protag.look()
+
         elif action[0] == 'ground':
-            if currentmap.check(protag.pos)[1] == []:
-                print('>There is nothing on the ground<\n')
-            else:
-                print('>On the ground you see<')
-                for item in currentmap.check(protag.pos)[1]:
-                    print('{}'.format(item.name))
-                print('')
+            player.ground()
 
         elif action[0] == 'pickup' and len(action) == 2:
-            for item in currentmap.check(protag.pos)[1]:
-                if action[1] == item.name.lower() and len(protag.person) < 5:
-                    # this will be put into the Player methods later, maybe
-                    protag.person.append(item)
-                    currentmap.check(protag.pos)[1].remove(item)
-                    print('You picked up {}\n'.format(item.name))
-                elif action[1] == item.name.lower() and len(protag.person) >= 5:
-                    print('You fumble the {} and it falls back on the ground.'.format(item.name))
-                    print('It would seem you are carrying too much in your hands to hold anymore.')
+            protag.pickup(action[1])
 
         elif action[0] == 'drop':
-            for item in protag.person:
-                if action[1] == item.name.lower():
-                    # this will be put into the player methods later
-                    protag.person.remove(item)
-                    currentmap.check(protag.pos)[1].append(item)
-                    print('You dropped {} on the ground\n'.format(item.name))
+            protag.drop(action[1])
         
         elif action[0] == 'talk':
             # if user types wrong name somevar will help print a newline
-            somevar = 0
-            if len(action) > 1:
-                for item in currentmap.check(protag.pos)[0]:
-                    somevar += 1
-                    if isinstance(item, NPC) and action[1] == item.name.lower():
-                        #somevar now knows an NPC was found and no extra \n
-                        somevar -= 1
-                        print('<>{}:\n{}'.format(item.name, item.talk(protag)))
-                if somevar == len(currentmap.check(protag.pos)[0]):
-                    print('')
-            # if just talk is typed, protag talks to all NPCs in area.   
-            else:
-                somevar = 0
-                for item in currentmap.check(protag.pos)[0]:
-                    somevar += 1
-                    if isinstance(item, NPC):
-                        somevar -= 1
-                        print('<>{}:\n{}'.format(item.name, item.talk(protag)))
-                if somevar == len(currentmap.check(protag.pos)[0]):
-                    print('Not a valid command, type help for help\n')
-        
+            protag.talk(action)
+
         elif action[0] == 'take':
             # take requires a second marker called from. This requiers action
             # to be reconfigured
