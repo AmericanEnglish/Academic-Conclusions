@@ -78,6 +78,7 @@ CREATE TABLE npcs
     y INTEGER, -- in a room.
     map_name VARCHAR(20),
     room_id INTEGER,
+    counter_value INTEGER,
     description VARCHAR,
     PRIMARY KEY (name),
     FOREIGN KEY (room_id)
