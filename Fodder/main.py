@@ -84,7 +84,7 @@ def maploop(currentmap):
                 protag.pack_view(cur)
             
             elif action[0] == 'me':
-                protag.person_view()
+                protag.person_view(cur)
             
             elif action[0] == 'put':
                 protag.put(action[1], cur)
