@@ -121,7 +121,11 @@ def maploop(currentmap):
                     protag.take(action[1:])
             
             elif action[0] == 'help' and len(action) == 2:
-                print(helpcom(action[1]))
+                cur.execute("""SELECT name, syntax, description FROM help
+                                WHERE name = %s""", [action[1]])
+                info = cur.fetchall()
+                for item in info:
+                    print(info)
             
             else:
                 print('Not a valid command, type help for help\n')
