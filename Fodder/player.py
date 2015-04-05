@@ -227,15 +227,50 @@ class Player:
             print('Youve dropped {} to the ground'.format(thing))
         print()
 
-    def examine(self, thing):
-        tracking = 0
-        for item in self.person:
-            if item.name.lower() == thing:
-                item.examine()
-            else:
-                tracking += 1
-        if tracking == len(self.person):
-            print('')
+    def examine(self, thing, cur):
+        # Examine spans items, npcs, and containers
+        # Starting with the smaller relation first
+        thing.lower().title()
+        cur.execute("""SELECT description FROM npcs
+            WHERE name = %s, x = %s, y = %s""",
+            [thing, self.pos[0], self.pos[1]])
+        npc_query = cur.fetchall()
+        if npc_query == []:
+            # Then checks containers in the area
+            cur.execute("""SELECT id, description, unlock_item_id, room_flag
+                FROM containers
+                WHERE name = %s, x = %s, y = %s""",
+                [thing, self.pos[0], self.pos[1]])
+            container_query = cur.fetchall()
+            if container_query == []:
+                pass
+            else: 
+                #Turns the list of tuples into just a tuple
+                container_query = container_query[0]
+                # Checks room flag
+                locked =  room_flag != None
+                if container_query[3]:
+                    print('-{}\n-Locked: {}\n++{}'.format(thing, locked, description))
+                else:
+                    # If not a room, than just a normal container
+                    # Checks first to display locked or not
+                    if locked:
+                        print('-{}\n-Locked: {}\n ++{}'.format(thing, locked, description))
+                    # If not locked displays contents of the container
+                    else:
+                        print('-{}\n-Locked: {}\n ++{}'.format(thing, locked, description))
+                        # Pulls contents from items table
+                        print('> Inside You See <')
+                        cur.execute("""SELECT name FROM items
+                            WHERE items.container_id = %s""", [container_query[0]])
+                        contents = cur.fetchall()
+                        contes.sort()
+                        for items in contents:
+                            print('-{}'.format(items[0]))
+                
+        else:
+            print('-{}\n++{}'.format(thing, npc_query[0][0]))
+        print()
 
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
