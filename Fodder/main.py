@@ -128,6 +128,8 @@ def maploop(currentmap):
                             ' '.join(action[1:action.index('from')]),
                             ' '.join(action[action.index('from') + 1:])]
                     protag.take(action[1:])
+                else:
+                    print('Not a valid command, type help for help\n')
             
             elif action[0] == 'help' and len(action) == 2:
                 help(action[1], cur)
