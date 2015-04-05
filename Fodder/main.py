@@ -81,7 +81,7 @@ def maploop(currentmap):
                 protag.move(action[1], cur)
             
             elif action[0] == 'pack':
-                protag.pack_view()
+                protag.pack_view(cur)
             
             elif action[0] == 'me':
                 protag.person_view()
