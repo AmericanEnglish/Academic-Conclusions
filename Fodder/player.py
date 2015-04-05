@@ -117,12 +117,15 @@ class Player:
 
         Displays a sort list of backpack contents
         """
-        #create sorting algorithim
+        # Selects items that are in pack and them collects their names'
         cur.execute("""SELECT items.name FROM inventory, items
             WHERE items.id = inventory.id AND backpack = TRUE""")
+        
         backpack = cur.fetchall()
-        print('> Your Pack <')
         backpack.sort()
+
+        # Displays information in uniform fashion
+        print('> Your Pack <')
         if backpack == []:
             print('-Empty-')
         else:
@@ -131,11 +134,14 @@ class Player:
         print()
 
     def person_view(self, cur):
+        # Selects items that are on person and collects their names'
         cur.execute("""SELECT items.name FROM inventory, items
             WHERE items.id = inventory.id AND inventory.name IS NULL
                 AND backpack = FALSE""")
         person = cur.fetchall()
         person.sort()
+
+        # Displays information in uniform fashion
         print('> You Hold <')
         if person == []:
             print('-Nothing-')
@@ -145,11 +151,16 @@ class Player:
         print()
 
     def look(self, cur):
+        
+        #Gathers the names of surrounding containers
         cur.execute("""SELECT name FROM containers
                 WHERE containers.map_name = %s AND
                     containers.x = %s AND containers.y = %s""",
                     [self.map, self.pos[0], self.pos[1]])
         surroundings = cur.fetchall()
+        surroundings.sort()
+
+        #Display information in uniform fashion
         print('> Around You See <')
         if surroundings == []:
             print('-Nothing-')
@@ -159,10 +170,23 @@ class Player:
         print()
 
     def ground(self, cur):
+        #Gathers the names of ground items
         cur.execute("""SELECT name FROM items
             WHERE item.map_name = %s AND
                 items.x = %s AND items.y = %s""",
                 [self.map, self.pos[0], self.pos[1]])
+        ground = cur.fetchall()
+        ground.sort()
+
+        # Displays information in uniform fashion
+        print('> On Ground You See <')
+        if ground == []:
+            print('-Nothing-')
+        else:
+            for items in ground:
+                print('-{}'.format(items[0]))
+        print()
+        
     def examine(self, thing):
         tracking = 0
         for item in self.person:
