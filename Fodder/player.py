@@ -275,8 +275,11 @@ class Player:
                             WHERE items.container_id = %s""", [container_query[0]])
                         contents = cur.fetchall()
                         contents.sort()
-                        for items in contents:
-                            print('-{}'.format(items[0]))        
+                        if contents != []:
+                            for items in contents:
+                                print('-{}'.format(items[0]))
+                        else:
+                            print('-Empty-')
         else:
             print('-{}\n++{}'.format(thing, npc_query[0][0]))
         print()
