@@ -66,7 +66,7 @@ class Player:
         Checks if the item.name is in the pack and if it is then returns
         the Obj in question. Else returns None meaning item not present
         """
-        thing = thing.title()
+        thing = thing.lower().title()
         cur.execute("""SELECT id, name FROM items WHERE name = %s """, [thing])
         items_query = cur.fetchall()
         if items_query == []:
