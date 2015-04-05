@@ -101,7 +101,8 @@ class Player:
         else:
             # Checks to see if item_id in personal inventory
             cur.execute("""SELECT id FROM inventory
-                WHERE id = %s AND name IS NULL AND backpack = FALSE""", items_query[0])
+                WHERE id = %s AND name IS NULL AND backpack = FALSE""",
+                items_query[0])
             inventory_query = cur.fetchall()
             if inventory_query == []:
                 print('You do not possess {}!'.format(thing))
@@ -152,7 +153,7 @@ class Player:
 
     def look(self, cur):
         
-        #Gathers the names of surrounding containers
+        # Gathers the names of surrounding containers
         cur.execute("""SELECT name FROM containers
                 WHERE containers.map_name = %s AND
                     containers.x = %s AND containers.y = %s""",
@@ -170,7 +171,7 @@ class Player:
         print()
 
     def ground(self, cur):
-        #Gathers the names of ground items
+        # Gathers the names of ground items
         cur.execute("""SELECT name FROM items
             WHERE item.map_name = %s AND
                 items.x = %s AND items.y = %s""",
@@ -186,7 +187,27 @@ class Player:
             for items in ground:
                 print('-{}'.format(items[0]))
         print()
-        
+
+    def pickup(self, thing, cur):
+        thing = thing.lower().title()
+        cur.execute("""SELECT id FROM items
+            WHERE items.map_name = %s AND
+                items.name = %s AND
+                items.x = %s AND items.y =%s""",
+                [self.map, thing, self.pos[0], self.pos[1]])
+        items_query = cur.fetchall()
+        if items_query == []:
+            print('Not a valid command, type help for help.\n')
+        else:
+            # Puts item into personal inventory
+            cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
+                items_query[0])
+            # 'Removes' item from map
+            cur.execute("""UPDATE items 
+                SET x = NULL, y = NULL, map_name = NULL
+                WHERE id = %s""", items_query[0])
+            print('> You Picked Up <\n{}\n'.format(thing))
+            
     def examine(self, thing):
         tracking = 0
         for item in self.person:
