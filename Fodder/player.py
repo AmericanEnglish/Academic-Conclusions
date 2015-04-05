@@ -245,8 +245,8 @@ class Player:
             if container_query == []:
                 # Time to check personal inventory
                 cur.execute("""SELECT description FROM inventory, items
-                    WHERE inventory.id = items.id AND backpack = 0 AND
-                        inventory.name IS NULL""")
+                    WHERE items.id = inventory.id AND items.name = %s AND
+                        backpack = 0 AND inventory.name IS NULL""", [thing])
                 personal_query = cur.fetchall()
                 if personal_query == []:
                     print('Not a valid command, type help for help.')
