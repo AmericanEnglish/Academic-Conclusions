@@ -77,6 +77,7 @@ class Player:
                 You cant carry anymore in your hands, consider putting something \
                 away')
             return
+        
         thing = thing.lower().title()
         #Checks to make sure item exists and pulls the id
         cur.execute("""SELECT inventory.id FROM inventory, items
