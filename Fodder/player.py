@@ -80,6 +80,7 @@ class Player:
             else:
                 cur.execute("""UPDATE inventory_query SET backpack = FALSE 
                         WHERE id = %s""", inventory_query[0])
+                print('Youve pulled {} from your pack!'.format(thing))
 
     def put(self, thing, cur):
         """(str) -> str
