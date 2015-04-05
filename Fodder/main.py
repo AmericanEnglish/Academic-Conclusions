@@ -56,7 +56,7 @@ def startup():
 
 
 
-def maploop(currentmap):
+def maploop(protag):
     """(Mapp) -> None
 
     These function is used for running movement and actions on a generic
@@ -65,7 +65,7 @@ def maploop(currentmap):
     are input by the user."""
     inmap = True
     while inmap and not protag.death:
-        action = input('={}=> '.format(currentmap.name))
+        action = input('={}=> '.format(protag.map))
         action = action.lower().strip().split()
         with con.cursor() as cur:
             if len(action) > 1:
@@ -276,10 +276,9 @@ if __name__ == '__main__':
     if input('Do you have PostgreSQL 9.4.1 installed?\n(y/n):').lower()[0] == 'y':    
         ready = startup()
         if ready:
-            exit() #to be deleted
-            # name = introduction()
-            protag = Player(name, map0.start)
-            main(protag, map0)
+            name = input('Name: ')
+            protag = Player(name)
+            maploop(protag)
     else:
         print('Please install PostgreSQL 9.4.1 or later')
         print('http://www.postgresql.org/download/')
