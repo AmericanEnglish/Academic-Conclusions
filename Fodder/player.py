@@ -75,9 +75,9 @@ class Player:
         if capacity >= 10:
             print('You attempt to use your pack but you fumble your items. \
                 You cant carry anymore in your hands, consider putting something \
-                away')
+                away\n')
             return
-        
+
         thing = thing.lower().title()
         #Checks to make sure item exists and pulls the id
         cur.execute("""SELECT inventory.id FROM inventory, items
@@ -200,7 +200,7 @@ class Player:
                 [self.map, thing, self.pos[0], self.pos[1]])
         items_query = cur.fetchall()
         if items_query == []:
-            print('Not a valid command, type help for help.\n')
+            print('Not a valid command, type help for help.')
         else:
             # Puts item into personal inventory
             cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
@@ -209,7 +209,23 @@ class Player:
             cur.execute("""UPDATE items 
                 SET x = NULL, y = NULL, map_name = NULL
                 WHERE id = %s""", items_query[0])
-            print('> You Picked Up <\n{}\n'.format(thing))
+            print('> You Picked Up <\n{}'.format(thing))
+        print()
+
+    def drop(self, thing, cur):
+        thing = thing.lower().title()
+        cur.execute("""SELECT id FROM inventory, items
+            WHERE items.name = %s AND backpack = FALSE AND
+                inventory.name IS NULL""")
+        dropped = cur.fetchall()
+        if dropped == []:
+            print('Not a valid command, type help for help')
+        else:
+            cur.execute("""DELETE FROM inventory WHERE id = %s""", dropped[0])
+            cur.execute("""UPDATE items SET x = %s, y = %s, map_name = %s
+                        WHERE id = %s""", dropped[0])
+            print('Youve dropped {} to the ground'.format(thing))
+        print()
 
     def examine(self, thing):
         tracking = 0
