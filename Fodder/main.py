@@ -90,7 +90,7 @@ def maploop(currentmap):
                 protag.put(action[1])
             
             elif action[0] == 'pull':
-                protag.pull(action[1])
+                protag.pull(action[1], cur)
             
             elif action[0] == 'examine' and len(action) == 2:
                 # check to make sure item / room / door in question is in the area
