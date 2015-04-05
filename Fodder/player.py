@@ -145,9 +145,8 @@ class Player:
         print()
 
     def look(self, cur):
-        cur.execute("""SELECT containers.name FROM containers, maps
-                WHERE map.name = %s AND
-                    containers.map_name = map.name AND
+        cur.execute("""SELECT name FROM containers
+                WHERE containers.map_name = %s AND
                     containers.x = %s AND containers.y = %s""",
                     [self.map, self.pos[0], self.pos[1]])
         surroundings = cur.fetchall()
@@ -160,7 +159,7 @@ class Player:
         print()
 
     def ground(self, cur):
-        cur.execute("""SELECT items.name FROM items
+        cur.execute("""SELECT name FROM items
             WHERE item.map_name = %s AND
                 items.x = %s AND items.y = %s""",
                 [self.map, self.pos[0], self.pos[1]])
