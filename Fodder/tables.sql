@@ -121,3 +121,11 @@ CREATE TABLE inventory
     FOREIGN KEY (name)
         REFERENCES npcs(name)
 );
+
+CREATE TABLE help
+(
+    name VARCHAR(10),
+    syntax VARCHAR(20),
+    description VARCHAR,
+    PRIMARY KEY (name)
+);
