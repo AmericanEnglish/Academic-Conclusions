@@ -67,6 +67,16 @@ class Player:
         Checks if the item.name is in the pack and if it is then returns
         the Obj in question. Else returns None meaning item not present
         """
+        #Query helps keep person inventory beneath 11
+        cur.execute("""SELECT COUNT(*) FROM inventory 
+            WHERE backpack = FALSE AND name IS NULL
+            GROUP BY name""")
+        capacity = cur.fetchall()[0][0]
+        if capacity >= 10:
+            print('You attempt to use your pack but you fumble your items. \
+                You cant carry anymore in your hands, consider putting something \
+                away')
+            return
         thing = thing.lower().title()
         #Checks to make sure item exists and pulls the id
         cur.execute("""SELECT inventory.id FROM inventory, items
