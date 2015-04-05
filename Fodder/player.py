@@ -121,21 +121,28 @@ class Player:
             WHERE items.id = inventory.id AND backpack = TRUE""")
         backpack = cur.fetchall()
         print('> Your Pack <')
-        if back == []:
+        backpack.sort()
+        if backpack == []:
             print('-Empty-')
         else:
             for items in backpack:
                 print('-{}'.format(items[0]))
         print()
 
-    def person_view(self):
-        #create sorting algoritihim
-        if self.person == []:
-            print('>You have nothing on you<')
-        for item in self.person:
-            print('{}'.format(str(item).title()))
-        print('')
-
+    def person_view(self, cur):
+        cur.execute("""SELECT items.name FROM inventory, items
+            WHERE items.id = inventory.id AND inventory.name IS NULL
+                AND backpack = FALSE""")
+        person = cur.fetchall()
+        person.sort()
+        print('> You Hold <')
+        if person == []:
+            print('-Nothing-')
+        else:
+            for item in person:
+                print('-{}'.format(item[0]))
+        print()
+        
     def examine(self, thing):
         tracking = 0
         for item in self.person:
