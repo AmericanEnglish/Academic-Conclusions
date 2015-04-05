@@ -104,7 +104,7 @@ def maploop(currentmap):
                 print(">You're already outside!<\n")
 
             elif action[0] == 'look':
-                protag.look()
+                protag.look(cur)
 
             elif action[0] == 'ground':
                 protag.ground()
