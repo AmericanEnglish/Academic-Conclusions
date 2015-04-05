@@ -110,7 +110,7 @@ def maploop(currentmap):
                 protag.ground(cur)
 
             elif action[0] == 'pickup' and len(action) == 2:
-                protag.pickup(action[1])
+                protag.pickup(action[1], cur)
 
             elif action[0] == 'drop':
                 protag.drop(action[1])
