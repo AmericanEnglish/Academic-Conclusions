@@ -43,7 +43,6 @@ def startup():
         if answer[0] == 'y':
             with open('tables.sql') as tables:
                 cur.execute(tables.read())
-                con.commit()
             with open('data.sql') as data_to_use:
                 cur.execute(data_to_use.read())
         
@@ -52,11 +51,12 @@ def startup():
             if answer == 'y':
                 with open('refresh.sql') as refresh:
                     cur.execute(refresh.read())
-    return True
+    con.commit()
+    return True, con
 
 
 
-def maploop(protag):
+def maploop(protag, con):
     """(Mapp) -> None
 
     These function is used for running movement and actions on a generic
@@ -135,6 +135,8 @@ def maploop(protag):
             
             else:
                 print('Not a valid command, type help for help\n')
+            con.commit()
+            
     main(protag, protag.map)
 
 def roomloop(protag, currentroom):
@@ -275,10 +277,10 @@ def score(protag):
 if __name__ == '__main__':
     if input('Do you have PostgreSQL 9.4.1 installed?\n(y/n):').lower()[0] == 'y':    
         ready = startup()
-        if ready:
+        if ready[0]:
             name = input('Name: ')
             protag = Player(name)
-            maploop(protag)
+            maploop(protag, ready[1])
     else:
         print('Please install PostgreSQL 9.4.1 or later')
         print('http://www.postgresql.org/download/')

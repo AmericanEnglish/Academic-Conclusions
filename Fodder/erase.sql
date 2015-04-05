@@ -9,3 +9,4 @@ DROP TABLE containers;
 DROP TABLE items;
 DROP TABLE maps;
 DROP TABLE worth;
+DROP TABLE help;

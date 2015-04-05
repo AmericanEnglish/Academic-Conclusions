@@ -80,18 +80,19 @@ class Player:
 
         thing = thing.lower().title()
         #Checks to make sure item exists and pulls the id
-        cur.execute("""SELECT inventory.id FROM inventory, items
-            WHERE inventory.id = items.id AND items.name = %s AND 
+        cur.execute("""SELECT inventory.item_id FROM inventory, items
+            WHERE inventory.item_id = items.id AND items.name = %s AND 
                 backpack = TRUE""", [thing])
         
         inventory_query = cur.fetchall()
         if inventory_query == []:
-            print('You dont have {} in your pack!\n'.format(thing))
+            print('You dont have {} in your pack!'.format(thing))
         else:
             # Moves item to personal inventory
-        cur.execute("""UPDATE inventory SET backpack = FALSE 
+            cur.execute("""UPDATE inventory SET backpack = FALSE 
                     WHERE id = %s""", inventory_query[0])
-            print('Youve pulled {} from your pack!\n'.format(thing))
+            print('Youve pulled {} from your pack!'.format(thing))
+        print()
 
     def put(self, thing, cur):
         """(str) -> str
@@ -101,8 +102,8 @@ class Player:
 
         thing = thing.lower().title()
         #Checks to make sure item exists and pulls the item_id
-        cur.execute("""SELECT inventory.id FROM inventory, items
-            WHERE inventory.id = items.id AND items.name = %s AND 
+        cur.execute("""SELECT inventory.item_id FROM inventory, items
+            WHERE inventory.item_id = items.id AND items.name = %s AND 
             inventory.name IS NULL AND backpack = FALSE""", [thing])
         
         inventory_query = cur.fetchall()
@@ -122,7 +123,7 @@ class Player:
         """
         # Selects items that are in pack and them collects their names'
         cur.execute("""SELECT items.name FROM inventory, items
-            WHERE items.id = inventory.id AND backpack = TRUE""")
+            WHERE items.id = inventory.item_id AND backpack = TRUE""")
         
         backpack = cur.fetchall()
         backpack.sort()
@@ -139,7 +140,7 @@ class Player:
     def person_view(self, cur):
         # Selects items that are on person and collects their names'
         cur.execute("""SELECT items.name FROM inventory, items
-            WHERE items.id = inventory.id AND inventory.name IS NULL
+            WHERE items.id = inventory.item_id AND inventory.name IS NULL
                 AND backpack = FALSE""")
         person = cur.fetchall()
         person.sort()
@@ -175,7 +176,7 @@ class Player:
     def ground(self, cur):
         # Gathers the names of ground items
         cur.execute("""SELECT name FROM items
-            WHERE item.map_name = %s AND
+            WHERE items.map_name = %s AND
                 items.x = %s AND items.y = %s""",
                 [self.map, self.pos[0], self.pos[1]])
         ground = cur.fetchall()
@@ -245,7 +246,7 @@ class Player:
             if container_query == []:
                 # Time to check personal inventory
                 cur.execute("""SELECT description FROM inventory, items
-                    WHERE items.id = inventory.id AND items.name = %s AND
+                    WHERE items.id = inventory.item_id AND items.name = %s AND
                         backpack = 0 AND inventory.name IS NULL""", [thing])
                 personal_query = cur.fetchall()
                 if personal_query == []:
@@ -282,6 +283,6 @@ class Player:
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
-                                WHERE name = %s""", [action[1]])
-                info = cur.fetchall()
-                print('{} -> {} \n++{}\n'.format(info[0], info[1], info[2]))
+                                WHERE name = %s""", [command])
+    info = cur.fetchall()[0]
+    print('{} -> {} \n++{}\n'.format(info[0], info[1], info[2]))
