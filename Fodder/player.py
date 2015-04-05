@@ -73,27 +73,37 @@ class Player:
             print("You dont have {} in your pack!\n".format(thing))
         else:
             cur.execute("""SELECT id FROM inventory 
-                WHERE name = %s AND backpack = TRUE""", [items_query[0][1]])
+                WHERE name = %s AND backpack = TRUE""", items_query[0])
             inventory_query = cur.fetchall()
             if inventory_query == []:
                 print('You dont have {} in your pack!\n'.format(thing))
             else:
                 cur.execute("""UPDATE inventory_query SET backpack = FALSE 
-                        WHERE id = %s""", [inventory_query[0][0]])
+                        WHERE id = %s""", inventory_query[0])
 
-    def put(self, thing):
+    def put(self, thing, cur):
         """(str) -> str
 
         Takes item off of player's person and put it into backpack
         """
 
-        for item in self.person:
-            if thing.lower() == item.name.lower():
-                self.pack.append(item)
-                self.person.remove(item)
-                print('{} was put into the pack \n'.format(item.name))
-                return
-        print('You do not posses {} \n'.format(thing))
+        thing = thing.lower().title()
+        cur.execute("""SELECT id FROM items 
+            WHERE name = %s""", [thing])
+        items_query = cur.fetchall()
+        if items_query == []:
+            print('You do not possess {}!'.format(thing))
+        else:
+            cur.execute("""SELECT id FROM inventory
+                WHERE id = %s AND name IS NULL""", items_query[0])
+            inventory_query = cur.fetchall()
+            if inventory_query == []:
+                print('You do not possess {}!'.format(thing))
+            else:
+                cur.execute("""UPDATE inventory SET backpack = TRUE
+                        WHERE id = %s AND name IS NULL""", inventory_query[0])
+                print('Youve put {} in your pack!'.format(thing))
+
 
     def pack_view(self):
         """(Backpack)
