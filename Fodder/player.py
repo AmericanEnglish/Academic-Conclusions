@@ -28,7 +28,7 @@ class Player:
         if self.totalmoves == 300:
             print('>Dead<\n')
             exit()
-            
+
         directions = {
                     'north': (0,1),
                     'south':(0,-1), 
@@ -60,20 +60,25 @@ class Player:
         else:
             print('Not a valid command, type help for help\n')
 
-    def pull(self, thing):
+    def pull(self, thing, cur):
         """(str) -> Obj
 
         Checks if the item.name is in the pack and if it is then returns
         the Obj in question. Else returns None meaning item not present
         """
-
-        for item in self.pack:
-            if thing.lower() == item.name.lower():
-                self.person.append(item)
-                self.pack.remove(item)
-                print('{} was pulled out of your pack\n'.format(item.name))
-                return
-        print('You lack {} in your pack\n'.format(thing))
+        thing = thing.title()
+        cur.execute("""SELECT id, name FROM items WHERE name = %s """, [thing])
+        items_query = cur.fetchall()
+        if items_query == []:
+            print("You dont have {} in your pack!\n".format(thing))
+        else:
+            cur.execute("""SELECT id FROM inventory WHERE name = %s AND backpack = TRUE""", [results[0][1]])
+            inventory_query = cur.fetchall()
+            if inventory_query == []:
+                print('You dont have {} in your pack!\n'.format(thing))
+            else:
+                cur.execute("""UPDATE inventory_query SET backpack = FALSE 
+                        WHERE id = %s""", [inventory_query[0][0]])
 
     def put(self, thing):
         """(str) -> str
