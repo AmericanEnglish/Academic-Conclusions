@@ -94,7 +94,7 @@ def maploop(currentmap):
             
             elif action[0] == 'examine' and len(action) == 2:
                 # check to make sure item / room / door in question is in the area
-                protag.examine(action[1])
+                protag.examine(action[1], cur)
 
             elif action[0] == 'enter' and len(action) > 1:
                 # checks for any rooms in the area that might be enterable
@@ -116,7 +116,6 @@ def maploop(currentmap):
                 protag.drop(action[1], cur)
             
             elif action[0] == 'talk':
-                # if user types wrong name somevar will help print a newline
                 protag.talk(action)
 
             elif action[0] == 'take':
