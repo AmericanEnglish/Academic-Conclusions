@@ -118,14 +118,7 @@ def maploop(currentmap):
                     action = [action[0],
                             ' '.join(action[1:action.index('from')]),
                             ' '.join(action[action.index('from') + 1:])]
-                    for item in currentmap.contents[protag.pos][0]:
-                        if action[2] == item.name.lower():
-                            # will be added as table/object method later
-                            for thing in item.contents:
-                                if thing.name.lower() == action[1]:
-                                    protag.person.append(thing)
-                                    item.contents.remove(thing)
-                                    print('You took {} from {}'.format(thing.name, item.name))
+                    protag.take(action[1:])
             
             # elif action[0] == 'help' and len(action) == 2:
             #     print(helpcom(action[1]))
