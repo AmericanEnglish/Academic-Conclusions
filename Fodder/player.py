@@ -42,7 +42,7 @@ class Player:
         # Pulls down the max x,y for the current map
         cur.execute("""SELECT max_x, max_y FROM maps
                     WHERE name = %s""", [self.map])
-        mapmax = cur.fetch()[0]
+        mapmax = cur.fetchall()[0]
         if motion.lower() in directions:
             x = self.pos[0] + directions[motion.lower()][0]
             y = self.pos[1] + directions[motion.lower()][1]
@@ -54,9 +54,8 @@ class Player:
             print('You have moved {}\n'.format(motion))
         
         # Sends a turn back warning if player leaves the map boundaries
-        if not (0 <= self.pos[0] <= mapmax[0]) or not (0 <= self.pos[1] <= mapmax[1]):
-            print("""You see the torch flicker and the wind begins to pick up\n
-                    Any further and you might not be going back.""")
+            if not (0 <= self.pos[0] <= mapmax[0]) or not (0 <= self.pos[1] <= mapmax[1]):
+                print("-You see the torch flicker and the wind begins to pick up Any further and you might not be going back.\n")
 
         else:
             print('Not a valid command, type help for help\n')
@@ -68,11 +67,10 @@ class Player:
         the Obj in question. Else returns None meaning item not present
         """
         #Query helps keep person inventory beneath 11
-        cur.execute("""SELECT COUNT(*) FROM inventory 
-            WHERE backpack = FALSE AND name IS NULL
-            GROUP BY name""")
-        capacity = cur.fetchall()[0][0]
-        if capacity >= 10:
+        cur.execute("""SELECT * FROM inventory 
+            WHERE backpack = FALSE AND name IS NULL""")
+        capacity = cur.fetchall()
+        if len(capacity) >= 10:
             print('You attempt to use your pack but you fumble your items. \
                 You cant carry anymore in your hands, consider putting something \
                 away\n')
@@ -90,7 +88,7 @@ class Player:
         else:
             # Moves item to personal inventory
             cur.execute("""UPDATE inventory SET backpack = FALSE 
-                    WHERE id = %s""", inventory_query[0])
+                    WHERE item_id = %s""", inventory_query[0])
             print('Youve pulled {} from your pack!'.format(thing))
         print()
 
@@ -112,7 +110,7 @@ class Player:
         else:
             # Moves item to backpack by changing backpack -> TRUE
             cur.execute("""UPDATE inventory SET backpack = TRUE
-                    WHERE id = %s""", inventory_query[0])
+                    WHERE item_id = %s""", inventory_query[0])
             print('Youve put {} in your pack!\n'.format(thing))
 
 
@@ -217,37 +215,39 @@ class Player:
         thing = thing.lower().title()
         cur.execute("""SELECT id FROM inventory, items
             WHERE items.name = %s AND backpack = FALSE AND
-                inventory.name IS NULL""")
+                inventory.name IS NULL""", [thing])
         dropped = cur.fetchall()
         if dropped == []:
             print('Not a valid command, type help for help')
         else:
-            cur.execute("""DELETE FROM inventory WHERE id = %s""", dropped[0])
-            cur.execute("""UPDATE items SET x = %s, y = %s, map_name = %s
-                        WHERE id = %s""", dropped[0])
+            cur.execute("""DELETE FROM inventory WHERE item_id = %s""", dropped[0])
+            cur.execute("""UPDATE items 
+                        SET x = %s, y = %s, map_name = %s
+                        WHERE id = %s""", 
+                        [self.pos[0], self.pos[1], self.map, dropped[0][0]])
             print('Youve dropped {} to the ground'.format(thing))
         print()
 
     def examine(self, thing, cur):
         # Examine spans items, npcs, and containers
         # Starting with the smaller relation first
-        thing.lower().title()
+        thing = thing.lower().title()
         cur.execute("""SELECT description FROM npcs
-            WHERE name = %s, x = %s, y = %s""",
+            WHERE name = %s AND x = %s AND y = %s""",
             [thing, self.pos[0], self.pos[1]])
         npc_query = cur.fetchall()
         if npc_query == []:
             # Then checks containers in the area
             cur.execute("""SELECT id, description, unlock_item_id, room_flag
                 FROM containers
-                WHERE name = %s, x = %s, y = %s""",
+                WHERE name = %s AND x = %s AND y = %s""",
                 [thing, self.pos[0], self.pos[1]])
             container_query = cur.fetchall()
             if container_query == []:
                 # Time to check personal inventory
                 cur.execute("""SELECT description FROM inventory, items
                     WHERE items.id = inventory.item_id AND items.name = %s AND
-                        backpack = 0 AND inventory.name IS NULL""", [thing])
+                        backpack = FALSE AND inventory.name IS NULL""", [thing])
                 personal_query = cur.fetchall()
                 if personal_query == []:
                     print('Not a valid command, type help for help.')
@@ -257,23 +257,24 @@ class Player:
                 #Turns the list of tuples into just a tuple
                 container_query = container_query[0]
                 # Checks room flag
-                locked =  room_flag != None
-                if container_query[3]:
-                    print('-{}\n-Locked: {}\n++{}'.format(thing, locked, description))
+                room_flag = container_query[3]
+                locked =  container_query[2] != None
+                if room_flag:
+                    print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
                 else:
                     # If not a room, than just a normal container
                     # Checks first to display locked or not
                     if locked:
-                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, description))
+                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
                     # If not locked displays contents of the container
                     else:
-                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, description))
+                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
                         # Pulls contents from items table
                         print('> Inside You See <')
                         cur.execute("""SELECT name FROM items
                             WHERE items.container_id = %s""", [container_query[0]])
                         contents = cur.fetchall()
-                        contes.sort()
+                        contents.sort()
                         for items in contents:
                             print('-{}'.format(items[0]))        
         else:
