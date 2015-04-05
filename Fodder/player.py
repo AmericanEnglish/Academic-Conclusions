@@ -121,10 +121,13 @@ class Player:
             WHERE items.id = inventory.id AND backpack = TRUE""")
         backpack = cur.fetchall()
         print('> Your Pack <')
-        for items in backpack:
-            print('-{}'.format(items[0]))
+        if back == []:
+            print('-Empty-')
+        else:
+            for items in backpack:
+                print('-{}'.format(items[0]))
         print()
-        
+
     def person_view(self):
         #create sorting algoritihim
         if self.person == []:
