@@ -13,11 +13,12 @@ INSERT INTO worth (name, value) VALUES
     ('platinum', 10.00);
 
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
-    (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE);
+    (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE),
+    (150, 'Barrel', 0, 1, 'Small Town', NULL, 'A oak barrely encrusted with beauty', NULL, FALSE); -- Test Case 1
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
     (1, 'Small Trinket', 0, 0, 'Small Town', 'bronze', NULL, 'A small smooth stone, you found in your pocket just a moment ago'),
-    (2, 'Pineapple', NULL, NULL, NULL, 'silver', 200, 'Its a Pineapple . . .');
+    (2, 'Pineapple', NULL, NULL, NULL, 'silver', 150, 'Its a Pineapple . . .'); -- Test Case 1
 
 INSERT INTO npcs (name, x, y, map_name, room_id, counter_value, description) VALUES 
     ('Oracle Wyma', NULL, NULL, NULL, 200, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest');
