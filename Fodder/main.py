@@ -107,7 +107,7 @@ def maploop(currentmap):
                 protag.look(cur)
 
             elif action[0] == 'ground':
-                protag.ground()
+                protag.ground(cur)
 
             elif action[0] == 'pickup' and len(action) == 2:
                 protag.pickup(action[1])
