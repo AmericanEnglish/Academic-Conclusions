@@ -9,7 +9,7 @@ CREATE TABLE maps
 );
 
 
-CREATE TABLE item_worth
+CREATE TABLE worth
 (
     name VARCHAR(20),
     value MONEY,
