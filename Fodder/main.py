@@ -78,7 +78,7 @@ def maploop(currentmap):
                     return True
             
             elif action[0] == 'm':
-                protag.move(action[1])
+                protag.move(action[1], cur)
             
             elif action[0] == 'pack':
                 protag.pack_view()
