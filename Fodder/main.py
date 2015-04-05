@@ -112,8 +112,8 @@ def maploop(currentmap):
             elif action[0] == 'pickup' and len(action) == 2:
                 protag.pickup(action[1], cur)
 
-            elif action[0] == 'drop':
-                protag.drop(action[1])
+            elif action[0] == 'drop' and len(action) == 2:
+                protag.drop(action[1], cur)
             
             elif action[0] == 'talk':
                 # if user types wrong name somevar will help print a newline
