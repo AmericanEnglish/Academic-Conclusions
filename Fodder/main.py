@@ -24,26 +24,25 @@ def startup():
     
     try:
         con = psycopg2.connect(host=zhost, database=zdatabase, user=zuser, password=zpass)
-        cur = con.cursor()
         print('Connnected! Ready for use!')
     except psycopg2.Error as problem:
         print(problem)
         return False
-
-    if answer[0] == 'y':
-        with open('tables.sql') as tables:
-            cur.execute(tables.read())
-            con.commit()
-        with open('data.sql') as data_to_use:
-            cur.execute(data_to_use.read())
-            con.commit()
-    
-    elif answer[0] == 'n':      
-        answer = input('New Game?\n(y/n): ').lower()
-        if answer == 'y':
-            with open('refresh.sql') as refresh:
-                cur.execute(refresh.read())
+    with con.cursor() as cur:
+        if answer[0] == 'y':
+            with open('tables.sql') as tables:
+                cur.execute(tables.read())
                 con.commit()
+            with open('data.sql') as data_to_use:
+                cur.execute(data_to_use.read())
+                con.commit()
+        
+        elif answer[0] == 'n':      
+            answer = input('New Game?\n(y/n): ').lower()
+            if answer == 'y':
+                with open('refresh.sql') as refresh:
+                    cur.execute(refresh.read())
+                    con.commit()
     return True
 
 
@@ -59,79 +58,80 @@ def maploop(currentmap):
     while inmap and not protag.death:
         action = input('={}=> '.format(currentmap.name))
         action = action.lower().strip().split()
-        if len(action) > 1:
-            action = [action[0], ' '.join(action[1:])]
-        if len(action) < 1:
-            print('')
-        
-        elif  action[0].lower() == 'quit':
-            if input('Are you sure? (y/n): ').lower() == 'y':
-                return True
-        
-        elif action[0] == 'm':
-            protag.move(action[1])
-        
-        elif action[0] == 'pack':
-            protag.pack_view()
-        
-        elif action[0] == 'me':
-            protag.person_view()
-        
-        elif action[0] == 'put':
-            protag.put(action[1])
-        
-        elif action[0] == 'pull':
-            protag.pull(action[1])
-        
-        elif action[0] == 'examine' and len(action) == 2:
-            # check to make sure item / room / door in question is in the area
-            protag.examine(action[1])
+        with con.cursor() as cursor:
+            if len(action) > 1:
+                action = [action[0], ' '.join(action[1:])]
+            if len(action) < 1:
+                print('')
+            
+            elif  action[0].lower() == 'quit':
+                if input('Are you sure? (y/n): ').lower() == 'y':
+                    return True
+            
+            elif action[0] == 'm':
+                protag.move(action[1])
+            
+            elif action[0] == 'pack':
+                protag.pack_view()
+            
+            elif action[0] == 'me':
+                protag.person_view()
+            
+            elif action[0] == 'put':
+                protag.put(action[1])
+            
+            elif action[0] == 'pull':
+                protag.pull(action[1])
+            
+            elif action[0] == 'examine' and len(action) == 2:
+                # check to make sure item / room / door in question is in the area
+                protag.examine(action[1])
 
-        elif action[0] == 'enter' and len(action) > 1:
-            # checks for any rooms in the area that might be enterable
-            player.enter(action[1])
+            elif action[0] == 'enter' and len(action) > 1:
+                # checks for any rooms in the area that might be enterable
+                player.enter(action[1])
 
-        elif action[0] == 'exit':
-            print(">You're already outside!<\n")
+            elif action[0] == 'exit':
+                print(">You're already outside!<\n")
 
-        elif action[0] == 'look':
-            protag.look()
+            elif action[0] == 'look':
+                protag.look()
 
-        elif action[0] == 'ground':
-            protag.ground()
+            elif action[0] == 'ground':
+                protag.ground()
 
-        elif action[0] == 'pickup' and len(action) == 2:
-            protag.pickup(action[1])
+            elif action[0] == 'pickup' and len(action) == 2:
+                protag.pickup(action[1])
 
-        elif action[0] == 'drop':
-            protag.drop(action[1])
-        
-        elif action[0] == 'talk':
-            # if user types wrong name somevar will help print a newline
-            protag.talk(action)
+            elif action[0] == 'drop':
+                protag.drop(action[1])
+            
+            elif action[0] == 'talk':
+                # if user types wrong name somevar will help print a newline
+                protag.talk(action)
 
-        elif action[0] == 'take':
-            # take requires a second marker called from. This requiers action
-            # to be reconfigured
-            if 'from' in action:
-                action = ' '.join(action).split()
-                action = [action[0],
-                        ' '.join(action[1:action.index('from')]),
-                        ' '.join(action[action.index('from') + 1:])]
-                for item in currentmap.contents[protag.pos][0]:
-                    if action[2] == item.name.lower():
-                        # will be added as table/object method later
-                        for thing in item.contents:
-                            if thing.name.lower() == action[1]:
-                                protag.person.append(thing)
-                                item.contents.remove(thing)
-                                print('You took {} from {}'.format(thing.name, item.name))
-        
-        # elif action[0] == 'help' and len(action) == 2:
-        #     print(helpcom(action[1]))
-        
-        else:
-            print('Not a valid command, type help for help\n')
+            elif action[0] == 'take':
+                # take requires a second marker called from. This requiers action
+                # to be reconfigured
+                if 'from' in action:
+                    action = ' '.join(action).split()
+                    action = [action[0],
+                            ' '.join(action[1:action.index('from')]),
+                            ' '.join(action[action.index('from') + 1:])]
+                    for item in currentmap.contents[protag.pos][0]:
+                        if action[2] == item.name.lower():
+                            # will be added as table/object method later
+                            for thing in item.contents:
+                                if thing.name.lower() == action[1]:
+                                    protag.person.append(thing)
+                                    item.contents.remove(thing)
+                                    print('You took {} from {}'.format(thing.name, item.name))
+            
+            # elif action[0] == 'help' and len(action) == 2:
+            #     print(helpcom(action[1]))
+            
+            else:
+                print('Not a valid command, type help for help\n')
     main(protag, protag.map)
 
 def roomloop(protag, currentroom):
