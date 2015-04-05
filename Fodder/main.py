@@ -87,7 +87,7 @@ def maploop(currentmap):
                 protag.person_view()
             
             elif action[0] == 'put':
-                protag.put(action[1])
+                protag.put(action[1], cur)
             
             elif action[0] == 'pull':
                 protag.pull(action[1], cur)
