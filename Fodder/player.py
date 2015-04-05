@@ -34,17 +34,21 @@ class Player:
         x = self.pos[0]
         y = self.pos[1]
         
+        # Pulls down the max x,y for the current map
         cur.execute("""SELECT max_x, max_y FROM maps
                     WHERE name = %s""", [self.map])
         mapmax = cur.fetch()[0]
         if motion.lower() in directions:
             x = self.pos[0] + directions[motion.lower()][0]
             y = self.pos[1] + directions[motion.lower()][1]
+            # Checks if player ignore the turn back warning
             if x < -1 or x > mapmax[0] + 1 or y < -1 or y > mapmax[1] + 1:
                 print('>Dead<')
                 exit()
             self.pos = x, y
             print('You have moved {}\n'.format(motion))
+        
+        # Sends a turn back warning if player leaves the map boundaries
         if not (0 <= self.pos[0] <= mapmax[0]) or not (0 <= self.pos[1] <= mapmax[1]):
             print("""You see the torch flicker and the wind begins to pick up\n
                     Any further and you might not be going back.""")
