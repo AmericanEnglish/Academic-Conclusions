@@ -20,7 +20,7 @@ CREATE TABLE worth
 -- Table of changing values
 CREATE TABLE items
 (
-    id INTEGER NOT NULL,
+    id INTEGER,
     name VARCHAR(20),
     x INTEGER, -- If both x and y are NULL 
     y INTEGER, -- then item must be on the ground in a room
