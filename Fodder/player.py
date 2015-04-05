@@ -122,6 +122,7 @@ class Player:
         if tracking == len(self.person):
             print('')
 
+    # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
                                 WHERE name = %s""", [action[1]])
