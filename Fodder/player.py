@@ -142,6 +142,21 @@ class Player:
             for item in person:
                 print('-{}'.format(item[0]))
         print()
+
+    def look(self, cur):
+        cur.execute("""SELECT containers.name FROM containers, maps
+                WHERE map.name = %s AND
+                    containers.map_name = map.name AND
+                    containers.x = %s AND containers.y = %s
+                """, [self.map, self.pos[0], self.post[1]])
+        surroundings = cur.fetchall()
+        print('> Around You See <')
+        if surroundings = []:
+            print('-Nothing-')
+        else:
+            for items in surroundings:
+                print('-{}'.format(items[0]))
+        print()
         
     def examine(self, thing):
         tracking = 0
