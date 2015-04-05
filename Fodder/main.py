@@ -58,7 +58,7 @@ def maploop(currentmap):
     while inmap and not protag.death:
         action = input('={}=> '.format(currentmap.name))
         action = action.lower().strip().split()
-        with con.cursor() as cursor:
+        with con.cursor() as cur:
             if len(action) > 1:
                 action = [action[0], ' '.join(action[1:])]
             if len(action) < 1:
@@ -113,15 +113,15 @@ def maploop(currentmap):
             elif action[0] == 'take':
                 # take requires a second marker called from. This requiers action
                 # to be reconfigured
-                if 'from' in action:
+                if 'from' in action[1]:
                     action = ' '.join(action).split()
                     action = [action[0],
                             ' '.join(action[1:action.index('from')]),
                             ' '.join(action[action.index('from') + 1:])]
                     protag.take(action[1:])
             
-            # elif action[0] == 'help' and len(action) == 2:
-            #     print(helpcom(action[1]))
+            elif action[0] == 'help' and len(action) == 2:
+                print(helpcom(action[1]))
             
             else:
                 print('Not a valid command, type help for help\n')
