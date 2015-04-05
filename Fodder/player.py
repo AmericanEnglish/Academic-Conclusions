@@ -72,7 +72,8 @@ class Player:
         if items_query == []:
             print("You dont have {} in your pack!\n".format(thing))
         else:
-            cur.execute("""SELECT id FROM inventory WHERE name = %s AND backpack = TRUE""", [results[0][1]])
+            cur.execute("""SELECT id FROM inventory 
+                WHERE name = %s AND backpack = TRUE""", [items_query[0][1]])
             inventory_query = cur.fetchall()
             if inventory_query == []:
                 print('You dont have {} in your pack!\n'.format(thing))
