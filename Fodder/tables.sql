@@ -125,7 +125,7 @@ CREATE TABLE inventory
 CREATE TABLE help
 (
     name VARCHAR(10),
-    syntax VARCHAR(20),
+    syntax VARCHAR(30),
     description VARCHAR,
     PRIMARY KEY (name)
 );
