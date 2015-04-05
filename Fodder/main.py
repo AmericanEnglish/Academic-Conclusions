@@ -35,14 +35,12 @@ def startup():
                 con.commit()
             with open('data.sql') as data_to_use:
                 cur.execute(data_to_use.read())
-                con.commit()
         
         elif answer[0] == 'n':      
             answer = input('New Game?\n(y/n): ').lower()
             if answer == 'y':
                 with open('refresh.sql') as refresh:
                     cur.execute(refresh.read())
-                    con.commit()
     return True
 
 
