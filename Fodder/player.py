@@ -147,17 +147,22 @@ class Player:
         cur.execute("""SELECT containers.name FROM containers, maps
                 WHERE map.name = %s AND
                     containers.map_name = map.name AND
-                    containers.x = %s AND containers.y = %s
-                """, [self.map, self.pos[0], self.post[1]])
+                    containers.x = %s AND containers.y = %s""",
+                    [self.map, self.pos[0], self.pos[1]])
         surroundings = cur.fetchall()
         print('> Around You See <')
-        if surroundings = []:
+        if surroundings == []:
             print('-Nothing-')
         else:
             for items in surroundings:
                 print('-{}'.format(items[0]))
         print()
-        
+
+    def ground(self, cur):
+        cur.execute("""SELECT items.name FROM items
+            WHERE item.map_name = %s AND
+                items.x = %s AND items.y = %s""",
+                [self.map, self.pos[0], self.pos[1]])
     def examine(self, thing):
         tracking = 0
         for item in self.person:
