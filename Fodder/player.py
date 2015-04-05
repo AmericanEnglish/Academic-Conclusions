@@ -111,19 +111,20 @@ class Player:
                 print('Youve put {} in your pack!\n'.format(thing))
 
 
-    def pack_view(self):
+    def pack_view(self, cur):
         """(Backpack)
 
         Displays a sort list of backpack contents
         """
         #create sorting algorithim
-        if self.pack == []:
-            print('>Pack is empty<')
-        #self.pack.sort()
-        for item in self.pack:
-            print('{}'.format(str(item).title()))
-        print('')
-
+        cur.execute("""SELECT items.name FROM inventory, items
+            WHERE items.id = inventory.id AND backpack = TRUE""")
+        backpack = cur.fetchall()
+        print('> Your Pack <')
+        for items in backpack:
+            print('-{}'.format(items[0]))
+        print()
+        
     def person_view(self):
         #create sorting algoritihim
         if self.person == []:
