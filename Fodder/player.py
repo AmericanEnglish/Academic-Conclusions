@@ -121,3 +121,9 @@ class Player:
                 tracking += 1
         if tracking == len(self.person):
             print('')
+
+def help(command, cur):
+    cur.execute("""SELECT name, syntax, description FROM help
+                                WHERE name = %s""", [action[1]])
+                info = cur.fetchall()
+                print('{} -> {} \n++{}\n'.format(info[0], info[1], info[2]))
