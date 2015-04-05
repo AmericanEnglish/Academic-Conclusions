@@ -243,7 +243,15 @@ class Player:
                 [thing, self.pos[0], self.pos[1]])
             container_query = cur.fetchall()
             if container_query == []:
-                pass
+                # Time to check personal inventory
+                cur.execute("""SELECT description FROM inventory, items
+                    WHERE inventory.id = items.id AND backpack = 0 AND
+                        inventory.name IS NULL""")
+                personal_query = cur.fetchall()
+                if personal_query == []:
+                    print('Not a valid command, type help for help.')
+                else:
+                    print('-{}\n++{}'.format(thing, personal_query[0][0]))
             else: 
                 #Turns the list of tuples into just a tuple
                 container_query = container_query[0]
@@ -255,10 +263,10 @@ class Player:
                     # If not a room, than just a normal container
                     # Checks first to display locked or not
                     if locked:
-                        print('-{}\n-Locked: {}\n ++{}'.format(thing, locked, description))
+                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, description))
                     # If not locked displays contents of the container
                     else:
-                        print('-{}\n-Locked: {}\n ++{}'.format(thing, locked, description))
+                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, description))
                         # Pulls contents from items table
                         print('> Inside You See <')
                         cur.execute("""SELECT name FROM items
@@ -266,8 +274,7 @@ class Player:
                         contents = cur.fetchall()
                         contes.sort()
                         for items in contents:
-                            print('-{}'.format(items[0]))
-                
+                            print('-{}'.format(items[0]))        
         else:
             print('-{}\n++{}'.format(thing, npc_query[0][0]))
         print()
