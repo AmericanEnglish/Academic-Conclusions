@@ -27,7 +27,8 @@ class Player:
         self.totalmoves += 1
         if self.totalmoves == 300:
             print('>Dead<\n')
-            exit()
+            self.death = True
+            return
 
         directions = {
                     'north': (0,1),
@@ -48,7 +49,7 @@ class Player:
             # Checks if player ignore the turn back warning
             if x < -1 or x > mapmax[0] + 1 or y < -1 or y > mapmax[1] + 1:
                 print('>Dead<\n')
-                exit()
+                self.death = True
             self.pos = x, y
             print('You have moved {}\n'.format(motion))
         
