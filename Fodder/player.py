@@ -190,6 +190,7 @@ class Player:
 
     def pickup(self, thing, cur):
         thing = thing.lower().title()
+        # Selecting item from items
         cur.execute("""SELECT id FROM items
             WHERE items.map_name = %s AND
                 items.name = %s AND
@@ -207,7 +208,7 @@ class Player:
                 SET x = NULL, y = NULL, map_name = NULL
                 WHERE id = %s""", items_query[0])
             print('> You Picked Up <\n{}\n'.format(thing))
-            
+
     def examine(self, thing):
         tracking = 0
         for item in self.person:
