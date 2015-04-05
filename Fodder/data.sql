@@ -2,7 +2,7 @@
 INSERT INTO maps (name, max_x, max_y, description) VALUES
     ('Small Town', 0, 2, 'A small, unfriendly, town that doesnt see many travelers');
 
-INSERT INTO worth (name, value) VALUES;
+INSERT INTO worth (name, value) VALUES
     ('inhumane', -6.00),
     ('questionable', -4.00),
     ('tainted', -2.00),
@@ -12,7 +12,7 @@ INSERT INTO worth (name, value) VALUES;
     ('gold', 6.00),
     ('platinum', 10.00);
 
-INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES;
+INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
     (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE);
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
@@ -23,7 +23,7 @@ INSERT INTO npcs (name, x, y, map_name, room_id, counter_value, description) VAL
     ('Oracle Wyma', NULL, NULL, NULL, 200, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest');
 
 INSERT INTO npc_conditionals (npc_name, condition, action) VALUES
-    ('Oracle Wyma', 'player.has(1)', 'score()')
+    ('Oracle Wyma', 'player.has(1)', 'score()');
 
 INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
     ('Oracle Wyma', 0, 'Hello there, you look familiar, do I know you? . . . Not much a talker\nI see. Either way you look like you might need some help. Now on a normal\nday I might just give you some money and tell you to do it in the faith of\nthe lord but I have no time. Ill give you one hundred gold if you retrieve\nan item for me. I need a small glass-like key from the graveyard. Fetch it.'),
