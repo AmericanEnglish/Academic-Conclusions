@@ -2,19 +2,16 @@ import psycopg2
 
 class Player:
     """Creates the player"""
-    def __init__(self, name, coords):
+    def __init__(self, name):
         """(Player, str, list of nums, tuple of nums)"""
         self.name = name
-        self.person = []
-        self.pack = []
-        self.pos = coords
-        self.map = None
+        self.pos = (0, 1)
+        self.map = 'Small Town'
         self.room = None
-        self.score = 0
         self.totalmoves = 0
         self.death = False
 
-    def move(self, motion):
+    def move(self, motion, cur):
         """(str) -> None
 
         Moves the player in one direction:
@@ -36,31 +33,24 @@ class Player:
                     }
         x = self.pos[0]
         y = self.pos[1]
+        
+        cur.execute("""SELECT max_x, max_y FROM maps
+                    WHERE name = %s""", [self.map])
+        mapmax = cur.fetch()[0]
         if motion.lower() in directions:
             x = self.pos[0] + directions[motion.lower()][0]
             y = self.pos[1] + directions[motion.lower()][1]
+            if x < -1 or x > mapmax[0] + 1 or y < -1 or y > mapmax[1] + 1:
+                print('>Dead<')
+                exit()
             self.pos = x, y
             print('You have moved {}\n'.format(motion))
-            if self.pos[0] > self.map.x or self.pos[0] < 0:
-                # Provides a warning if the map is left
-                if self.pos[0] > self.map.x + 1 or self.pos[0] < -1:
-                    print('You were eaten by wolves')
-                    return True
-                elif self.pos[0] == self.map.x + 1 or self.pos[0] == -1:
-                    print('You have left the saftey of the {}, move farther and you might not move'.format(
-                                                        self.map.name))
-                    print('at all. Quickly there is no time, head back from whence you came.\n')
-            elif self.pos[1] > self.map.y or self.pos[1] < 0:
-                # Provides a warning if the map is left
-                if self.pos[1] > self.map.y + 1 or self.pos[1] < -1:
-                    print('You were eaten by cannibals')
-                    return True
-                elif self.pos[1] == self.map.y + 1 or self.pos[1] == -1:
-                    print('You have left the saftey of the {}, move farther and you might not move'.format(
-                                                        self.map.name))
-                    print('at all. Quickly there is no time, move back from whence you came.\n')
+        if not (0 <= self.pos[0] <= mapmax[0]) or not (0 <= self.pos[1] <= mapmax[1]):
+            print("""You see the torch flicker and the wind begins to pick up\n
+                    Any further and you might not be going back.""")
+
         else:
-            print('Not a valid command, type help for help')
+            print('Not a valid command, type help for help\n')
 
     def pull(self, thing):
         """(str) -> Obj
