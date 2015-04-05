@@ -16,9 +16,8 @@ INSERT INTO containers (id, name, x, y, map_name, parent_container_id, descripti
     (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE);
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
-    (1, 'Key' ,  2,    2, 'Small Town', NULL, 'A plain metal key good for unlocking'),
-    (2, 'Key', NULL, NULL, NULL,  300, 'A smaller plainer key' ),
-    (3, 'Final Key', NULL, NULL, NULL, 2, 'The only key youll ever wear' );
+    (1, 'Small Trinket', 0, 0, 'Small Town', 'bronze', NULL, 'A small smooth stone, you found in your pocket just a moment ago'),
+    (2, 'Pineapple', NULL, NULL, NULL, 'silver', 200, 'Its a Pineapple . . .');
 
 INSERT INTO npcs (name, x, y, map_name, room_id, counter_value, description) VALUES 
     ('Oracle Wyma', NULL, NULL, NULL, 200, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest');
