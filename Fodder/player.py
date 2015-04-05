@@ -67,17 +67,20 @@ class Player:
         the Obj in question. Else returns None meaning item not present
         """
         thing = thing.lower().title()
+        #Checks to make sure item exists and pulls the id
         cur.execute("""SELECT id, name FROM items WHERE name = %s """, [thing])
         items_query = cur.fetchall()
         if items_query == []:
             print("You dont have {} in your pack!\n".format(thing))
         else:
+            # Checks the backpack for item
             cur.execute("""SELECT id FROM inventory 
                 WHERE name = %s AND backpack = TRUE""", items_query[0])
             inventory_query = cur.fetchall()
             if inventory_query == []:
                 print('You dont have {} in your pack!\n'.format(thing))
             else:
+                # Moves item to personal inventory
                 cur.execute("""UPDATE inventory_query SET backpack = FALSE 
                         WHERE id = %s""", inventory_query[0])
                 print('Youve pulled {} from your pack!\n'.format(thing))
@@ -89,18 +92,20 @@ class Player:
         """
 
         thing = thing.lower().title()
-        cur.execute("""SELECT id FROM items 
-            WHERE name = %s""", [thing])
+        #Checks to make sure item exists and pulls the item_id
+        cur.execute("""SELECT id FROM items WHERE name = %s""", [thing])
         items_query = cur.fetchall()
         if items_query == []:
             print('You do not possess {}!'.format(thing))
         else:
+            # Checks to see if item_id in personal inventory
             cur.execute("""SELECT id FROM inventory
-                WHERE id = %s AND name IS NULL""", items_query[0])
+                WHERE id = %s AND name IS NULL AND backpack = FALSE""", items_query[0])
             inventory_query = cur.fetchall()
             if inventory_query == []:
                 print('You do not possess {}!'.format(thing))
             else:
+                # Moves item to backpack by changing backpack -> TRUE
                 cur.execute("""UPDATE inventory SET backpack = TRUE
                         WHERE id = %s AND name IS NULL""", inventory_query[0])
                 print('Youve put {} in your pack!\n'.format(thing))
