@@ -107,7 +107,7 @@ class Player:
             else:
                 # Moves item to backpack by changing backpack -> TRUE
                 cur.execute("""UPDATE inventory SET backpack = TRUE
-                        WHERE id = %s AND name IS NULL""", inventory_query[0])
+                        WHERE id = %s""", inventory_query[0])
                 print('Youve put {} in your pack!\n'.format(thing))
 
 
