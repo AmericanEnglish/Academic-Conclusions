@@ -29,8 +29,8 @@ CREATE TABLE items
     -- container_id INTEGER, -- If NULL then item is on ground
     description VARCHAR,
     PRIMARY KEY (id),
-    FOREIGN KEY (base_name)
-        REFERENCES item_worth (name),
+    FOREIGN KEY (worth_type)
+        REFERENCES worth (name),
     -- FOREIGN KEY (container_id)
     --     REFERENCES containers (id),
     FOREIGN KEY (map_name)
@@ -117,7 +117,7 @@ CREATE TABLE inventory
     backpack BOOLEAN,
     PRIMARY KEY (item_id),
     FOREIGN KEY (item_id)
-        REFERENCES items (id)
+        REFERENCES items (id),
     FOREIGN KEY (name)
         REFERENCES npcs(name)
 );
