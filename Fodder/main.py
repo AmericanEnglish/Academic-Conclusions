@@ -8,6 +8,17 @@ from time import perf_counter
 
 
 def startup():
+    """(None) -> Bool
+
+    This helps determine all the connection settings for the PostgreSQL
+    server. If there are any errors FOR ANY REASON the startup function
+    will drop the error message into the command line and return False
+    preventing the game from continuing. Otherwise startup will connect
+    to the server.
+
+    Startup will then go through and insert all data if the user hasn't
+    played before, or refresh the data if the user wants a new game.
+    """
     answer = input('Is this your first time running "Academic Conclusions"?\n(y/n):').lower()
     default = input('Use default server login?\n(y/n): ').lower()
     if default[0] == 'n':
