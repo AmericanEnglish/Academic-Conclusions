@@ -106,7 +106,7 @@ def maploop(protag, con):
                 print(">You're already outside!<\n")
 
             elif action[0] == 'look':
-                protag.look(cur)
+                protag.look(None, cur)
 
             elif action[0] == 'ground':
                 protag.ground(cur)
@@ -154,7 +154,7 @@ def roomloop(protag, currentroom):
     print("You entered {}\n".format(currentroom.name))
     with con.cursor() as cur:
         while True:
-            action = input('={}=> '.format(currentroom.name))
+            action = input('={}=> '.format(self.room))
             action = action.lower().strip().split()
             if len(action) > 1:
                 action = [action[0], ' '.join(action[1:])]
@@ -175,25 +175,18 @@ def roomloop(protag, currentroom):
                 protag.pull(action[1], cur)
             
             elif action[0] == 'examine' and len(action) == 2:
-                for item in currentroom.contents[0]:
-                    if action[1] in item.name.lower():
-                        item.examine()
-                        break
-                protag.examine(action[1])
-                print('')
+                protag.room_examine(action[1], cur)
+                print()
             
             elif action[0] == 'enter':
-                print(">You're already in the {}<\n".format(currentroom.name))
+                print(">You're already in the {}<\n".format(self.room))
             
             elif action[0] == 'exit':
-                print(">You exit the {}<\n".format(currentroom.name))
+                print(">You exit the {}<\n".format(self.room))
                 return
 
             elif action[0] == 'look':
-                print('>Around you see<')
-                for item in currentroom.contents[0]:
-                    print(item.name)
-                print('')
+                protag.room_look(cur)
             
             elif action[0] == 'ground':
                 if currentroom.contents[1] == []:
