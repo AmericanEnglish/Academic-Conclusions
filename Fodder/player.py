@@ -152,13 +152,13 @@ class Player:
                 print('-{}'.format(item[0]))
         print()
 
-    def look(self, cur):
+    def look(self, parent_container_id, cur):
         
         # Gathers the names of surrounding containers
         cur.execute("""SELECT name FROM containers
-                WHERE containers.map_name = %s AND
-                    containers.x = %s AND containers.y = %s""",
-                    [self.map, self.pos[0], self.pos[1]])
+                WHERE map_name = %s AND x = %s AND y = %s
+                    AND parent_container_id = %s""",
+                    [self.map, self.pos[0], self.pos[1]], parent_container_id)
         surroundings = cur.fetchall()
         surroundings.sort()
 
@@ -306,6 +306,8 @@ class Player:
         else:
             print('Not a valid command, type help for help.')
         print()
+    
+    def 
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
