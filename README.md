@@ -12,10 +12,13 @@ This program was coded in python3.4 and uses the following additional packages:
 ## Progress
 - Done
     * Base Program Written
+    * All maploop functions written
+    * All maploop so far is bugless
 - To Do
-    * Trim exessive statements from main.py and make them methods of the *Player* class. These commits will be referred to as **Fat Trimming** in commits.
-    * Convert things in player.py to use the database for as much as possible.
-    * Maps.py will be changed . . . eventually
+    * Continue to condense main.py while slowly expanding player.py
+    * Write all queries that will have room related information
+    * Maps.py will be eliminated and all functionality moved to player.py
+    * Finish the 'enter' function and in doing so finally tie maps to rooms.
 
 ## Finally . . .
 To run the program simply:
