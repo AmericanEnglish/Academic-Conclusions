@@ -284,28 +284,28 @@ class Player:
             print('-{}\n++{}'.format(thing, npc_query[0][0]))
         print()
 
-        def take(self, combo, cur):
-            item = combo[0]
-            item = item.lower().title()
-            container = combo[1]
-            container = container.lower().title()
-            cur.execute("""SELECT item.id FROM containers, items
-                        WHERE item.name = %s AND containers.name = %s AND
-                        containers.x = %s AND containers.y = %s""",
-                        [item, container, self.pos[0], self.pos[1]]])
-            
-            # Isolates the tuple from the list
-            item_id = cur.fetchall()[0]
-            if len(combo_value) == 2:
-                cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
-                    item_id)
-                cur.execute("""UPDATE items 
-                    SET x = NULL, y = NULL, map_name = NULL, container_id = NULL
-                    WHERE item.id = %s""", item_id)
-                print('> You took {} from {} <')
-            else:
-                print('Not a valid command, type help for help.')
-            print()
+    def take(self, combo, cur):
+        item = combo[0]
+        item = item.lower().title()
+        container = combo[1]
+        container = container.lower().title()
+        cur.execute("""SELECT items.id FROM containers, items
+                    WHERE items.name = %s AND containers.name = %s AND
+                    containers.x = %s AND containers.y = %s""",
+                    [item, container, self.pos[0], self.pos[1]])
+        
+        # Isolates the tuple from the list
+        item_id = cur.fetchall()[0]
+        if len(item_id) == 1:
+            cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
+                item_id)
+            cur.execute("""UPDATE items 
+                SET x = NULL, y = NULL, map_name = NULL, container_id = NULL
+                WHERE items.id = %s""", item_id)
+            print('> You took {} from {} <'.format(item, container))
+        else:
+            print('Not a valid command, type help for help.')
+        print()
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
