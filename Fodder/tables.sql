@@ -4,12 +4,22 @@ CREATE TABLE maps
     name VARCHAR(20),
     max_x INTEGER,
     max_y INTEGER,
-    warp_point1 INTEGER[],
-    warp_point2 INTEGER[],
     description VARCHAR,
     PRIMARY KEY (name)
 );
 
+CREATE TABLE warp_points
+(
+    from_map VARCHAR(20),
+    to_map  VARCHAR(20),
+    from_point INTEGER[],
+    to_point INTEGER[],
+    PRIMARY KEY (from_map, to_map),
+    FOREIGN KEY (from_map)
+        REFERENCES maps (name),
+    FOREIGN KEY (to_map)
+        REFERENCES maps (name)
+);
 
 CREATE TABLE worth
 (
