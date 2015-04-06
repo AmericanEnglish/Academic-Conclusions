@@ -1,6 +1,6 @@
 -- Maps first
-INSERT INTO maps (name, max_x, max_y, description) VALUES
-    ('Small Town', 0, 2, 'A small, unfriendly, town that doesnt see many travelers');
+INSERT INTO maps (name, max_x, max_y, warp_point1, warp_point2, description) VALUES
+    ('Small Town', 0, 2, {0, 0}, NULL, 'A small, unfriendly, town that doesnt see many travelers');
 
 INSERT INTO worth (name, value) VALUES
     ('inhumane', -6.00),
