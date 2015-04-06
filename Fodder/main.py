@@ -128,7 +128,7 @@ def maploop(protag, con):
                     action = [action[0],
                             ' '.join(action[1:action.index('from')]),
                             ' '.join(action[action.index('from') + 1:])]
-                    protag.take(action[1:])
+                    protag.take(action[1:], cur)
                 else:
                     print('Not a valid command, type help for help\n')
             
