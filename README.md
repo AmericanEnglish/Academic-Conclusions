@@ -13,7 +13,7 @@ This program was coded in python3.4 and uses the following additional packages:
 - Done
     * Base Program Written
     * All maploop functions written
-    * All maploop so far is bugless
+    * All maploop functions, so far, are bugless
 - To Do
     * Continue to condense main.py while slowly expanding player.py
     * Write all queries that will have room related information
