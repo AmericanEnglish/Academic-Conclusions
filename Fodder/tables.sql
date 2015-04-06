@@ -4,6 +4,8 @@ CREATE TABLE maps
     name VARCHAR(20),
     max_x INTEGER,
     max_y INTEGER,
+    warp_point2 INTEGER[],
+    warp_point2 INTEGER[],
     description VARCHAR,
     PRIMARY KEY (name)
 );
