@@ -343,7 +343,7 @@ class Player:
             room_info = cur.fetchall()
             if room_info[2] == None:
                 self.room = room_info[0:2]
-                print('- Youve Entered The {} -'.format(self.room))
+                print('- Youve Entered The {} -'.format(self.room[1]))
             else:
                 print('> You Attempt To Unlock The Building <')
                 cur.execute("""SELECT * FROM inventory
@@ -355,7 +355,7 @@ class Player:
                     print('- Success! The Lock & Key Vanish! -')
                     self.unlock(room_info[0], room_info[-1], cur)
                     self.room = room_info[0:2]
-                    print('- Youve Entered The {} -'.format(self.room))
+                    print('- Youve Entered The {} -'.format(self.room[1]))
         print()
 
     def unlock(container_id, unlock_item_id, cur):
