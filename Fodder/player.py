@@ -152,13 +152,12 @@ class Player:
                 print('-{}'.format(item[0]))
         print()
 
-    def look(self, parent_container_id, cur):
+    def look(self, cur):
         
         # Gathers the names of surrounding containers
         cur.execute("""SELECT name FROM containers
-                WHERE map_name = %s AND x = %s AND y = %s
-                    AND parent_container_id = %s""",
-                    [self.map, self.pos[0], self.pos[1]], parent_container_id)
+                WHERE map_name = %s AND x = %s AND y = %s""",
+                [self.map, self.pos[0], self.pos[1]])
         surroundings = cur.fetchall()
         surroundings.sort()
 
@@ -324,7 +323,7 @@ class Player:
             [room_name, self.pos[0], self.pos[1], self.map])
         room_ident = cur.fetchall()
         if room_ident == []:
-            # If it isn't a room it must be a map warp_point
+            # If it isn't a room it must be a warp_point
             cur.execute("""SELECT to_map, to_point FROM warp_points
                 WHERE from_map = %s AND from_point = ARRAY[%s, %s]""",
                 [self.map, self.pos[0], self.pos[1]])
