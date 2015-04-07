@@ -274,7 +274,7 @@ if __name__ == '__main__':
         if ready[0]:
             name = input('Name: ')
             protag = Player(name)
-            maploop(protag, ready[1])
+            main(protag, ready[1])
     else:
         print('Please install PostgreSQL 9.4.1 or later')
         print('http://www.postgresql.org/download/')
