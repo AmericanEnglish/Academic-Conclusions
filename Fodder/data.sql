@@ -1,6 +1,10 @@
 -- Maps first
 INSERT INTO maps (name, max_x, max_y, description) VALUES
-    ('Small Town', 0, 2, 'A small, unfriendly, town that doesnt see many travelers');
+    ('Small Town', 0, 2, 'A small, unfriendly, town that doesnt see many travelers'),
+    ('Graveyard', 2, 2, 'A massive graveyard, graves and mausoleums riddled with the bones and bodies. Graves amess and the smell of freshly unearthed dirt riddles the air. You cant help but wonder who would linger in such places.');
+
+INSERT INTO warp_points (from_map, to_map, from_point, to_point) VALUES
+    ('Small Town', 'Graveyard', '{0, 0}', '{2, 0}');
 
 INSERT INTO worth (name, value) VALUES
     ('inhumane', -6.00),
