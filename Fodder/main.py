@@ -97,10 +97,8 @@ def maploop(protag, con):
                 protag.examine(action[1], cur)
 
             elif action[0] == 'enter' and len(action) > 1:
-                #This checks to see if action[1] is a map or not. 
-                # If action[1] is a map it will load the player into it
-                if not check(action[1]):
-                    player.enter(action[1])
+                # Player can enter map or room
+                player.enter(action[1], cur)
 
             elif action[0] == 'exit':
                 print(">You're already outside!<\n")
