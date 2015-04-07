@@ -250,7 +250,16 @@ class Player:
                         backpack = FALSE AND inventory.name IS NULL""", [thing])
                 personal_query = cur.fetchall()
                 if personal_query == []:
-                    print('Not a valid command, type help for help.')
+                    # Maybe its a warp_point?
+                    cur.execute("""SELECT description FROM maps, warp_points
+                        WHERE maps.name = warp_points.to_map AND to_map = %s
+                            AND from_map = %s AND from_point = '{%s, %s}'""",
+                            [thing, self.map, self.pos[0], self.pos[1]])
+                    portal_query = cur.fetchall()
+                    if portal_query == []:
+                        print('Not a valid command, type help for help.')
+                    else:
+                        print('-{}\n++{}'.format(thing, portal_query[0][0]))
                 else:
                     print('-{}\n++{}'.format(thing, personal_query[0][0]))
             else: 
