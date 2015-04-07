@@ -329,7 +329,7 @@ class Player:
                 WHERE from_map = %s AND from_point = ARRAY[%s, %s]""",
                 [self.map, self.pos[0], self.pos[1]])
             map_info = cur.fetchall()
-            if map_info = []:
+            if map_info == []:
                 print('Not a valid command, type help for help.')
             else:
                 self.map = map_info[0]
@@ -338,7 +338,7 @@ class Player:
                     WHERE name = %s""", [self.map])
                 # Prints the map description
                 print('- You Have Entered The {} -'.format(self.map))
-                print('+{}'format(cur.fetchall()[0]))
+                print('++{}'.format(cur.fetchall()[0]))
         else:
             room_info = cur.fetchall()
             if room_info[2] == None:
@@ -353,8 +353,8 @@ class Player:
                     print('- To No Resolve, You Dont Have The Key -')
                 else:
                     print('- Success! The Lock & Key Vanish! -')
-                    self.unlock(room_info[0], room_info[-1] cur)
-                    self.room = room_info = [0:2]
+                    self.unlock(room_info[0], room_info[-1], cur)
+                    self.room = room_info[0:2]
                     print('- Youve Entered The {} -'.format(self.room))
         print()
 
