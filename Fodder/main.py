@@ -64,7 +64,7 @@ def maploop(protag, con):
     used and mutated in relation to the Mapp object and the commands that
     are input by the user."""
     inmap = True
-    while inmap and not protag.death:
+    while inmap and not protag.death and protag.room == None:
         action = input('={}=> '.format(protag.map))
         action = action.lower().strip().split()
         with con.cursor() as cur:
