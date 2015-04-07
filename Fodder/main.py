@@ -138,7 +138,7 @@ def maploop(protag, con):
             con.commit()
 
 
-def roomloop(protag, cur):
+def roomloop(protag, con):
     """(Player, Room) -> None
 
     This function is used for a player's interaction with the room and its 
@@ -258,13 +258,12 @@ def roomloop(protag, cur):
 
 
 
-def main(protag, startingmap):
-    protag.map = startingmap
-    protag.pos = protag.map.start
+def main(protag, con):
     while protag.death != True:
         while protag.death != True and protag.room == None:    
-            maploop(protag)
-        while protag.death != True and protag.room != None
+            maploop(protag, con)
+        while protag.death != True and protag.room != None:
+            roomloop(protag, con)
 
 def score(protag):
     pass
