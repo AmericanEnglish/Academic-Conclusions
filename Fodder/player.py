@@ -370,5 +370,3 @@ def help(command, cur):
                                 WHERE name = %s""", [command])
     info = cur.fetchall()[0]
     print('{} -> {} \n++{}\n'.format(info[0], info[1], info[2]))
-
-
