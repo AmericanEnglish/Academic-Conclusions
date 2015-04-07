@@ -101,10 +101,11 @@ def maploop(protag, con):
                 player.enter(action[1], cur)
 
             elif action[0] == 'exit':
-                print(">You're already outside!<\n")
+                print("> Youre Already Outside! <")
+                print()
 
             elif action[0] == 'look':
-                protag.look(None, cur)
+                protag.look(cur)
 
             elif action[0] == 'ground':
                 protag.ground(cur)
@@ -146,11 +147,8 @@ def roomloop(protag, con):
     interactions are not exactly the same."""
     protag.room = currentroom
     #If the door is locked they are 'kicked' from the room
-    if not currentroom.door.open(protag):
-        return
-    print("You entered {}\n".format(currentroom.name))
     with con.cursor() as cur:
-        while True:
+        while protag.room != None:
             action = input('={}=> '.format(self.room))
             action = action.lower().strip().split()
             if len(action) > 1:
@@ -160,10 +158,10 @@ def roomloop(protag, con):
                 print('')
 
             elif action[0] == 'pack':
-                protag.pack_view()
+                protag.pack_view(cur)
             
             elif action[0] == 'me':
-                protag.person_view()
+                protag.person_view(cur)
             
             elif action[0] == 'put':
                 protag.put(action[1], cur)
@@ -176,80 +174,40 @@ def roomloop(protag, con):
                 print()
             
             elif action[0] == 'enter':
-                print(">You're already in the {}<\n".format(self.room))
+                print("> Youre Already In The {} <".format(protag.room[1]))
+                print()
             
             elif action[0] == 'exit':
-                print(">You exit the {}<\n".format(self.room))
-                return
+                print("> You exit the {} <".format(protag.room))
+                print()
+                protag.room = None
 
             elif action[0] == 'look':
                 protag.room_look(cur)
             
             elif action[0] == 'ground':
-                if currentroom.contents[1] == []:
-                    print('>There is nothing on the ground<\n')
-                else:
-                    print('>On the ground you see<')
-                    for item in currentroom.contents[1]:
-                        print('{}'.format(item.name))
-                    print('')
+                protag.room_ground(cur)
 
             elif action[0] == 'pickup':
-                for item in currentroom.contents[1]:
-                    if action[1] == item.name.lower():
-                        protag.person.append(item)
-                        currentroom.contents[1].remove(item)
-                        print('>You picked up {}<\n'.format(item.name))
+                protag.room_pickup(action[1], cur)
 
             elif action[0] == 'drop':
-                for item in protag.person:
-                    if action[1] == item.name.lower():
-                        protag.person.remove(item)
-                        currentroom.contents[1].append(item)
-                        print('>You dropped {} on the ground<'.format(item.name))
-                print('')
+                protag.room_drop(action[1], cur)
             
             elif action[0] == 'take':
                 # take requires a second marker called from. This requiers action
                 # to be reconfigured
-                if 'from' in action:
+                if 'from' in action[1]:
                     action = ' '.join(action).split()
                     action = [action[0],
                             ' '.join(action[1:action.index('from')]),
                             ' '.join(action[action.index('from') + 1:])]
-                    for item in currentroom.contents[0]:
-                        if action[2] == item.name.lower():
-                            # will be added as table/object method later
-                            for thing in item.contents:
-                                if thing.name.lower() == action[1]:
-                                    protag.person.append(thing)
-                                    item.contents.remove(thing)
-                                    print('You took {} from {}'.format(thing.name, item.name))
+                    protag.take(action[1:], cur)
                 print('')
             
             elif action[0] == 'talk':
                 # if user types wrong name somevar will help print a newline
-                somevar = 0
-                if len(action) > 1:
-                    for item in currentroom.contents[0]:
-                        somevar += 1
-                        if isinstance(item, NPC) and action[1] == item.name.lower():
-                            #somevar now knows an NPC was found and no extra \n
-                            somevar -= 1
-                            print('<>{}:\n{}'.format(item.name, item.talk(protag)))
-                    if somevar == len(currentroom.contents[0]):
-                        print('')
-                # if just talk is typed, protag talks to all NPCs in area.   
-                else:
-                    somevar = 0
-                    for item in currentroom.contents[0]:
-                        somevar += perf_counter()
-                        if isinstance(item, NPC):
-                            somevar -= 1
-                            print('<>{}:\n{}'.format(item.name, item.talk(protag)))
-                    if somevar == len(currentroom.contents[0]):
-                        print('')
-
+                protag.talk(action[1])
             elif action[0] == 'help' and len(action) == 2:
                 help(action[2], cur)
             
@@ -264,6 +222,7 @@ def main(protag, con):
             maploop(protag, con)
         while protag.death != True and protag.room != None:
             roomloop(protag, con)
+    score(protag)
 
 def score(protag):
     pass
