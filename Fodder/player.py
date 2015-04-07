@@ -344,10 +344,17 @@ class Player:
                     print('- To No Resolve, You Dont Have The Key -')
                 else:
                     print('- Success! The Lock & Key Vanish! -')
-                    self.unlock(room_info[0])
+                    self.unlock(room_info[0], room_info[-1] cur)
                     self.room = room_info = [0:2]
                     print('- Youve Entered The {} -'.format(self.room))
         print()
+
+    def unlock(container_id, unlock_item_id, cur):
+        cur.execute("""UPDATE containers 
+        SET unlock_item_id = NULL
+        WHERE id = %s """, [container_id])
+        cur.execute("""DELETE FROM inventory 
+            WHERE item_id = %s""", [unlock_item_id])
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
