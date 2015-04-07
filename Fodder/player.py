@@ -5,7 +5,7 @@ class Player:
     def __init__(self, name):
         """(Player, str, list of nums, tuple of nums)"""
         self.name = name
-        self.pos = (0, 1)
+        self.pos = [0, 1]
         self.map = 'Small Town'
         self.room = None
         self.totalmoves = 0
@@ -307,10 +307,52 @@ class Player:
             print('Not a valid command, type help for help.')
         print()
     
-    def 
+    def enter(room_name, cur):
+        room_name = room_name.lower().title()
+        cur.execute("""SELECT id, name, unlock_item_id FROM containers
+            WHERE name = %s AND x = %s AND y = %s AND
+            room_flag = TRUE AND map_name = %s""",
+            [room_name, self.pos[0], self.pos[1], self.map])
+        room_ident = cur.fetchall()
+        if room_ident == []:
+            # If it isn't a room it must be a map warp_point
+            cur.execute("""SELECT to_map, to_point FROM warp_points
+                WHERE from_map = %s AND from_point = ARRAY[%s, %s]""",
+                [self.map, self.pos[0], self.pos[1]])
+            map_info = cur.fetchall()
+            if map_info = []:
+                print('Not a valid command, type help for help.')
+            else:
+                self.map = map_info[0]
+                self.pos = map_info[1]
+                cur.execute("""SELECT description FROM maps
+                    WHERE name = %s""", [self.map])
+                # Prints the map description
+                print('- You Have Entered The {} -'.format(self.map))
+                print('+{}'format(cur.fetchall()[0]))
+        else:
+            room_info = cur.fetchall()
+            if room_info[2] == None:
+                self.room = room_info[0:2]
+                print('- Youve Entered The {} -'.format(self.room))
+            else:
+                print('> You Attempt To Unlock The Building <')
+                cur.execute("""SELECT * FROM inventory
+                    WHERE name IS NULL AND id = %s""", [room_info[-1]])
+                unlock = cur.fetchall()
+                if unlock == []:
+                    print('- To No Resolve, You Dont Have The Key -')
+                else:
+                    print('- Success! The Lock & Key Vanish! -')
+                    self.unlock(room_info[0])
+                    self.room = room_info = [0:2]
+                    print('- Youve Entered The {} -'.format(self.room))
+        print()
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
                                 WHERE name = %s""", [command])
     info = cur.fetchall()[0]
     print('{} -> {} \n++{}\n'.format(info[0], info[1], info[2]))
+
+
