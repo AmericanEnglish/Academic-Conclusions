@@ -372,7 +372,7 @@ class Player:
         contents = cur.fetchall()
 
         print('> Around You See <')
-        if contents = []:
+        if contents == []:
             print('-Nothing-')
         else:
             for items in contents:
@@ -431,7 +431,7 @@ class Player:
                 WHERE item.id = %s""", items_query[0])
             print('> You Picked Up The {} <'.format(thing))
         print()
-        
+
     def room_drop(self, thing, cur):
         pass
 
