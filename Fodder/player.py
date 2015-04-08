@@ -392,19 +392,21 @@ class Player:
         contents = cur.fetchall()
 
         print('> Around You See <')
-        if contents == []:
             # Check for npcs
-            cur.execute("""SELECT name FROM npcs
-                WHERE room_id = %s""", [self.room[0]])
-            npc_query = cur.fetchall()
-            if npc_query == []:
-                print('-Nothing-')
-            else:
+        cur.execute("""SELECT name FROM npcs
+            WHERE room_id = %s""", [self.room[0]])
+        npc_query = cur.fetchall()
+        if npc_query == [] and contents == []:
+            print('-Nothing-')
+        else:
+            if npc_query != []:
+                npc_query.sort()
                 for people in npc_query:
                     print('-{}'.format(people[0]))
-        else:
-            for items in contents:
-                print('-{}'.format(items[0]))
+            if contents != []:
+                contents.sort()
+                for items in contents:
+                    print('-{}'.format(items[0]))
         print()
 
     def room_ground(self, cur):
