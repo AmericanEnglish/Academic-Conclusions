@@ -4,7 +4,8 @@ INSERT INTO maps (name, max_x, max_y, description) VALUES
     ('Graveyard', 2, 2, 'A massive graveyard, graves and mausoleums riddled with the bones and bodies. Graves amess and the smell of freshly unearthed dirt riddles the air. You cant help but wonder who would linger in such places.');
 
 INSERT INTO warp_points (from_map, to_map, from_point, to_point) VALUES
-    ('Small Town', 'Graveyard', '{0, 0}', '{2, 0}');
+    ('Small Town', 'Graveyard', '{0, 0}', '{2, 0}'),
+    ('Graveyard', 'Small Town', '{2, 0}', '{0, 0}');
 
 INSERT INTO worth (name, value) VALUES
     ('inhumane', -6.00),
@@ -21,7 +22,7 @@ INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, descripti
 
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
     (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE),
-    (150, 'Barrel', 0, 1, 'Small Town', 200, 'A oak barrely encrusted with beauty', 3, FALSE); -- Test Case 1
+    (150, 'Barrel', NULL, NULL, 'Small Town', 200, 'A oak barrely encrusted with beauty', 3, FALSE); -- Test Case 1
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
     (1, 'Small Trinket', 0, 0, 'Small Town', 'bronze', NULL, 'A small smooth stone, you found in your pocket just a moment ago'),
