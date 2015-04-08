@@ -365,7 +365,18 @@ class Player:
             WHERE item_id = %s""", [unlock_item_id])
 
     def room_look(self, cur):
-        pass
+        cur.execute("""SELECT name FROM containers
+            WHERE parent_container_id = %s""", [self.room[0]])
+        contents = cur.fetchall()
+        
+        print('> Around You See <')
+        if contents = []:
+            print('-Nothing-')
+        else:
+            for items in contents:
+                print('-{}'.format(items[0]))
+        print()
+
 
     def room_ground(self, cur):
         pass
