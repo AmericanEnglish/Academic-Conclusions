@@ -16,10 +16,10 @@ This program was coded in python3.4 and uses the following additional packages:
     * All maploop functions are bugless
     * All roomloop functions are written
     * All roomloop functions are bugless
+    * Look now displays everything from npcs to wwarp_points
 - To Do
     * Write talk method.
     * Maps.py will be eliminated and all functionality moved to player.py
-    * Make *look* display, warp_points, npcs, and containers
 
 ## Finally . . .
 To run the program simply:
