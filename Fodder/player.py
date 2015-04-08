@@ -158,16 +158,25 @@ class Player:
         cur.execute("""SELECT name FROM containers
                 WHERE map_name = %s AND x = %s AND y = %s""",
                 [self.map, self.pos[0], self.pos[1]])
-        surroundings = cur.fetchall()
-        surroundings.sort()
+        containers = cur.fetchall()
+        containers.sort()
 
+        cur.execute("""SELECT name FROM npcs
+            WHERE map_name = %s AND x = %s AND y = %s""",
+            [self.map, self.pos[0], self.pos[1]])
+        npcs_query = cur.fetchall()
+
+        cur.execute("""SELECT to_map FROM warp_points
+            WHERE from_map = %s AND from_point = '{%s, %s}'""")
+        warp_points = cur.fetchall()
         #Display information in uniform fashion
         print('> Around You See <')
-        if surroundings == []:
+        if containers == [] and npcs_query == [] and warp_points == []:
             print('-Nothing-')
         else:
-            for items in surroundings:
-                print('-{}'.format(items[0]))
+            if containers != []:
+                for items in containers:
+                    print('-{}'.format(items[0]))
         print()
 
     def ground(self, cur):
