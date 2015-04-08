@@ -281,6 +281,8 @@ class Player:
                             print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
                         else:
                             self.unlock(container_query[0], container_query[2], cur)
+                            print('> You Attempt To Unlock The {} <'.format(thing))
+                            print('-The Lock And Key Vanish-\n')
                             print('-{}\n-Locked: False\n++{}'.format(thing, container_query[1]))
                             print('> Inside You See <')
                             cur.execute("""SELECT name FROM items
@@ -324,7 +326,7 @@ class Player:
         item_id = cur.fetchall()
         if len(item_id) == 1 and item_id[0][1] == None:
             cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
-                item_id)
+                [item_id[0][0]])
             cur.execute("""UPDATE items 
                 SET x = NULL, y = NULL, map_name = NULL, container_id = NULL
                 WHERE items.id = %s""", [item_id[0][0]])
@@ -335,7 +337,7 @@ class Player:
             print('Not a valid command, type help for help.')
         print()
     
-    def enter(room_name, cur):
+    def enter(self, room_name, cur):
         room_name = room_name.lower().title()
         cur.execute("""SELECT id, name, unlock_item_id FROM containers
             WHERE name = %s AND x = %s AND y = %s AND
@@ -377,7 +379,7 @@ class Player:
                     print('- Youve Entered The {} -'.format(self.room[1]))
         print()
 
-    def unlock(container_id, unlock_item_id, cur):
+    def unlock(self, container_id, unlock_item_id, cur):
         cur.execute("""UPDATE containers 
         SET unlock_item_id = NULL
         WHERE id = %s """, [container_id])
