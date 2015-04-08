@@ -404,11 +404,11 @@ class Player:
         item_id = cur.fetchall()
         if len(item_id) == 1 and item_id[0][1] == None:
             cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
-                item_id)
+                [item_id[0][0]])
             cur.execute("""UPDATE items 
-                SET x = NULL, y = NULL, map_name = NULL, container_id = NULL
+                SET map_name = NULL, container_id = NULL
                 WHERE items.id = %s""", [item_id[0][0]])
-            print('> You took {} from {} <'.format(item, container))
+            print('> You Took {} From {} <'.format(item, container))
         elif item_id[0][1] != None:
             print('-The {} Is Locked, Consider Unlocking-'.format(container))
         else:
@@ -416,8 +416,22 @@ class Player:
         print()
         
     def room_pickup(self, thing, cur):
-        pass
+        thing = thing.lower().title()
+        cur.execute("""SELECT items.id FROM items
+            WHERE item.name = %s AND items.container_id = %s""", 
+            [thing, self.room[0]])
+        items_query = cur.fetchall()
 
+        if items_query == []:
+            print('Not a valid command, type help for help.')
+        else:
+            cur.execute("""INSERT INTO inventory VALUES (NULL, %s, 0)""",
+                items_query[0])
+            cur.execute("""UPDATE items SET container_id = NULL, map_name = NULL 
+                WHERE item.id = %s""", items_query[0])
+            print('> You Picked Up The {} <'.format(thing))
+        print()
+        
     def room_drop(self, thing, cur):
         pass
 
