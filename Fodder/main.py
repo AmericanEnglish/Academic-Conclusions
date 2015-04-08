@@ -178,7 +178,7 @@ def roomloop(protag, con):
                 print()
             
             elif action[0] == 'exit':
-                print("> You exit the {} <".format(protag.room))
+                print("> You Exit The {} <".format(protag.room))
                 print()
                 protag.room = None
 
@@ -222,9 +222,9 @@ def main(protag, con):
             maploop(protag, con)
         while protag.death != True and protag.room != None:
             roomloop(protag, con)
-    score(protag)
+    score(protag, con)
 
-def score(protag):
+def score(protag, con):
     pass
 
 if __name__ == '__main__':
