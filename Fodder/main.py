@@ -209,7 +209,7 @@ def roomloop(protag, con):
                 # if user types wrong name somevar will help print a newline
                 protag.talk(action[1])
             elif action[0] == 'help' and len(action) == 2:
-                help(action[2], cur)
+                help(action[1], cur)
             
             else:
                 print('Not a valid command, type help for help\n')
