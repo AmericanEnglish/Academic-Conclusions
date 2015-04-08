@@ -415,6 +415,11 @@ class Player:
             print('Not a valid command, type help for help')
         print()
         
+    def room_pickup(self, thing, cur):
+        pass
+
+    def room_drop(self, thing, cur):
+        pass
 
     def room_examine(self, thing, cur):
         pass
