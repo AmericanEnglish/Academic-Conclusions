@@ -50,6 +50,7 @@ class Player:
             if x < -1 or x > mapmax[0] + 1 or y < -1 or y > mapmax[1] + 1:
                 print('>Dead<\n')
                 self.death = True
+                return
             self.pos = x, y
             print('You have moved {}\n'.format(motion))
         
@@ -167,13 +168,20 @@ class Player:
         npcs_query = cur.fetchall()
 
         cur.execute("""SELECT to_map FROM warp_points
-            WHERE from_map = %s AND from_point = '{%s, %s}'""")
+            WHERE from_map = %s AND from_point = '{%s, %s}'""",
+            [self.map, self.pos[0], self.pos[1]])
         warp_points = cur.fetchall()
         #Display information in uniform fashion
         print('> Around You See <')
         if containers == [] and npcs_query == [] and warp_points == []:
             print('-Nothing-')
         else:
+            if warp_points != []:
+                for points in warp_points:
+                    print('-{}'.format(points[0]))
+            if npcs_query != []:
+                for people in npcs_query:
+                    print('-{}'.format(people[0]))
             if containers != []:
                 for items in containers:
                     print('-{}'.format(items[0]))
@@ -362,13 +370,13 @@ class Player:
             if map_info == []:
                 print('Not a valid command, type help for help.')
             else:
-                self.map = map_info[0]
-                self.pos = map_info[1]
+                self.map = map_info[0][0]
+                self.pos = map_info[0][1]
                 cur.execute("""SELECT description FROM maps
                     WHERE name = %s""", [self.map])
                 # Prints the map description
                 print('> You Have Entered The {} <'.format(self.map))
-                print('++{}'.format(cur.fetchall()[0]))
+                print('++{}'.format(cur.fetchall()[0][0]))
         else:
             room_info = room_ident[0]
             if room_info[2] == None:
