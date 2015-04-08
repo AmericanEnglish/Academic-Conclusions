@@ -460,7 +460,7 @@ class Player:
             print('Not a valid command, type help for help.')
         else:
             cur.execute("""DELETE FROM inventory WHERE item_id = %s""",
-                [items_query[0])
+                items_query[0])
             cur.execute("""UPDATE items 
                 SET container_id = %s, map_name = %s
                 WHERE items.id = %s""",
