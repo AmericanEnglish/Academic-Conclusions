@@ -358,17 +358,17 @@ class Player:
                 cur.execute("""SELECT description FROM maps
                     WHERE name = %s""", [self.map])
                 # Prints the map description
-                print('- You Have Entered The {} -'.format(self.map))
+                print('> You Have Entered The {} <'.format(self.map))
                 print('++{}'.format(cur.fetchall()[0]))
         else:
-            room_info = cur.fetchall()
+            room_info = room_ident[0]
             if room_info[2] == None:
                 self.room = room_info[0:2]
-                print('- Youve Entered The {} -'.format(self.room[1]))
+                print('> You Enter The {} <'.format(self.room[1]))
             else:
                 print('> You Attempt To Unlock The Building <')
                 cur.execute("""SELECT * FROM inventory
-                    WHERE name IS NULL AND id = %s""", [room_info[-1]])
+                    WHERE name IS NULL AND item_id = %s""", [room_info[-1]])
                 unlock = cur.fetchall()
                 if unlock == []:
                     print('- To No Resolve, You Dont Have The Key -')
@@ -376,7 +376,7 @@ class Player:
                     print('- Success! The Lock & Key Vanish! -')
                     self.unlock(room_info[0], room_info[-1], cur)
                     self.room = room_info[0:2]
-                    print('- Youve Entered The {} -'.format(self.room[1]))
+                    print('> You Enter The {} <'.format(self.room[1]))
         print()
 
     def unlock(self, container_id, unlock_item_id, cur):
@@ -393,7 +393,15 @@ class Player:
 
         print('> Around You See <')
         if contents == []:
-            print('-Nothing-')
+            # Check for npcs
+            cur.execute("""SELECT name FROM npcs
+                WHERE room_id = %s""", [self.room[0]])
+            npc_query = cur.fetchall()
+            if npc_query == []:
+                print('-Nothing-')
+            else:
+                for people in npc_query:
+                    print('-{}'.format(people[0]))
         else:
             for items in contents:
                 print('-{}'.format(items[0]))
@@ -414,47 +422,47 @@ class Player:
 
     def room_take(self, combo, cur):
         thing = combo[0].lower().title()
-        container = combo[0].lower().title()
-        cur.execute("""SELECT item.id, containers.unlock_item_id
+        container = combo[1].lower().title()
+        cur.execute("""SELECT items.id, containers.unlock_item_id
             FROM items, containers
-            WHERE containers.name = %s AND item.name = %s
+            WHERE containers.name = %s AND items.name = %s AND
                 containers.id = items.container_id AND 
                 containers.parent_container_id = %s""", 
                 [container, thing, self.room[0]])
         item_id = cur.fetchall()
-        if len(item_id) == 1 and item_id[0][1] == None:
+        if item_id == []:
+            print('Not a valid command, type help for help')
+        elif len(item_id) == 1 and item_id[0][1] == None:
             cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
                 [item_id[0][0]])
             cur.execute("""UPDATE items 
                 SET map_name = NULL, container_id = NULL
                 WHERE items.id = %s""", [item_id[0][0]])
-            print('> You Took {} From {} <'.format(item, container))
+            print('> You Took {} From {} <'.format(thing, container))
         elif item_id[0][1] != None:
             print('-The {} Is Locked, Consider Unlocking-'.format(container))
-        else:
-            print('Not a valid command, type help for help')
         print()
         
     def room_pickup(self, thing, cur):
         thing = thing.lower().title()
         cur.execute("""SELECT items.id FROM items
-            WHERE item.name = %s AND items.container_id = %s""", 
+            WHERE items.name = %s AND items.container_id = %s""", 
             [thing, self.room[0]])
         items_query = cur.fetchall()
 
         if items_query == []:
             print('Not a valid command, type help for help.')
         else:
-            cur.execute("""INSERT INTO inventory VALUES (NULL, %s, 0)""",
+            cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
                 items_query[0])
             cur.execute("""UPDATE items SET container_id = NULL, map_name = NULL 
-                WHERE item.id = %s""", items_query[0])
+                WHERE items.id = %s""", items_query[0])
             print('> You Picked Up The {} <'.format(thing))
         print()
 
     def room_drop(self, thing, cur):
         thing = thing.lower().title()
-        cur.execute("""SELECT item.id FROM items, inventory
+        cur.execute("""SELECT items.id FROM items, inventory
             WHERE items.id = inventory.item_id AND items.name = %s AND
             inventory.name IS NULL AND backpack = FALSE""", [thing])
         items_query = cur.fetchall()
@@ -468,6 +476,7 @@ class Player:
                 WHERE items.id = %s""",
                 [self.room[0], self.map, items_query[0][0]])
             print('> You Dropped {} To The Ground! <'.format(thing))
+        print()
 
     def room_examine(self, thing, cur):
         thing = thing.lower().title()
@@ -484,7 +493,7 @@ class Player:
             if container_query == []:
                 # Then look at an item on the person
                 cur.execute("""SELECT description FROM items, inventory
-                    WHERE items.id = inventory.item_id AND backpack = FALSE AND name IS NULL""")
+                    WHERE items.id = inventory.item_id AND backpack = FALSE AND inventory.name IS NULL""")
                 personal_query = cur.fetchall()
 
                 if personal_query == []:
@@ -492,17 +501,17 @@ class Player:
                 else:
                     print('-{}\n++{}'.format(thing, personal_query[0][0]))
             else:
-                locked = container_query[2] != None
+                locked = container_query[0][2] != None
                 if locked:
                     cur.execute("""SELECT * FROM inventory
                         WHERE item_id = %s AND backpack = FALSE AND name IS NULL""",
-                        [container_query[2]])
+                        [container_query[0][2]])
                     unlocking = cur.fetchall()
                     if unlocking == []:
-                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[0][1]))
                     else:
                         self.unlock(container_query[0][0], container_query[0][2], cur)
-                        print('-{}\n-Locked: False\n++{}'.format(thing, container_query[1]))
+                        print('-{}\n-Locked: False\n++{}'.format(thing, container_query[0][1]))
                         print('> Inside You See <')
                         cur.execute("""SELECT name FROM items
                             WHERE items.container_id = %s""", [container_query[0][0]])
@@ -515,11 +524,11 @@ class Player:
                             print('-Empty-')
                 # If not locked displays contents of the container
                 else:
-                    print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                    print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[0][1]))
                     # Pulls contents from items table
                     print('> Inside You See <')
                     cur.execute("""SELECT name FROM items
-                        WHERE items.container_id = %s""", [container_query[0]])
+                        WHERE items.container_id = %s""", [container_query[0][0]])
                     contents = cur.fetchall()
                     contents.sort()
                     if contents != []:
