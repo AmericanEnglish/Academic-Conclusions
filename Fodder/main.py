@@ -221,7 +221,17 @@ def main(protag, con):
     score(protag, con)
 
 def score(protag, con):
-    pass
+    with con.cursor() as cur:
+        cur.execute("""SELECT value FROM inventory
+            INNER JOIN items ON items.id = inventory.item_id
+            INNER JOIN worth ON worth.name = items.worth_type
+            WHERE name IS NULL""")
+        final = cur.fetchall()[0]
+        placeholder = 0
+        for value in final:
+            placeholder += value[0]
+        print('Final Score: {}'.format(placeholder))
+        
 
 if __name__ == '__main__':
     if input('Do you have PostgreSQL 9.4.1 installed?\n(y/n):').lower()[0] == 'y':    
