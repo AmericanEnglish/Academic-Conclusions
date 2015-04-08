@@ -368,7 +368,7 @@ class Player:
         cur.execute("""SELECT name FROM containers
             WHERE parent_container_id = %s""", [self.room[0]])
         contents = cur.fetchall()
-        
+
         print('> Around You See <')
         if contents = []:
             print('-Nothing-')
@@ -379,7 +379,17 @@ class Player:
 
 
     def room_ground(self, cur):
-        pass
+        cur.execute("""SELECT name FROM items 
+            WHERE container_id = %s""", [self.room[0]])
+        contents = cur.fetchall()
+
+        print('> On The Ground You See <')
+        if contents == []:
+            print('-Nothing-')
+        else:
+            for items in contents:
+                print('-{}'.format(items[0]))
+
 
     def room_take(self, thing, cur):
         pass
