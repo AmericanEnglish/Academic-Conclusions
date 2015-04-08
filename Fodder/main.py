@@ -98,7 +98,7 @@ def maploop(protag, con):
 
             elif action[0] == 'enter' and len(action) > 1:
                 # Player can enter map or room
-                player.enter(action[1], cur)
+                protag.enter(action[1], cur)
 
             elif action[0] == 'exit':
                 print("> Youre Already Outside! <")
