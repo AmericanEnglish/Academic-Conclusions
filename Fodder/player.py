@@ -212,9 +212,9 @@ class Player:
 
     def drop(self, thing, cur):
         thing = thing.lower().title()
-        cur.execute("""SELECT id FROM inventory, items
-            WHERE items.name = %s AND backpack = FALSE AND
-                inventory.name IS NULL""", [thing])
+        cur.execute("""SELECT items.id FROM inventory, items
+            WHERE items.name = %s AND items.id = inventory.item_id AND 
+            backpack = FALSE AND inventory.name IS NULL""", [thing])
         dropped = cur.fetchall()
         if dropped == []:
             print('Not a valid command, type help for help')
@@ -433,7 +433,21 @@ class Player:
         print()
 
     def room_drop(self, thing, cur):
-        pass
+        thing = thing.lower().title()
+        cur.execute("""SELECT item.id FROM items, inventory
+            WHERE items.id = inventory.item_id AND items.name = %s AND
+            inventory.name IS NULL AND backpack = FALSE""", [thing])
+        items_query = cur.fetchall()
+        if items_query == []:
+            print('Not a valid command, type help for help.')
+        else:
+            cur.execute("""DELETE FROM inventory WHERE item_id = %s""",
+                [items_query[0])
+            cur.execute("""UPDATE items 
+                SET container_id = %s, map_name = %s
+                WHERE items.id = %s""",
+                [self.room[0], self.map, items_query[0][0]])
+            print('> You Dropped {} To The Ground! <'.format(thing))
 
     def room_examine(self, thing, cur):
         pass
