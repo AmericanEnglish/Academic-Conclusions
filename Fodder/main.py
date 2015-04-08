@@ -169,7 +169,6 @@ def roomloop(protag, con):
             
             elif action[0] == 'examine' and len(action) == 2:
                 protag.room_examine(action[1], cur)
-                print()
             
             elif action[0] == 'enter':
                 print("> Youre Already In The {} <".format(protag.room[1]))
@@ -200,8 +199,7 @@ def roomloop(protag, con):
                     action = [action[0],
                             ' '.join(action[1:action.index('from')]),
                             ' '.join(action[action.index('from') + 1:])]
-                    protag.take(action[1:], cur)
-                print('')
+                    protag.room_take(action[1:], cur)
             
             elif action[0] == 'talk':
                 # if user types wrong name somevar will help print a newline
