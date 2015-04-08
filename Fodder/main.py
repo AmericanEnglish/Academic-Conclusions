@@ -145,11 +145,9 @@ def roomloop(protag, con):
     This function is used for a player's interaction with the room and its 
     contents. Although some 'action' words are the same the objects some
     interactions are not exactly the same."""
-    protag.room = currentroom
-    #If the door is locked they are 'kicked' from the room
     with con.cursor() as cur:
         while protag.room != None:
-            action = input('={}=> '.format(self.room))
+            action = input('={}=> '.format(protag.room[1]))
             action = action.lower().strip().split()
             if len(action) > 1:
                 action = [action[0], ' '.join(action[1:])]
@@ -178,7 +176,7 @@ def roomloop(protag, con):
                 print()
             
             elif action[0] == 'exit':
-                print("> You Exit The {} <".format(protag.room))
+                print("> You Exit The {} <".format(protag.room[1]))
                 print()
                 protag.room = None
 
