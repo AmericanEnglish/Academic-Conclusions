@@ -117,7 +117,7 @@ def maploop(protag, con):
                 protag.drop(action[1], cur)
             
             elif action[0] == 'talk':
-                protag.talk(action)
+                protag.talk(action[1], cur)
 
             elif action[0] == 'take':
                 # take requires a second marker called from. This requiers action
@@ -203,7 +203,7 @@ def roomloop(protag, con):
             
             elif action[0] == 'talk':
                 # if user types wrong name somevar will help print a newline
-                protag.talk(action[1])
+                protag.talk(action[1], cur)
             elif action[0] == 'help' and len(action) == 2:
                 help(action[1], cur)
             
@@ -231,7 +231,7 @@ def score(protag, con):
         for value in final:
             placeholder += value[0]
         print('Final Score: {}'.format(placeholder))
-        
+
 
 if __name__ == '__main__':
     if input('Do you have PostgreSQL 9.4.1 installed?\n(y/n):').lower()[0] == 'y':    
