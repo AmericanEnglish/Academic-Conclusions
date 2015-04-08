@@ -503,7 +503,7 @@ class Player:
                         print('-{}\n-Locked: False\n++{}'.format(thing, container_query[1]))
                         print('> Inside You See <')
                         cur.execute("""SELECT name FROM items
-                            WHERE items.container_id = %s""", [container_query[0]])
+                            WHERE items.container_id = %s""", [container_query[0][0]])
                         contents = cur.fetchall()
                         contents.sort()
                         if contents != []:
