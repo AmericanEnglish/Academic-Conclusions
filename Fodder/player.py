@@ -297,20 +297,22 @@ class Player:
         item = item.lower().title()
         container = combo[1]
         container = container.lower().title()
-        cur.execute("""SELECT items.id FROM containers, items
+        cur.execute("""SELECT items.id, containers.unlock_item_id FROM containers, items
                     WHERE items.name = %s AND containers.name = %s AND
                     containers.x = %s AND containers.y = %s""",
                     [item, container, self.pos[0], self.pos[1]])
         
         # Isolates the tuple from the list
-        item_id = cur.fetchall()[0]
-        if len(item_id) == 1:
+        item_id = cur.fetchall()
+        if len(item_id) == 1 and item_id[0][1] == None:
             cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
                 item_id)
             cur.execute("""UPDATE items 
                 SET x = NULL, y = NULL, map_name = NULL, container_id = NULL
-                WHERE items.id = %s""", item_id)
+                WHERE items.id = %s""", [item_id[0][0]])
             print('> You took {} from {} <'.format(item, container))
+        elif item_id[0][1] != None:
+            print('-The {} Is Locked, Consider Unlocking-'.format(container))
         else:
             print('Not a valid command, type help for help.')
         print()
@@ -377,7 +379,6 @@ class Player:
                 print('-{}'.format(items[0]))
         print()
 
-
     def room_ground(self, cur):
         cur.execute("""SELECT name FROM items 
             WHERE container_id = %s""", [self.room[0]])
@@ -389,10 +390,31 @@ class Player:
         else:
             for items in contents:
                 print('-{}'.format(items[0]))
+        print()
 
-
-    def room_take(self, thing, cur):
-        pass
+    def room_take(self, combo, cur):
+        thing = combo[0].lower().title()
+        container = combo[0].lower().title()
+        cur.execute("""SELECT item.id, containers.unlock_item_id
+            FROM items, containers
+            WHERE containers.name = %s AND item.name = %s
+                containers.id = items.container_id AND 
+                containers.parent_container_id = %s""", 
+                [container, thing, self.room[0]])
+        item_id = cur.fetchall()
+        if len(item_id) == 1 and item_id[0][1] == None:
+            cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
+                item_id)
+            cur.execute("""UPDATE items 
+                SET x = NULL, y = NULL, map_name = NULL, container_id = NULL
+                WHERE items.id = %s""", [item_id[0][0]])
+            print('> You took {} from {} <'.format(item, container))
+        elif item_id[0][1] != None:
+            print('-The {} Is Locked, Consider Unlocking-'.format(container))
+        else:
+            print('Not a valid command, type help for help')
+        print()
+        
 
     def room_examine(self, thing, cur):
         pass
