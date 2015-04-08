@@ -48,7 +48,7 @@ Functions:
 - examine
     - examine *object*
     - Examines an item around you. If you lack the-know about what is around you just use the [look] command. Example command for Note you cannot examine things that are on the ground or in your pack. Only containers, rooms, and things on your person.
-    - This is also the command for unlocking things. Simply examine a container or room for which you have the key and it will become unlocked for good. Doing so will allow you to examine the contents of the container or enter the room.
+    - This is also the command for unlocking containers only. Simply examine the container in question and if you have the correct item on your person then the container will become unlocked. 
 - enter
     - enter *place*
     - Enters a room or the next area/previous area. This command does not work when you are already in a room.
