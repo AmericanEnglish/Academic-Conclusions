@@ -363,6 +363,21 @@ class Player:
         WHERE id = %s """, [container_id])
         cur.execute("""DELETE FROM inventory 
             WHERE item_id = %s""", [unlock_item_id])
+
+    def room_look(self, cur):
+        pass
+
+    def room_ground(self, cur):
+        pass
+
+    def room_take(self, thing, cur):
+        pass
+
+    def room_examine(self, thing, cur):
+        pass
+
+    def talk(self, npc_name, cur):
+        pass
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
