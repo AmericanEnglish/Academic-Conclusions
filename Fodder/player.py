@@ -273,7 +273,25 @@ class Player:
                     # If not a room, than just a normal container
                     # Checks first to display locked or not
                     if locked:
-                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                        cur.execute("""SELECT * FROM inventory
+                            WHERE item_id = %s AND backpack = FALSE AND name IS NULL""",
+                            [container_query[2]])
+                        unlocking = cur.fetchall()
+                        if unlocking == []:
+                            print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                        else:
+                            self.unlock(container_query[0], container_query[2], cur)
+                            print('-{}\n-Locked: False\n++{}'.format(thing, container_query[1]))
+                            print('> Inside You See <')
+                            cur.execute("""SELECT name FROM items
+                                WHERE items.container_id = %s""", [container_query[0]])
+                            contents = cur.fetchall()
+                            contents.sort()
+                            if contents != []:
+                                for items in contents:
+                                    print('-{}'.format(items[0]))
+                            else:
+                                print('-Empty-')
                     # If not locked displays contents of the container
                     else:
                         print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
@@ -450,7 +468,66 @@ class Player:
             print('> You Dropped {} To The Ground! <'.format(thing))
 
     def room_examine(self, thing, cur):
-        pass
+        thing = thing.lower().title()
+        # First check for NPCs
+        cur.execute("""SELECT description FROM npcs
+            WHERE room_id = %s AND name = %s""", [self.room[0], thing])
+        npc_query = cur.fetchall()
+        if npc_query == []:
+            # Check those containers
+            cur.execute("""SELECT id, description, unlock_item_id FROM containers
+                WHERE room_flag = FALSE AND containers.name = %s AND parent_container_id = %s""",
+                [thing, self.room[0]])
+            container_query = cur.fetchall()
+            if container_query == []:
+                # Then look at an item on the person
+                cur.execute("""SELECT description FROM items, inventory
+                    WHERE items.id = inventory.item_id AND backpack = FALSE AND name IS NULL""")
+                personal_query = cur.fetchall()
+
+                if personal_query == []:
+                    print('Not a valid command, type help for help')
+                else:
+                    print('-{}\n++{}'.format(thing, personal_query[0][0]))
+            else:
+                locked = container_query[2] != None
+                if locked:
+                    cur.execute("""SELECT * FROM inventory
+                        WHERE item_id = %s AND backpack = FALSE AND name IS NULL""",
+                        [container_query[2]])
+                    unlocking = cur.fetchall()
+                    if unlocking == []:
+                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                    else:
+                        self.unlock(container_query[0][0], container_query[0][2], cur)
+                        print('-{}\n-Locked: False\n++{}'.format(thing, container_query[1]))
+                        print('> Inside You See <')
+                        cur.execute("""SELECT name FROM items
+                            WHERE items.container_id = %s""", [container_query[0]])
+                        contents = cur.fetchall()
+                        contents.sort()
+                        if contents != []:
+                            for items in contents:
+                                print('-{}'.format(items[0]))
+                        else:
+                            print('-Empty-')
+                # If not locked displays contents of the container
+                else:
+                    print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                    # Pulls contents from items table
+                    print('> Inside You See <')
+                    cur.execute("""SELECT name FROM items
+                        WHERE items.container_id = %s""", [container_query[0]])
+                    contents = cur.fetchall()
+                    contents.sort()
+                    if contents != []:
+                        for items in contents:
+                            print('-{}'.format(items[0]))
+                    else:
+                        print('-Empty-')
+        else:
+            print('-{}\n++{}'.format(thing, npc_query[0][0]))
+        print()
 
     def talk(self, npc_name, cur):
         pass
