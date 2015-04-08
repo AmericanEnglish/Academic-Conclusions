@@ -20,8 +20,8 @@ INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, descripti
     (3, 'Master Key', NULL, NULL, NULL, 'platinum', NULL, 'It unlocks things.'); -- Test Case 1
 
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
-    (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE),
-    (150, 'Barrel', 0, 1, 'Small Town', NULL, 'A oak barrely encrusted with beauty', 3, FALSE); -- Test Case 1
+    (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  3, TRUE),
+    (150, 'Barrel', 0, 1, 'Small Town', 200, 'A oak barrely encrusted with beauty', NULL, FALSE); -- Test Case 1
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
     (1, 'Small Trinket', 0, 0, 'Small Town', 'bronze', NULL, 'A small smooth stone, you found in your pocket just a moment ago'),
