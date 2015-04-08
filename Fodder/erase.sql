@@ -7,6 +7,7 @@ DROP TABLE inventory;
 DROP TABLE npcs;
 DROP TABLE containers;
 DROP TABLE items;
+DROP TABLE warp_points;
 DROP TABLE maps;
 DROP TABLE worth;
 DROP TABLE help;
