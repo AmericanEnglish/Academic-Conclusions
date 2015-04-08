@@ -22,7 +22,8 @@ INSERT INTO containers (id, name, x, y, map_name, parent_container_id, descripti
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
     (1, 'Small Trinket', 0, 0, 'Small Town', 'bronze', NULL, 'A small smooth stone, you found in your pocket just a moment ago'),
-    (2, 'Pineapple', NULL, NULL, NULL, 'silver', 150, 'Its a Pineapple . . .'); -- Test Case 1
+    (2, 'Pineapple', NULL, NULL, NULL, 'silver', 150, 'Its a Pineapple . . .'),
+    (3, 'Master Key', NULL, NULL, NULL, 'platinum', NULL, 'It unlocks things.'); -- Test Case 1
 
 INSERT INTO npcs (name, x, y, map_name, room_id, counter_value, description) VALUES 
     ('Oracle Wyma', NULL, NULL, NULL, 200, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest');
@@ -35,6 +36,9 @@ INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
     ('Oracle Wyma', 1, 'Im a clergy I cant just go robbing graves! Im pretty sure its on the 3rd\nfloor or something. Just grab it and hurry back, time is of the essence.'),
     ('Oracle Wyma', 2, 'Aaaaahh yes, this is the orb i was looking for! Thank you. Now take this\nbullion and never come back');
 
+INSERT INTO inventory VALUES
+    (NULL, 3, FALSE);
+    
 INSERT INTO help (name, syntax, description) VALUES 
     ('help', 'help *action*', 'Displays the functionality of an action command and the needed syntax for correct execution'),
     ('m', 'm *direction*', 'This function only works outside of rooms, typing this inside of a room will result in an invalid command. You can move North, East, South, and West.'),
