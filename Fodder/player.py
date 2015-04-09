@@ -619,7 +619,14 @@ class Player:
                 WHERE item_id = %s""", [item_id])
             return True
 
-
+    def give(self, item_id, cur):
+        cur.execute("""UPDATE inventory
+            SET name = NULL
+            WHERE item_id = %s""", [item_id])
+        cur.execute("""SELECT name FROM items
+            WHERE id = %s""", [item_id])
+        thing = cur.fetchall()[0][0]
+        print('> You Were Given {} <'.format(thing))
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
