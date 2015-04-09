@@ -596,19 +596,45 @@ class Player:
                 [npc_name, self.room[0]])
             dialogue = cur.fetchall()
         # Checks for conditionals 
-
-            # Executes the conditional in question
+        # Need to make sure that text is printed BEFORE commands are
+        # executed, so they are moved to the back of conditionals
+        put_exec_at_back = False
+        for have, action in conditionals:
+            if self.has(have):
+                # Figure out match the conditional number to the dialogue tree
+                cur.execute("""UPDATE npcs 
+                    SET counter_value = %s
+                    WHERE name = %s""", [counters[0], npc_name])
+                
+                if '(' in action and ')' in action and put_exec_at_back:
+                    put_exec_at_back = True
+                    conditionals.append((have, action))
+                elif '(' in action and ')' in action and put_exec_at_back:
+                    exec(action)
+                    put_exec_at_back = False
+                else:
+                    print(action)
 
         # If no conditionals happened then it just uses talk phrases
-        if counters[0] < counters[1] - len(conditionals):
+        if counters[0] <= counters[1] - len(conditionals):
             for value, phrase in dialogue:
-                if value == counters[0]:
-                    print('{}:> {}'.format(npc_name, phrase))
-                    if counters[0] < counters[1] - len(conditionals) - 1:
-                        cur.execute("""UPDATE npcs
-                            SET counter_value = counter_value + 1
-                            WHERE name = %s""", [npc_name])
-
+                print('{}:> {}'.format(npc_name, phrase))
+                if counters[0] < counters[1] - len(conditionals) - 1:
+                    cur.execute("""UPDATE npcs
+                        SET counter_value = counter_value + 1
+                        WHERE name = %s""", [npc_name])
+    
+    def has(self, item_id):
+        cur.execute("""SELECT * FROM inventory
+            WHERE name IS NULL AND item_id = %s""", [item_id])
+        filler = cur.fetchall()
+        if filler == []:
+            return False
+        else:
+            cur.execute("""UPDATE inventory 
+                SET name = NULL
+                WHERE item_id = %s""", [item_id])
+            return True
 
 
     # def has(id) <- Checks NPC conditionals return Bool
