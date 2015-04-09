@@ -1,17 +1,17 @@
 -- Maps first
 INSERT INTO maps (name, max_x, max_y, description) VALUES
     ('Small Town', 0, 2, E'A small, unfriendly, town that doesnt see many travelers'),
-    ('Graveyard', 2, 2, E'A massive graveyard, graves and mausoleums riddled with the bones and bodies. Graves amess and the smell of freshly unearthed dirt riddles the air. You cant help but wonder who would linger in such places.'),
-    ('Mausoleum', 2, 2, E'Large enough to house what could be hundreds of bodies. The door appears unlocked and open. The smell of death, decay, and wallowing eminate from the insides. Proceed with caution.'),
-    ('Mausoleum: 2nd Floor', 3, 3, E'The second floor of the dead. Who knows how deep this figurative dungeon may span.');
+    ('Graveyard', 2, 2, E'A massive graveyard, graves and mausoleums riddled with the bones and\nbodies. Graves amess and the smell of freshly unearthed dirt riddles the\nair. You cant help but wonder who would linger in such places.'),
+    ('Mausoleum', 2, 2, E'Large enough to house what could be hundreds of bodies. The door appears\nunlocked and open. The smell of death, decay, and wallowing eminate from\nthe insides. Proceed with caution.'),
+    ('2nd Floor', 3, 3, E'The second floor of the dead. Who knows how deep this figurative dungeon\nmay span.');
 
 INSERT INTO warp_points (from_map, to_map, from_point, to_point) VALUES
     ('Small Town', 'Graveyard', '{0, 0}', '{2, 0}'),
     ('Graveyard', 'Small Town', '{2, 0}', '{0, 0}'),
     ('Graveyard', 'Mausoleum', '{1, 2}', '{1, 1}'),
     ('Mausoleum', 'Graveyard', '{1, 1}', '{1, 2}'),
-    ('Mausoleum', 'Mausoleum: 2nd Floor', '{2, 2}', '{0, 0}'),
-    ('Mausoleum: 2nd Floor', 'Mausoleum', '{0,0}', '{2,2}');
+    ('Mausoleum', '2nd Floor', '{2, 2}', '{0, 0}'),
+    ('2nd Floor', 'Mausoleum', '{0,0}', '{2,2}');
 
 INSERT INTO worth (name, value) VALUES
     ('inhumane', -6),
@@ -25,11 +25,11 @@ INSERT INTO worth (name, value) VALUES
 
 -- This is mainly things don't go into a container
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
-    (1, 'Skull Key', 0, 2, 'Graveyard', 'silver', NULL, E'The hilt of the key has a skull crafted in it, almost as if you shouldnt be where it leads.'),
+    (1, 'Skull Key', 0, 2, 'Graveyard', 'silver', NULL, E'The hilt of the key has a skull crafted in it, almost as if you shouldnt be\nwhere it leads.'),
     (100, 'Small Money Pouch', NULL, NULL, NULL, 'silver', NULL, E'A small pouch of silver coins. A sign of a hard days work.' ),
-    (50, 'Teddy Bear', NULL, NULL, NULL, 'valueless', NULL, E'Small but worn. This teddy lasted someone a lot of years in good care or maybe a few years in constant use. Hard to tell.'),
+    (50, 'Teddy Bear', NULL, NULL, NULL, 'valueless', NULL, E'Small but worn. This teddy lasted someone a lot of years in good care or\nmaybe a few years in constant use. Hard to tell.'),
     (13, 'Red Key', 2, 2, 'Mausoleum', 'tainted', NULL, E'A red key. Thats it.'),
-    (75, 'Paper Note', NULL, NULL, NULL, 'inhumane', NULL, E'Dear mom, teddy said he wanted to play with the ghosts. Ill be back before dinner, honest! ~ Pookey');
+    (75, 'Paper Note', NULL, NULL, NULL, 'inhumane', NULL, E'Dear mom, teddy said he wanted to play with the ghosts. Ill be back before\ndinner, honest! ~ Pookey');
 -- Containers and Rooms
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
     (1, 'Town Hall', 0, 2, 'Small Town', NULL, E'A rustic and acient hall constructed far before you were born',  NULL, TRUE),
@@ -38,8 +38,8 @@ INSERT INTO containers (id, name, x, y, map_name, parent_container_id, descripti
     (4, 'Unmarked Grave 302', 0, 1, 'Graveyard', NULL, E'This towns cemetary is full of more dead people than you thought. To make matters worse they dont even label the dead.', NULL, FALSE),
     (5, 'Rotting Chest', 0, 0, 'Mausoleum', NULL, E'Decaying like a biological hurricane this chest doesnt seem to have much else going for it. Even the false lock is in need of repair.', NULL, FALSE),
     (8, 'Red Room', 2, 1, 'Mausoleum', NULL, E'The door is red, it is safe to assume this place paints the drapes on the inside the same color, and the floor, and walls, you get the drift.', 13, TRUE),
-    (9, 'Odd Room', 0, 1, 'Mausoleum: 2nd Floor', NULL, E'Something about, be it the circular door or whatever tacky interior may wait. This whole thing is just out of place in the mausoleum.', NULL, TRUE),
-    (10, 'Dark Room', 2, 1, 'Mausoleum: 2nd Floor', NULL, E'The from your torch dims as you peer in on the room. The very evil that flows forth seems to draing the energy from the very light that illuminates it.', NULL, TRUE);
+    (9, 'Odd Room', 0, 1, '2nd Floor', NULL, E'Something about, be it the circular door or whatever tacky interior may wait. This whole thing is just out of place in the mausoleum.', NULL, TRUE),
+    (10, 'Dark Room', 2, 1, '2nd Floor', NULL, E'The from your torch dims as you peer in on the room. The very evil that flows forth seems to draing the energy from the very light that illuminates it.', NULL, TRUE);
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES 
     (6, 'Ribbed Key', NULL, NULL, NULL, 'silver', 2, E'A strange, metal ribbed, key. This sort of thing would be used to open something you wanted to protect. Whether it be your family or your selfishness.'),
@@ -50,7 +50,7 @@ INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, descripti
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
     (6, 'Small Den', 0, 2, 'Mausoleum', NULL, E'A fork in a mausoleum? What could possible be in there? Something or someone important?', 6, TRUE),
     (7, 'Fresh Barrel', NULL, NULL, NULL, 6, E'This barrel appears to be the newest thing added to the collection of spiders and remnants that litter the area.', NULL, FALSE),
-    (11, 'Ominious Room', 1, 3, 'Mausoleum: 2nd Floor', NULL, E'This should be it. An insanely creepy feeling of being watched. Just one chest lies in wait beyond the door it seems.', NULL, TRUE),
+    (11, 'Ominious Room', 1, 3, '2nd Floor', NULL, E'This should be it. An insanely creepy feeling of being watched. Just one chest lies in wait beyond the door it seems.', NULL, TRUE),
     (12, 'Colorful Chest', NULL, NULL, NULL, 11, E'A brightly colored chest. Its the peacock of chests. A showman amongst less chest rivals. Crafted by a holy being almost.', NULL, FALSE);
 
 
