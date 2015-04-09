@@ -10,6 +10,7 @@ class Player:
         self.room = None
         self.totalmoves = 0
         self.death = False
+        self.victory = False
 
     def move(self, motion, cur):
         """(str) -> None
@@ -587,7 +588,7 @@ class Player:
                 [npc_name, self.room[0]])
             counters = cur.fetchall()
             
-            cur.execute("""SELECT counter, condition, action FROM npc_conditionals, npcs
+            cur.execute("""SELECT condition, action FROM npc_conditionals, npcs
                 WHERE npc_name = %s AND room_id = %s AND name = npc_name""",
                 [npc_name, self.room[0]])
             conditionals = cur.fetchall()
@@ -601,13 +602,40 @@ class Player:
             print()
             return 
         counters = counters[0]
-        # Checks for conditionals 
-        # Need to make sure that text is printed BEFORE commands are
-        # executed, so they are moved to the back of conditionals
-        
+        duplication = False
+
+        for item_id, condition in conditionals:
+            condition = condition.split()
+            if self.has(npc_name, item_id, cur):
+                duplication = True
+                if counters[0] < counters[1] - len(conditionals):
+                    adjusted_counter = counters[1] - len(conditionals)
+                elif counters[0] < counters[1] - 2:
+                    adjusted_counter = counters[0] + 1
+                cur.execute("""UPDATE npcs 
+                    SET counter_value = %s
+                    WHERE name = %s""", [adjusted_counter, npc_name])
+                for value, phrase in dialogue:
+                    if value == adjusted_counter:
+                        print(phrase.replace('\\n', '\n'))
+                if condition[0] == 'score()':
+                    self.victory = True
+                    self.death = True
+                elif condition[0] == 'give':
+                    self.give(int(condition[1]))
+        for value, phrase in dialogue:
+            if value == counters[0] and duplication:
+                duplication = False
+            elif value == counters[0] and not duplication:
+                print(phrase.replace('\\n', '\n'))
+
+        if counters[0] < counters[1] - len(conditionals) - 1:
+            cur.execute("""UPDATE npcs
+                SET counter_value = counter_value + 1
+                WHERE name = %s""", [npc_name])
         print()
 
-    def has(self, item_id, cur):
+    def has(self, npc_name, item_id, cur):
         cur.execute("""SELECT * FROM inventory
             WHERE name IS NULL AND item_id = %s""", [item_id])
         filler = cur.fetchall()
@@ -615,8 +643,8 @@ class Player:
             return False
         else:
             cur.execute("""UPDATE inventory 
-                SET name = NULL
-                WHERE item_id = %s""", [item_id])
+                SET name = %s
+                WHERE item_id = %s""", [npc_name, item_id])
             return True
 
     def give(self, item_id, cur):
@@ -627,6 +655,7 @@ class Player:
             WHERE id = %s""", [item_id])
         thing = cur.fetchall()[0][0]
         print('> You Were Given {} <'.format(thing))
+
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
