@@ -11,7 +11,8 @@ def introduction():
             print(line, end='')    
     choice = 'No'
     while choice.lower()[0] != 'y':
-        name = input(' Can you at least tell me your name before I go? ')
+        name = input('Can you at least tell me your name before I go? ')
         choice = input("""*{}*\nAre you sure? (y/n): """.format(name))
-
+        if len(choice) < 1:
+            choice = ' '
     return name

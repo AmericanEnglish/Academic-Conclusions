@@ -3,8 +3,10 @@ import getpass
 from player import *
 from maps import *
 from time import perf_counter
+from introduction import introduction
+from platform import platform
+import os
 
-# from introduction import *
 directions = {
                     'north': (0,1),
                     'south':(0,-1), 
@@ -50,6 +52,7 @@ def startup():
                 cur.execute(tables.read())
             with open('data.sql') as data_to_use:
                 cur.execute(data_to_use.read())
+            skip = False
         
         elif answer[0] == 'n':      
             print('Data Refreshed To Defaults!')
@@ -57,8 +60,18 @@ def startup():
                 cur.execute(refresh.read())
             with open('data.sql','r') as data_to_use:
                 cur.execute(data_to_use.read())
+            skip = input('Skip Introduction?\n(y/n): ').lower().strip()
+            if skip == 'y':
+                skip = True
+            else:
+                skip = False
     con.commit()
-    return True, con
+    hos = platform()
+    if 'windows' in hos.lower():
+        os.system('cls')
+    elif 'linux' in hos.lower():
+        os.system('clear')
+    return True, con, skip
 
 
 
@@ -140,7 +153,8 @@ def maploop(protag, con):
             
             elif action[0] == 'help' and len(action) == 2:
                 help(action[1], cur)
-            
+            elif action[0]== 'help':
+                help('all', cur)
             else:
                 print('Not a valid command, type help for help\n')
             con.commit()
@@ -245,7 +259,11 @@ def score(protag, con):
 if __name__ == '__main__':
     ready = startup()
     if ready[0]:
-        name = input('Name: ')
+        if not ready[2]:
+            name = introduction()
+        else:
+            name = input('Name: ').strip()
+        protag = Player(name)
         protag = Player('')
         main(protag, ready[1])
     else:

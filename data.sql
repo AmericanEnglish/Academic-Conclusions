@@ -106,7 +106,7 @@ INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
 
 INSERT INTO help (name, syntax, description) VALUES 
     ('help', 'help *action*', E'Displays the functionality of an action command and the needed syntax for correct execution'),
-    ('m', 'm *direction*', E'This function only works outside of rooms, typing this inside of a room will result in an invalid command. You can move North, East, South, and West.'),
+    ('direction', '*direction*', E'This function only works outside of rooms, typing this inside of a room will result in an invalid command. You can move North, East, South, and West.'),
     ('pack', 'pack', E'This action checks your backpack. Your backpack has no capacity'),
     ('me', 'me', E'This displays the contents of what your holding in your hands. NPCs wont check your pack but they can definitely spot what your holding'),
     ('put', 'put *item*', E'Puts an item into your backpack.'),

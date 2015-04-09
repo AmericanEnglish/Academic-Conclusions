@@ -659,5 +659,16 @@ class Player:
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
                                 WHERE name = %s""", [command])
-    info = cur.fetchall()[0]
+    info = cur.fetchall()
+    if info == []:
+        if command =='all':
+            cur.execute("""SELECT name FROM help""")
+            info = cur.fetchall()
+            for item in info:
+                print('-{}'.format(item[0]))
+            return
+        print('Not a valid command, type help for help.')
+        print()
+        return
+    info = info[0]
     print('{} -> {} \n++{}\n'.format(info[0], info[1], info[2]))
