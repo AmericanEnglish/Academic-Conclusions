@@ -99,24 +99,23 @@ CREATE TABLE npcs
         REFERENCES maps (name)
 );
 
-
-CREATE TABLE npc_conditionals
-(
-    npc_name VARCHAR(20),
-    condition INTEGER,
-    action VARCHAR, --This is a python command such as protag.give(thing)
-    PRIMARY KEY (npc_name, condition),
-    FOREIGN KEY (npc_name)
-        REFERENCES npcs (name)
-);
-
-
 CREATE TABLE npc_dialogue
 (
     npc_name VARCHAR(20),
     counter INTEGER,
     dialogue VARCHAR,
     PRIMARY KEY (npc_name, counter),
+    FOREIGN KEY (npc_name)
+        REFERENCES npcs (name)
+);
+
+CREATE TABLE npc_conditionals
+(
+    npc_name VARCHAR(20),
+    counter INTEGER,
+    condition INTEGER,
+    action VARCHAR, --This is a python command such as protag.give(thing)
+    PRIMARY KEY (npc_name, condition),
     FOREIGN KEY (npc_name)
         REFERENCES npcs (name)
 );
