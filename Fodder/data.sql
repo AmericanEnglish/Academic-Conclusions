@@ -17,23 +17,20 @@ INSERT INTO worth (name, value) VALUES
     ('gold', 6.00),
     ('platinum', 10.00);
 
-INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
-    (3, 'Master Key', NULL, NULL, NULL, 'platinum', NULL, 'It unlocks things.'); -- Test Case 1
-
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
     (200, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE),
-    (150, 'Barrel', NULL, NULL, 'Small Town', 200, 'A oak barrely encrusted with beauty', 3, FALSE); -- Test Case 1
+    (150, 'Barrel', NULL, NULL, 'Small Town', 200, 'A oak barrely encrusted with beauty', NULL, FALSE); -- Test Case 1
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
-    (1, 'Small Trinket', 0, 0, 'Small Town', 'bronze', NULL, 'A small smooth stone, you found in your pocket just a moment ago'),
+    (1, 'Small Trinket', NULL, NULL, NULL, 'bronze', NULL, 'A small smooth stone, you found in your pocket just a moment ago'),
     (2, 'Pineapple', NULL, NULL, NULL, 'silver', 150, 'Its a Pineapple . . .');
 
 
 INSERT INTO npcs (name, x, y, map_name, room_id, counter_value, description) VALUES 
     ('Oracle Wyma', NULL, NULL, NULL, 200, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest');
 
-INSERT INTO npc_conditionals (npc_name, counter, condition, action) VALUES
-    ('Oracle Wyma', 3, 1, 'score()');
+INSERT INTO npc_conditionals (npc_name, condition, action) VALUES
+    ('Oracle Wyma', 1, 'score()');
 
 INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
     ('Oracle Wyma', 0, 'Hello there, you look familiar, do I know you? . . . Not much a talker\nI see. Either way you look like you might need some help. Now on a normal\nday I might just give you some money and tell you to do it in the faith of\nthe lord but I have no time. Ill give you one hundred gold if you retrieve\nan item for me. I need a small glass-like key from the graveyard. Fetch it.'),
@@ -41,7 +38,7 @@ INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
     ('Oracle Wyma', 2, 'Aaaaahh yes, this is the orb i was looking for! Thank you. Now take this\nbullion and never come back');
 
 INSERT INTO inventory VALUES
-    (NULL, 3, FALSE);
+    (NULL, 1, FALSE);
 
 INSERT INTO help (name, syntax, description) VALUES 
     ('help', 'help *action*', 'Displays the functionality of an action command and the needed syntax for correct execution'),
