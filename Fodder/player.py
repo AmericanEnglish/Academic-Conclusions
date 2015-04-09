@@ -560,7 +560,57 @@ class Player:
         print()
 
     def talk(self, npc_name, cur):
-        pass
+        npc_name = npc_name.lower().title()
+        if player.room == None:
+            cur.execute("""SELECT npcs.counter_value, COUNT(*) FROM npc_dialogue
+                INNER JOIN npcs ON npcs.name = npc_dialogue.npc_name
+                WHERE name = %s AND x = %s AND y = %s
+                GROUP BY npcs.name""",
+                [npc_name, self.pos[0], self.pos[1]])
+            counters = cur.fetchall()[0]
+            
+            cur.execute("""SELECT conditionals, action FROM npc_conditionals
+                WHERE npc_conditionals.name = %s AND x = %s AND y = %s""",
+                [npc_name, self.pos[0], self.pos[1]])
+            conditionals = cur.fetchall()
+            
+            cur.execute("""SELECT counter, dialogue FROM npc_dialogue
+                WHERE name = %s AND x = %s AND y = %s""",
+                [npc_name, self.pos[0], self.pos[1]])
+            dialogue = cur.fetchall()
+        else:
+            cur.execute("""SELECT npcs.counter_value, COUNT(*) FROM npc_dialogue
+                INNER JOIN npcs ON npcs.name = npc_dialogue.npc_name
+                WHERE name = %s AND room_id = %s
+                GROUP BY npcs.name""",
+                [npc_name, self.room[0]])
+            counters = cur.fetchall()[0]
+            
+            cur.execute("""SELECT conditionals, action FROM npc_conditionals
+                WHERE npc_conditionals.name = %s AND room_id = %s""",
+                [npc_name, self.room[0])
+            conditionals = cur.fetchall()
+            
+            cur.execute("""SELECT counter, dialogue FROM npc_dialogue
+                WHERE name = %s AND room_id = %s""",
+                [npc_name, self.room[0]])
+            dialogue = cur.fetchall()
+        # Checks for conditionals 
+
+            # Executes the conditional in question
+
+        # If no conditionals happened then it just uses talk phrases
+        if counters[0] < counters[1] - len(conditionals):
+            for value, phrase in dialogue:
+                if value == counters[0]:
+                    print('{}:> {}'.format(npc_name, phrase))
+                    if counters[0] < counters[1] - len(conditionals) - 1:
+                        cur.execute("""UPDATE npcs
+                            SET counter_value = counter_value + 1
+                            WHERE name = %s""", [npc_name])
+
+
+
     # def has(id) <- Checks NPC conditionals return Bool
 def help(command, cur):
     cur.execute("""SELECT name, syntax, description FROM help
