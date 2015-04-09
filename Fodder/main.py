@@ -253,8 +253,8 @@ if __name__ == '__main__':
     ready = (True, con)
     print('Success!')
     if ready[0]:
-        name = input('Name: ')
-        protag = Player(name)
+        #name = input('Name: ')
+        protag = Player('')
         main(protag, ready[1])
     else:
         print('Please install PostgreSQL 9.4.1 or later')
