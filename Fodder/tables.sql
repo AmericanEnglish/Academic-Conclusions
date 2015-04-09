@@ -114,7 +114,7 @@ CREATE TABLE npc_conditionals
     npc_name VARCHAR(20),
     condition INTEGER,
     action VARCHAR, --This is a python command such as protag.give(thing)
-    PRIMARY KEY (npc_name, condition),
+    PRIMARY KEY (npc_name, action),
     FOREIGN KEY (npc_name)
         REFERENCES npcs (name)
 );
