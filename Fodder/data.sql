@@ -32,12 +32,12 @@ INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, descripti
 INSERT INTO npcs (name, x, y, map_name, room_id, counter_value, description) VALUES 
     ('Oracle Wyma', NULL, NULL, NULL, 200, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest');
 
-INSERT INTO npc_conditionals (npc_name, condition, action) VALUES
-    ('Oracle Wyma', 1, 'score()');
+INSERT INTO npc_conditionals (npc_name, counter, condition, action) VALUES
+    ('Oracle Wyma', 3, 1, 'score()');
 
 INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
     ('Oracle Wyma', 0, 'Hello there, you look familiar, do I know you? . . . Not much a talker\nI see. Either way you look like you might need some help. Now on a normal\nday I might just give you some money and tell you to do it in the faith of\nthe lord but I have no time. Ill give you one hundred gold if you retrieve\nan item for me. I need a small glass-like key from the graveyard. Fetch it.'),
-    ('Oracle Wyma', 1, 'Im a clergy I cant just go robbing graves! Im pretty sure its on the 3rd\nfloor or something. Just grab it and hurry back, time is of the essence.'),
+    ('Oracle Wyma', 1, 'Im a clergy I cant just go robbing graves! Im pretty sure its on the 3rd floor or something. Just grab it and hurry back, time is of the essence.'),
     ('Oracle Wyma', 2, 'Aaaaahh yes, this is the orb i was looking for! Thank you. Now take this\nbullion and never come back');
 
 INSERT INTO inventory VALUES
