@@ -185,7 +185,7 @@ class Player:
                     print(':{}'.format(people[0]))
             if containers != []:
                 for items in containers:
-                    print('-{}'.format(items[0]))
+                    print('#{}'.format(items[0]))
         print()
 
     def ground(self, cur):
@@ -274,9 +274,9 @@ class Player:
                             [thing, self.map, self.pos[0], self.pos[1]])
                     portal_query = cur.fetchall()
                     if portal_query == []:
-                        print('Not a valid command, type help for help.')
+                        print('Invalid: try -examine object-, or type help examine for more.')
                     else:
-                        print('-{}\n++{}'.format(thing, portal_query[0][0]))
+                        print('*{}\n++{}'.format(thing, portal_query[0][0]))
                 else:
                     print('-{}\n++{}'.format(thing, personal_query[0][0]))
             else: 
@@ -286,7 +286,7 @@ class Player:
                 room_flag = container_query[3]
                 locked =  container_query[2] != None
                 if room_flag:
-                    print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                    print('#{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
                 else:
                     # If not a room, than just a normal container
                     # Checks first to display locked or not
@@ -296,12 +296,12 @@ class Player:
                             [container_query[2]])
                         unlocking = cur.fetchall()
                         if unlocking == []:
-                            print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                            print('#{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
                         else:
                             self.unlock(container_query[0], container_query[2], cur)
                             print('> You Attempt To Unlock The {} <'.format(thing))
                             print('-The Lock And Key Vanish-\n')
-                            print('-{}\n-Locked: False\n++{}'.format(thing, container_query[1]))
+                            print('#{}\n-Locked: False\n++{}'.format(thing, container_query[1]))
                             print('> Inside You See <')
                             cur.execute("""SELECT name FROM items
                                 WHERE items.container_id = %s""", [container_query[0]])
@@ -314,7 +314,7 @@ class Player:
                                 print('-Empty-')
                     # If not locked displays contents of the container
                     else:
-                        print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
+                        print('#{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[1]))
                         # Pulls contents from items table
                         print('> Inside You See <')
                         cur.execute("""SELECT name FROM items
@@ -327,7 +327,7 @@ class Player:
                         else:
                             print('-Empty-')
         else:
-            print('-{}\n++{}'.format(thing, npc_query[0][0]))
+            print(':{}\n++{}'.format(thing, npc_query[0][0]))
         print()
 
     def take(self, combo, cur):
@@ -518,7 +518,7 @@ class Player:
                 personal_query = cur.fetchall()
 
                 if personal_query == []:
-                    print('Not a valid command, type help for help')
+                    print('Invalid: try -examine object-, or type help examine for more.')
                 else:
                     print('-{}\n++{}'.format(thing, personal_query[0][0]))
             else:
