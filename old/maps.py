@@ -1,12 +1,110 @@
-import psycopg2
-
 class Mapp:
-    def __init__(self, connection):
+    def __init__(self, filename):
             #contents is a dict of tuple: list objects
             # {(0, 0):[[Room, Enemey][Ground Things, Here]], (0,1): [[],[]]} 
-            con = connection
-            cur = con.cursor()
+        running = {}
+        with open(filename, 'r') as somefile:
+            self.name = somefile.readline().strip().split(',')[1].strip()
+            
+            nextline = somefile.readline().strip().split(',')
+            dimensionx = (int(nextline[1].strip()), int((nextline[2].strip())))
+            self.x = dimensionx[1]
 
+            nextline = somefile.readline().strip().split(',')
+            dimensiony = (int(nextline[1].strip()), int(nextline[2].strip()))
+            self.y = dimensiony[1]
+
+            nextline = somefile.readline().strip().split(',')
+            self.start = (int(nextline[1].strip()), int(nextline[2].strip()))
+            #generates empty map contents and all the coordinates
+            for x in range(dimensionx[1] + 1):
+                for y in range(dimensiony[1] + 1):
+                    running[(x , y)] = [[],[]]
+
+            for aline in somefile:
+                aline = aline.strip().split(',')
+                line = []
+                for item in aline:
+                    line.append(item.strip())
+
+                if line[0] == 'ROOM':
+                    # ROOM X Y NAME DOORNAME LOCKED? COMP DOORKEY
+                    #  0   1 2  3      4        5     6      7
+                    if len(line) == 8:
+                        doorkey = line[7]
+                    else:
+                        doorkey = None
+                    x, y = int(line[1]), int(line[2])
+                    running[(x, y)][0].append(Room(line[3], [[],[]], Door(line[4], line[5].isalpha(), line[6], doorkey)))
+                
+                elif line[0] == 'INTER':
+                    # INTER GROUND X Y NAME COMP
+                    #   0     1    2 3  4    5
+                    if line[1] == 'GROUND':
+                        x, y = int(line[2]), int(line[3])
+                        name = line[4]
+                        composition = line[5]
+                        running[(x, y)][1].append(Interactable(name, composition))
+                    else:
+                        # INTER X Y NAME COMP
+                        #   0   1 2  3    4
+                        x = int(line[1])
+                        y = int(line[2])
+                        name = line[3]
+                        composition = line [4]
+                        running[(x, y)][0].append(Interactable(name, composition))
+
+                elif line[0] == 'NPC':
+                    # NPC X Y FILE
+                    #  0  1 2  3
+                    x, y = int(line[1]), int(line[2])
+                    running[(x, y)][0].append(NPC(line[3]))
+
+                elif line[0] == 'CONT':
+                    # CONT X Y NAME COMP
+                    #  0   1 2  3    4
+                    x, y = int(line[1]), int(line[2])
+                    running[(x, y)][0].append(Container(line[3], line[4], []))
+
+                elif line[0] == 'INSI':
+                    # INSI CONTNAME OBJCLASS X Y NAME COMP
+                    #   0     1       2      3 4  5    6 
+                    x, y = int(line[3]), int(line[4])
+                    for item in running[(x, y)][0]:
+                        if item.name.lower() == line[1].lower():
+                            # Puts interactable on ground in room
+                            if isinstance(item, Room) and line[2] == 'INTER':
+                                item.contents[1].append(Interactable(line[5], line[6]))
+                                break
+                            # Puts container inside room
+                            elif isinstance(item, Room) and line[2] == 'CONT':
+                                item.contents[0].append(Container(line[5], line[6], []))
+                                break
+                            # Puts interactable in container on map
+                            elif isinstance(item, Container):
+                                item.contents.append(Interactable(line[5], line[6]))
+                                break
+
+                elif line[0] == 'SPEC':
+                    # SPEC ROOMNAME CONTNAME INTER X Y NAME COMP
+                    #  0      1        2       3   4 5  6    7
+                    x, y = int(line[4]), int(line[5])
+                    for item in running[(x, y)][0]:
+                        if item.name.lower() == line[1].lower():
+                            for entity in item.contents[0]:
+                                if entity.name.lower() == line[2].lower():
+                                    entity.contents.append(Interactable(line[6], line[7]))
+                                    break
+                            break
+
+                elif line[0] == 'RNPC':
+                    # RNPC X Y FILE ROOMNAME
+                    #  0  1 2   3    4      
+                    x, y = int(line[1]), int(line[2])
+                    for item in running[(x, y)][0]:
+                        if isinstance(item, Room) and item.name.lower() == line[4].lower():
+                            item.contents[0].append(NPC(line[3]))
+        self.contents = running
     def check(self, pos):
         return self.contents[pos]
 
@@ -94,7 +192,7 @@ class Container(Interactable):
 class NPC():
     """Generates NPC objects"""
     def __init__(self, dialogfile):
-        """(str, file.ext) -> None
+        """(str, file.ext, str) -> None
 
         NPCs need a name and a file containing their dialogue trees. The
         dialogues in the file will be in the correct order such that the
