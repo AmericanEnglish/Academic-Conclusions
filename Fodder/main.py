@@ -146,7 +146,7 @@ def roomloop(protag, con):
     contents. Although some 'action' words are the same the objects some
     interactions are not exactly the same."""
     with con.cursor() as cur:
-        while protag.room != None:
+        while protag.room != None and protag.death != True:
             action = input('={}=> '.format(protag.room[1]))
             action = action.lower().strip().split()
             if len(action) > 1:
