@@ -235,23 +235,7 @@ def score(protag, con):
 
 
 if __name__ == '__main__':
-    # Temporary auto-drop and login for debug purposes
-    #ready = startup()
-    print('Forcing Data . . .')
-    zhost='localhost'
-    zdatabase='cs350'
-    zuser='student'
-    zpass='student'
-    con = psycopg2.connect(host=zhost, database=zdatabase, user=zuser, password=zpass)
-    with con.cursor() as cur:
-        with open('erase.sql', 'r') as delete:
-            cur.execute(delete.read())
-        with open('tables.sql', 'r') as tables:
-            cur.execute(tables.read())
-        with open('data.sql', 'r') as data:
-            cur.execute(data.read())
-    ready = (True, con)
-    print('Success!')
+    ready = startup()
     if ready[0]:
         #name = input('Name: ')
         protag = Player('')
