@@ -1,4 +1,4 @@
-from time import perf_counter
+from time import sleep
 def introduction():
     print('')
     with open('intro', 'r') as intro:
