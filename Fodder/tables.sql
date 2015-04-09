@@ -103,7 +103,7 @@ CREATE TABLE npcs
 CREATE TABLE npc_conditionals
 (
     npc_name VARCHAR(20),
-    condition VARCHAR,
+    condition INTEGER,
     action VARCHAR, --This is a python command such as protag.give(thing)
     PRIMARY KEY (npc_name, condition),
     FOREIGN KEY (npc_name)
