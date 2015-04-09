@@ -90,7 +90,7 @@ INSERT INTO npc_conditionals (npc_name, condition, action) VALUES
     ('Lazlo', 50, 'give 75');
 
 INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
-    ('Oracle Wyma', 0, 'Hello there, you look familiar, do I know you? . . . Not much of a talker\nI see. Either way you look like you might need some help. Now on a normal\nday I might just give you some money and tell you to do it in the faith of\nthe lord but I have no time. Ill give you one hundred gold if you retrieve\nan item for me. I need a small glass-like key from the graveyard. Fetch it.'),
+    ('Oracle Wyma', 0, E'Hello there, you look familiar, do I know you? . . . Not much of a talker\nI see. Either way you look like you might need some help. Now on a normal\nday I might just give you some money and tell you to do it in the faith of\nthe lord but I have no time. Ill give you one hundred gold if you retrieve\nan item for me. I need a small glass-like key from the graveyard. Fetch it.'),
     ('Oracle Wyma', 1, 'Im a clergy I cant just go robbing graves! Im pretty sure its on the 3rd floor or something. Just grab it and hurry back, time is of the essence.'),
     ('Oracle Wyma', 2, 'Aaaaahh yes, this is the orb i was looking for! Thank you. Now take this\nbullion and never come back'),
     ('Diana', 0, 'Have you seen my son? He went into a crypt earlier to look for his teddy. He hasnt come back in a couple hours. I think something might have happened to him.'),
