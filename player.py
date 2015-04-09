@@ -616,7 +616,7 @@ class Player:
                     WHERE name = %s""", [counters[0], npc_name])
                 for value, phrase in dialogue:
                     if value == counters[0]:
-                        print(phrase.replace('\\n', '\n'))
+                        print(phrase)
                 if condition[0] == 'score()':
                     self.victory = True
                     self.death = True
@@ -626,12 +626,13 @@ class Player:
             if value == counters[0] and duplication:
                 duplication = False
             elif value == counters[0] and not duplication:
-                print(phrase.replace('\\n', '\n'))
+                print(phrase)
 
         if counters[0] < counters[1] - len(conditionals) - 1:
             cur.execute("""UPDATE npcs
                 SET counter_value = counter_value + 1
                 WHERE name = %s""", [npc_name])
+        print()
 
     def has(self, npc_name, item_id, cur):
         cur.execute("""SELECT * FROM inventory
