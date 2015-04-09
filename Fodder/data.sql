@@ -11,7 +11,7 @@ INSERT INTO warp_points (from_map, to_map, from_point, to_point) VALUES
     ('Graveyard', 'Mausoleum', '{1, 2}', '{1, 1}'),
     ('Mausoleum', 'Graveyard', '{1, 1}', '{1, 2}'),
     ('Mausoleum', 'Mausoleum: 2nd Floor', '{2, 2}', '{0, 0}'),
-    ('Mausoleum: 2nd Floor', '{0,0}', '{2,2}');
+    ('Mausoleum: 2nd Floor', 'Graveyard', '{0,0}', '{2,2}');
 
 INSERT INTO worth (name, value) VALUES
     ('inhumane', -6.00),
@@ -29,7 +29,7 @@ INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, descripti
     (100, 'Small Money Pouch', NULL, NULL, NULL, 'silver', NULL, 'A small pouch of silver coins. A sign of a hard days work.' ),
     (50, 'Teddy Bear', NULL, NULL, NULL, 'valueless', NULL, 'Small but worn. This teddy lasted someone a lot of years in good care or maybe a few years in constant use. Hard to tell.'),
     (13, 'Red Key', 2, 2, 'Mausoleum', 'tainted', NULL, 'A red key. Thats it.'),
-    )75, 'Paper Note', NULL, NULL, NULL, NULL, 'inhumane', 'Dear mom, teddy said he wanted to play with the ghosts. Ill be back before dinner, honest! ~ Pookey');
+    (75, 'Paper Note', NULL, NULL, NULL, 'inhumane', NULL, 'Dear mom, teddy said he wanted to play with the ghosts. Ill be back before dinner, honest! ~ Pookey');
 -- Containers and Rooms
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
     (1, 'Town Hall', 0, 2, 'Small Town', NULL, 'A rustic and acient hall constructed far before you were born',  NULL, TRUE),
@@ -39,18 +39,18 @@ INSERT INTO containers (id, name, x, y, map_name, parent_container_id, descripti
     (5, 'Rotting Chest', 0, 0, 'Mausoleum', NULL, 'Decaying like a biological hurricane this chest doesnt seem to have much else going for it. Even the false lock is in need of repair.', NULL, FALSE),
     (8, 'Red Room', 2, 1, 'Mausoleum', NULL, 'The door is red, it is safe to assume this place paints the drapes on the inside the same color, and the floor, and walls, you get the drift.', 13, TRUE),
     (9, 'Odd Room', 0, 1, 'Mausoleum: 2nd Floor', NULL, 'Something about, be it the circular door or whatever tacky interior may wait. This whole thing is just out of place in the mausoleum.', NULL, TRUE),
-    (10, 'Dark Room', 2, 1, 'Mausoleum 2nd, Floor', NULL, 'The from your torch dims as you peer in on the room. The very evil that flows forth seems to draing the energy from the very light that illuminates it.', NULL, TRUE);
+    (10, 'Dark Room', 2, 1, 'Mausoleum: 2nd Floor', NULL, 'The from your torch dims as you peer in on the room. The very evil that flows forth seems to draing the energy from the very light that illuminates it.', NULL, TRUE);
 
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES 
     (6, 'Ribbed Key', NULL, NULL, NULL, 'silver', 2, 'A strange, metal ribbed, key. This sort of thing would be used to open something you wanted to protect. Whether it be your family or your selfishness.'),
     (14, 'Decorative Necklace', NULL, NULL, NULL, 'tainted', 8, 'The necklacke has a picture of Queen Mary on it. Not the fun one. The bath in the blood of young girls one. Yours now you guess.'),
     (15, 'Flask', NULL, NULL, NULL, 'bronze', 8, 'An alcoholic flask with a horse etched into the side.'),
-    (16, 'Slipper', NULL, NULL, NULL, 'gold', 8, 'A slipper made of a glass. Although there is only one, these are rare to find nevertheless.')
+    (16, 'Slipper', NULL, NULL, NULL, 'gold', 8, 'A slipper made of a glass. Although there is only one, these are rare to find nevertheless.');
 
 INSERT INTO containers (id, name, x, y, map_name, parent_container_id, description, unlock_item_id, room_flag) VALUES
     (6, 'Small Den', 0, 2, 'Mausoleum', NULL, 'A fork in a mausoleum? What could possible be in there? Something or someone important?', 6, TRUE),
     (7, 'Fresh Barrel', NULL, NULL, NULL, 6, 'This barrel appears to be the newest thing added to the collection of spiders and remnants that litter the area.', NULL, FALSE),
-    (11, 'Ominious Room', 1, 3, 'Mausoleum: 2nd Floor', NULL, 'This should be it. An insanely creepy feeling of being watched. Just one chest lies in wait beyond the door it seems.', NULL, TRUE)
+    (11, 'Ominious Room', 1, 3, 'Mausoleum: 2nd Floor', NULL, 'This should be it. An insanely creepy feeling of being watched. Just one chest lies in wait beyond the door it seems.', NULL, TRUE),
     (12, 'Colorful Chest', NULL, NULL, NULL, 11, 'A brightly colored chest. Its the peacock of chests. A showman amongst less chest rivals. Crafted by a holy being almost.', NULL, FALSE);
 
 
@@ -58,33 +58,33 @@ INSERT INTO containers (id, name, x, y, map_name, parent_container_id, descripti
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
     (2, 'Skull', NULL, NULL, NULL, 'tainted', 3, 'A human skull, how often do you see one of these babies detached? Too. Frequently.'),
     (3, 'Hand', NULL, NULL, NULL, 'tainted', 3, 'Although dead for what might be centuries, you feel an essence lingering around it when you examine it.'),
-    (4, 'Whiskers The Cat', NULL NULL, NULL, 'platinum', 2, 'A small feline of meowing variety. He attempts to wriggle out of your hands. Find his owner quickly?'),
-    (5, 'Human Skeleton', NULL NULL, NULL, 'questionable', 4, 'Its, well it used to be, a full human skeleton. Complete with skull, legs, and those other bones too!'),
+    (4, 'Whiskers The Cat', NULL, NULL, NULL, 'platinum', 2, 'A small feline of meowing variety. He attempts to wriggle out of your hands. Find his owner quickly?'),
+    (5, 'Human Skeleton', NULL, NULL, NULL, 'questionable', 4, 'Its, well it used to be, a full human skeleton. Complete with skull, legs, and those other bones too!'),
     (7, 'Small Deformed Skull', NULL, NULL, NULL, 'questionable', 7, 'This skull is small in stature and human in nature. Most likely is belonged to a child. It seems . . . fresher than the rest.'),
     (8, 'Small Legs', NULL, NULL, NULL, 'questionable', 7, 'Small human-like legs. They arent grey and blackened. These seem recently deposited.'),
     (9, 'Short Arms', NULL, NULL, NULL, 'questionable', 7, 'Arms. Small but definitely human. Maybe . . . Maybe dont touch them.'),
     (10, 'Dead Torso', NULL, NULL, NULL, 'questionable', 7, 'This is a human torso. Dead of course. Although not too dead. Dont stick around long enough to know the difference.'),
-    (11, 'Gold Coins', NULL, NULL, NULL, 'silver'), 6, 'A few gold coins. They have a nicer sheen to them. Legit? Probably.'),
+    (11, 'Gold Coins', NULL, NULL, NULL, 'silver', 6, 'A few gold coins. They have a nicer sheen to them. Legit? Probably.'),
     (12, 'Wooden Chisel', NULL, NULL, NULL, 'bronze', 6, 'Small but convient chisel. It might be worth something if you know the right person that is.'),
-    (14, 'Gold Bracelet', NULL, NULL, NULL, 'gold', 9, 'A small gold chain that can fit the wrist of a small adult or perhaps a very large child.'),
-    (15, 'Glass Orb', NULL, NULL, NULL, 'valueless', 12, 'An orb with a sand like swirl etched into the glass. When you shake it lights up subtly but dimly.')
+    (17, 'Gold Bracelet', NULL, NULL, NULL, 'gold', 9, 'A small gold chain that can fit the wrist of a small adult or perhaps a very large child.'),
+    (18, 'Glass Orb', NULL, NULL, NULL, 'valueless', 12, 'An orb with a sand like swirl etched into the glass. When you shake it lights up subtly but dimly.');
 
 -- For keys that go into containers
 -- and etc
 INSERT INTO npcs (name, x, y, map_name, room_id, counter_value, description) VALUES 
-    ('Oracle Wyma', NULL, NULL, NULL, 1, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest');
+    ('Oracle Wyma', NULL, NULL, NULL, 1, 0, 'An old wisey man, who seems to project a sense of self-importance and dishonesty but he is still dressed like a priest'),
     ('Diana', 2, 1, 'Graveyard', NULL, 0, 'She seems upset. In a graveyard. So far: normal'),
     ('Old Man Jack', 1, 0, 'Graveyard', NULL, 0, 'A suspiciously old man. Not suspicious because hes old. He seems to be looking through the grass.' ),
     ('Lola', 1, 1, 'Mausoleum', NULL, 0, 'An elderly woman. her face appears to be convered in blemishes and what might be plague spots. Something just doesnt sit well about her.'),
     ('Lazlo', NULL, NULL, NULL, 10, 0, 'A young boy, hair desheveled. He looks a bit weird. Acts a bit weird. Hes obviously a local.');
 
-INSERT INTO inventory (name, id, backpack) VALUES
-    ('Diana', 100, FALSE)
-    ('Lola', 50, FALSE)
-    ('Lazlo', 75, FALSE)
+INSERT INTO inventory (name, item_id, backpack) VALUES
+    ('Diana', 100, FALSE),
+    ('Lola', 50, FALSE),
+    ('Lazlo', 75, FALSE);
 
 INSERT INTO npc_conditionals (npc_name, condition, action) VALUES
-    ('Oracle Wyma', 15, 'score()'),
+    ('Oracle Wyma', 18, 'score()'),
     ('Diana', 75, 'give 100'),
     ('Lola', 4, 'give 50'),
     ('Lazlo', 50, 'give 75');
@@ -102,7 +102,7 @@ INSERT INTO npc_dialogue (npc_name, counter, dialogue) VALUES
     ('Lola', 1, 'I thought he would come in here looking for shelter. I guess not.'),
     ('Lola', 2, 'ERHMAHGERD WHISKERS!!! If you ever run away again little guy, I WILL KILL you.'),
     ('Lazlo', 0, 'Have you seen my teddy? I set him down around here somewhere to play . . .'),
-    ('Lazlo', 1, 'Oh gosh! You found him! Thanks! Could you tell me mommy Im in here and totes ok? Ill write a note.')
+    ('Lazlo', 1, 'Oh gosh! You found him! Thanks! Could you tell me mommy Im in here and totes ok? Ill write a note.');
 
 INSERT INTO help (name, syntax, description) VALUES 
     ('help', 'help *action*', 'Displays the functionality of an action command and the needed syntax for correct execution'),
