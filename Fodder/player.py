@@ -603,37 +603,44 @@ class Player:
             return 
         counters = counters[0]
         duplication = False
-
+        print('M1')
         for item_id, condition in conditionals:
+            print('M2')
             condition = condition.split()
             if self.has(npc_name, item_id, cur):
                 duplication = True
                 if counters[0] < counters[1] - len(conditionals):
-                    adjusted_counter = counters[1] - len(conditionals)
-                elif counters[0] < counters[1] - 2:
-                    adjusted_counter = counters[0] + 1
+                    print('M3')
+                    counters = (counters[1] - len(conditionals), counters[1])
+                elif counters[0] < counters[1] - 1:
+                    print('M4')
+                    counters = (counters[0] + 1, counters[1])
                 cur.execute("""UPDATE npcs 
                     SET counter_value = %s
-                    WHERE name = %s""", [adjusted_counter, npc_name])
+                    WHERE name = %s""", [counters[0], npc_name])
                 for value, phrase in dialogue:
-                    if value == adjusted_counter:
+                    if value == counters[0]:
                         print(phrase.replace('\\n', '\n'))
                 if condition[0] == 'score()':
                     self.victory = True
                     self.death = True
                 elif condition[0] == 'give':
-                    self.give(int(condition[1]))
+                    self.give(int(condition[1]), cur)
+        #----------------------------------
+        print('M5')
         for value, phrase in dialogue:
+            print('M6')
             if value == counters[0] and duplication:
                 duplication = False
             elif value == counters[0] and not duplication:
                 print(phrase.replace('\\n', '\n'))
 
         if counters[0] < counters[1] - len(conditionals) - 1:
+            print('M7')
             cur.execute("""UPDATE npcs
                 SET counter_value = counter_value + 1
                 WHERE name = %s""", [npc_name])
-        print()
+        print('M8')
 
     def has(self, npc_name, item_id, cur):
         cur.execute("""SELECT * FROM inventory
