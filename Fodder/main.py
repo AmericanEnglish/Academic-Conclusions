@@ -237,7 +237,7 @@ def score(protag, con):
 if __name__ == '__main__':
     ready = startup()
     if ready[0]:
-        #name = input('Name: ')
+        name = input('Name: ')
         protag = Player('')
         main(protag, ready[1])
     else:
