@@ -561,70 +561,53 @@ class Player:
 
     def talk(self, npc_name, cur):
         npc_name = npc_name.lower().title()
-        if player.room == None:
+        if self.room == None:
             cur.execute("""SELECT npcs.counter_value, COUNT(*) FROM npc_dialogue
                 INNER JOIN npcs ON npcs.name = npc_dialogue.npc_name
                 WHERE name = %s AND x = %s AND y = %s
                 GROUP BY npcs.name""",
                 [npc_name, self.pos[0], self.pos[1]])
-            counters = cur.fetchall()[0]
+            counters = cur.fetchall()
             
-            cur.execute("""SELECT conditionals, action FROM npc_conditionals
-                WHERE npc_conditionals.name = %s AND x = %s AND y = %s""",
+            cur.execute("""SELECT condition, action FROM npc_conditionals, npcs
+                WHERE npc_name = %s AND x = %s AND y = %s AND npc_name = name""",
                 [npc_name, self.pos[0], self.pos[1]])
             conditionals = cur.fetchall()
             
             cur.execute("""SELECT counter, dialogue FROM npc_dialogue
-                WHERE name = %s AND x = %s AND y = %s""",
+                INNER JOIN npcs ON npc_dialogue.npc_name = npcs.name
+                WHERE npc_name = %s AND x = %s AND y = %s""",
                 [npc_name, self.pos[0], self.pos[1]])
             dialogue = cur.fetchall()
         else:
             cur.execute("""SELECT npcs.counter_value, COUNT(*) FROM npc_dialogue
                 INNER JOIN npcs ON npcs.name = npc_dialogue.npc_name
-                WHERE name = %s AND room_id = %s
+                WHERE npc_name = %s AND room_id = %s
                 GROUP BY npcs.name""",
                 [npc_name, self.room[0]])
-            counters = cur.fetchall()[0]
+            counters = cur.fetchall()
             
-            cur.execute("""SELECT conditionals, action FROM npc_conditionals
-                WHERE npc_conditionals.name = %s AND room_id = %s""",
-                [npc_name, self.room[0])
+            cur.execute("""SELECT counter, condition, action FROM npc_conditionals, npcs
+                WHERE npc_name = %s AND room_id = %s AND name = npc_name""",
+                [npc_name, self.room[0]])
             conditionals = cur.fetchall()
             
-            cur.execute("""SELECT counter, dialogue FROM npc_dialogue
-                WHERE name = %s AND room_id = %s""",
+            cur.execute("""SELECT counter, dialogue FROM npc_dialogue, npcs
+                WHERE npc_name = %s AND room_id = %s AND npc_name = name""",
                 [npc_name, self.room[0]])
             dialogue = cur.fetchall()
+        if counters == []:
+            print('Not a valid command, type help for help')
+            print()
+            return 
+        counters = counters[0]
         # Checks for conditionals 
         # Need to make sure that text is printed BEFORE commands are
         # executed, so they are moved to the back of conditionals
-        put_exec_at_back = False
-        for have, action in conditionals:
-            if self.has(have):
-                # Figure out match the conditional number to the dialogue tree
-                cur.execute("""UPDATE npcs 
-                    SET counter_value = %s
-                    WHERE name = %s""", [counters[0], npc_name])
-                
-                if '(' in action and ')' in action and put_exec_at_back:
-                    put_exec_at_back = True
-                    conditionals.append((have, action))
-                elif '(' in action and ')' in action and put_exec_at_back:
-                    exec(action)
-                    put_exec_at_back = False
-                else:
-                    print(action)
+        
+        print()
 
-        # If no conditionals happened then it just uses talk phrases
-        if counters[0] <= counters[1] - len(conditionals):
-            for value, phrase in dialogue:
-                print('{}:> {}'.format(npc_name, phrase))
-                if counters[0] < counters[1] - len(conditionals) - 1:
-                    cur.execute("""UPDATE npcs
-                        SET counter_value = counter_value + 1
-                        WHERE name = %s""", [npc_name])
-    
-    def has(self, item_id):
+    def has(self, item_id, cur):
         cur.execute("""SELECT * FROM inventory
             WHERE name IS NULL AND item_id = %s""", [item_id])
         filler = cur.fetchall()
