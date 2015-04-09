@@ -58,7 +58,7 @@ INSERT INTO containers (id, name, x, y, map_name, parent_container_id, descripti
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES
     (2, 'Skull', NULL, NULL, NULL, 'tainted', 3, E'A human skull, how often do you see one of these babies detached? Too. Frequently.'),
     (3, 'Hand', NULL, NULL, NULL, 'tainted', 3, E'Although dead for what might be centuries, you feel an essence lingering around it when you examine it.'),
-    (4, 'Whiskers The Cat', NULL, NULL, NULL, 'platinum', 2, E'A small feline of meowing variety. He attempts to wriggle out of your hands. Find his owner quickly?'),
+    (4, 'Whiskers The Cat', NULL, NULL, NULL, 'platinum', 2, E'A small feline of the meowing variety. He attempts to wriggle out of your hands. Find his owner quickly?'),
     (5, 'Human Skeleton', NULL, NULL, NULL, 'questionable', 4, E'Its, well it used to be, a full human skeleton. Complete with skull, legs, and those other bones too!'),
     (7, 'Small Deformed Skull', NULL, NULL, NULL, 'questionable', 7, E'This skull is small in stature and human in nature. Most likely is belonged to a child. It seems . . . fresher than the rest.'),
     (8, 'Small Legs', NULL, NULL, NULL, 'questionable', 7, E'Small human-like legs. They arent grey and blackened. These seem recently deposited.'),
