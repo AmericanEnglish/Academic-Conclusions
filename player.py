@@ -179,10 +179,10 @@ class Player:
         else:
             if warp_points != []:
                 for points in warp_points:
-                    print('-{}'.format(points[0]))
+                    print('*{}'.format(points[0]))
             if npcs_query != []:
                 for people in npcs_query:
-                    print('-{}'.format(people[0]))
+                    print(':{}'.format(people[0]))
             if containers != []:
                 for items in containers:
                     print('-{}'.format(items[0]))
@@ -420,7 +420,7 @@ class Player:
             if npc_query != []:
                 npc_query.sort()
                 for people in npc_query:
-                    print('-{}'.format(people[0]))
+                    print(':{}'.format(people[0]))
             if contents != []:
                 contents.sort()
                 for items in contents:
