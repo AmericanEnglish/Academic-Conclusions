@@ -225,11 +225,12 @@ def score(protag, con):
         cur.execute("""SELECT value FROM inventory
             INNER JOIN items ON items.id = inventory.item_id
             INNER JOIN worth ON worth.name = items.worth_type
-            WHERE name IS NULL""")
-        final = cur.fetchall()[0]
+            WHERE inventory.name IS NULL""")
+        final = cur.fetchall()
         placeholder = 0
-        for value in final:
-            placeholder += value[0]
+        if final != []:    
+            for value in final:
+                placeholder += value[0][0]
         print('Final Score: {}'.format(placeholder))
 
 
