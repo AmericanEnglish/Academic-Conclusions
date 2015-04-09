@@ -1,7 +1,6 @@
 import psycopg2
 from getpass import getpass
 from player import *
-from maps import *
 from time import sleep
 from introduction import introduction
 from platform import platform
@@ -102,7 +101,9 @@ def maploop(protag, con):
             
             elif action[0] in directions:
                 protag.move(action[0], cur)
-            
+                protag.look(cur)
+                protag.ground(cur)
+
             elif action[0] == 'pack':
                 protag.pack_view(cur)
             
@@ -143,7 +144,7 @@ def maploop(protag, con):
             elif action[0] == 'talk' and len(action) == 2:
                 protag.talk(action[1], cur)
 
-            elif action[0] == 'take':
+            elif action[0] == 'take' and len(take) > 1:
                 # take requires a second marker called from. This requiers action
                 # to be reconfigured
                 if 'from' in action[1]:
@@ -178,12 +179,12 @@ def roomloop(protag, con):
                 action = [action[0], ' '.join(action[1:])]
             
             if len(action) < 1:
-                print('')
+                print()
 
             elif action[0] == 'pack':
                 protag.pack_view(cur)
             
-            elif action[0] == 'me' and len(action) == 2:
+            elif action[0] == 'me':
                 protag.person_view(cur)
             
             elif action[0] == 'put' and len(action) == 2:
@@ -217,7 +218,7 @@ def roomloop(protag, con):
             elif action[0] == 'drop' and len(action) == 2:
                 protag.room_drop(action[1], cur)
             
-            elif action[0] == 'take':
+            elif action[0] == 'take' and len(action) > 1:
                 # take requires a second marker called from. This requiers action
                 # to be reconfigured
                 if 'from' in action[1]:

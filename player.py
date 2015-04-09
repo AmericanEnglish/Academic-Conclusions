@@ -513,7 +513,8 @@ class Player:
             if container_query == []:
                 # Then look at an item on the person
                 cur.execute("""SELECT description FROM items, inventory
-                    WHERE items.id = inventory.item_id AND backpack = FALSE AND inventory.name IS NULL""")
+                    WHERE items.id = inventory.item_id AND backpack = FALSE AND inventory.name IS NULL
+                    AND items.name = %s""", [thing])
                 personal_query = cur.fetchall()
 
                 if personal_query == []:
