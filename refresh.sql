@@ -1,1 +1,1 @@
-TRUNCATE items, containers, item_worth, maps, npcs, npc_conditionals, npc_dialogue, inventory;
+TRUNCATE items, containers, worth, maps, npcs, npc_conditionals, npc_dialogue, inventory, warp_points, help;

@@ -11,17 +11,17 @@ INSERT INTO warp_points (from_map, to_map, from_point, to_point) VALUES
     ('Graveyard', 'Mausoleum', '{1, 2}', '{1, 1}'),
     ('Mausoleum', 'Graveyard', '{1, 1}', '{1, 2}'),
     ('Mausoleum', 'Mausoleum: 2nd Floor', '{2, 2}', '{0, 0}'),
-    ('Mausoleum: 2nd Floor', 'Graveyard', '{0,0}', '{2,2}');
+    ('Mausoleum: 2nd Floor', 'Mausoleum', '{0,0}', '{2,2}');
 
 INSERT INTO worth (name, value) VALUES
-    ('inhumane', -6.00),
-    ('questionable', -4.00),
-    ('tainted', -2.00),
-    ('valueless', 0.00),
-    ('bronze', 2.00),
-    ('silver', 4.00),
-    ('gold', 6.00),
-    ('platinum', 10.00);
+    ('inhumane', -6),
+    ('questionable', -4),
+    ('tainted', -2),
+    ('valueless', 0),
+    ('bronze', 2),
+    ('silver', 4),
+    ('gold', 6),
+    ('platinum', 10);
 
 -- This is mainly things don't go into a container
 INSERT INTO items (id, name, x, y, map_name, worth_type, container_id, description) VALUES

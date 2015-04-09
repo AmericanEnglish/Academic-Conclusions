@@ -24,7 +24,7 @@ CREATE TABLE warp_points
 CREATE TABLE worth
 (
     name VARCHAR(20),
-    value MONEY,
+    value INTEGER,
     PRIMARY KEY (name)
 );
 

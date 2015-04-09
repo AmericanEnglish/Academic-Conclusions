@@ -5,7 +5,12 @@ from maps import *
 from time import perf_counter
 
 # from introduction import *
-
+directions = {
+                    'north': (0,1),
+                    'south':(0,-1), 
+                    'east':(1, 0), 
+                    'west':(-1, 0)
+                    }
 
 def startup():
     """(None) -> Bool
@@ -19,7 +24,7 @@ def startup():
     Startup will then go through and insert all data if the user hasn't
     played before, or refresh the data if the user wants a new game.
     """
-    answer = input('Is this your first time running "Academic Conclusions"?\n(y/n):').lower()
+    answer = input('Is this your first time running "Academic Conclusions"?\n(y/n): ').lower()
     default = input('Use default server login?\n(y/n): ').lower()
     if default[0] == 'n':
         zhost = input('PostgreSQL Host IP: ')
@@ -47,10 +52,11 @@ def startup():
                 cur.execute(data_to_use.read())
         
         elif answer[0] == 'n':      
-            answer = input('New Game?\n(y/n): ').lower()
-            if answer == 'y':
-                with open('refresh.sql') as refresh:
-                    cur.execute(refresh.read())
+            print('Data Refreshed To Defaults!')
+            with open('refresh.sql','r') as refresh:
+                cur.execute(refresh.read())
+            with open('data.sql','r') as data_to_use:
+                cur.execute(data_to_use.read())
     con.commit()
     return True, con
 
@@ -71,14 +77,14 @@ def maploop(protag, con):
             if len(action) > 1:
                 action = [action[0], ' '.join(action[1:])]
             if len(action) < 1:
-                print('')
+                print()
             
             elif  action[0].lower() == 'quit':
                 if input('Are you sure? (y/n): ').lower() == 'y':
                     return True
             
-            elif action[0] == 'm':
-                protag.move(action[1], cur)
+            elif action[0] in directions:
+                protag.move(action[0], cur)
             
             elif action[0] == 'pack':
                 protag.pack_view(cur)
@@ -86,10 +92,10 @@ def maploop(protag, con):
             elif action[0] == 'me':
                 protag.person_view(cur)
             
-            elif action[0] == 'put':
+            elif action[0] == 'put'  and len(action) == 2:
                 protag.put(action[1], cur)
             
-            elif action[0] == 'pull':
+            elif action[0] == 'pull' and len(action) == 2:
                 protag.pull(action[1], cur)
             
             elif action[0] == 'examine' and len(action) == 2:
@@ -106,6 +112,7 @@ def maploop(protag, con):
 
             elif action[0] == 'look':
                 protag.look(cur)
+                protag.ground(cur)
 
             elif action[0] == 'ground':
                 protag.ground(cur)
@@ -116,7 +123,7 @@ def maploop(protag, con):
             elif action[0] == 'drop' and len(action) == 2:
                 protag.drop(action[1], cur)
             
-            elif action[0] == 'talk':
+            elif action[0] == 'talk' and len(action) == 2:
                 protag.talk(action[1], cur)
 
             elif action[0] == 'take':
@@ -158,19 +165,19 @@ def roomloop(protag, con):
             elif action[0] == 'pack':
                 protag.pack_view(cur)
             
-            elif action[0] == 'me':
+            elif action[0] == 'me' and len(action) == 2:
                 protag.person_view(cur)
             
-            elif action[0] == 'put':
+            elif action[0] == 'put' and len(action) == 2:
                 protag.put(action[1], cur)
             
-            elif action[0] == 'pull':
+            elif action[0] == 'pull' and len(action) == 2:
                 protag.pull(action[1], cur)
             
             elif action[0] == 'examine' and len(action) == 2:
                 protag.room_examine(action[1], cur)
             
-            elif action[0] == 'enter':
+            elif action[0] == 'enter' and len(action) == 2:
                 print("> Youre Already In The {} <".format(protag.room[1]))
                 print()
             
@@ -181,14 +188,15 @@ def roomloop(protag, con):
 
             elif action[0] == 'look':
                 protag.room_look(cur)
+                protag.room_ground(cur)
             
             elif action[0] == 'ground':
                 protag.room_ground(cur)
 
-            elif action[0] == 'pickup':
+            elif action[0] == 'pickup' and len(action)== 2:
                 protag.room_pickup(action[1], cur)
 
-            elif action[0] == 'drop':
+            elif action[0] == 'drop' and len(action) == 2:
                 protag.room_drop(action[1], cur)
             
             elif action[0] == 'take':
@@ -201,7 +209,7 @@ def roomloop(protag, con):
                             ' '.join(action[action.index('from') + 1:])]
                     protag.room_take(action[1:], cur)
             
-            elif action[0] == 'talk':
+            elif action[0] == 'talk' and len(action) == 2:
                 # if user types wrong name somevar will help print a newline
                 protag.talk(action[1], cur)
             elif action[0] == 'help' and len(action) == 2:
@@ -230,8 +238,8 @@ def score(protag, con):
         placeholder = 0
         if final != []:    
             for value in final:
-                placeholder += value[0][0]
-        print('Final Score: {}'.format(placeholder))
+                placeholder += int(value[0])
+        print('Final Score: {}'.format(int(placeholder)))
 
 
 if __name__ == '__main__':
