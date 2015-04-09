@@ -1,8 +1,8 @@
 import psycopg2
-import getpass
+from getpass import getpass
 from player import *
 from maps import *
-from time import perf_counter
+from time import sleep
 from introduction import introduction
 from platform import platform
 import os
@@ -26,13 +26,12 @@ def startup():
     Startup will then go through and insert all data if the user hasn't
     played before, or refresh the data if the user wants a new game.
     """
-    answer = input('Is this your first time running "Academic Conclusions"?\n(y/n): ').lower()
     default = input('Use default server login?\n(y/n): ').lower()
     if default[0] == 'n':
         zhost = input('PostgreSQL Host IP: ')
         zdatabase = input('PostgreSQL Database Name: ')
         zuser = input('Username: ')
-        zpass = getpass.getpass('Password: ')
+        zpass = getpass('Password: ')
     else:
         zhost='localhost'
         zdatabase='cs350'
@@ -47,29 +46,34 @@ def startup():
         print(problem)
         return False
     with con.cursor() as cur:
-        if answer[0] == 'y':
-            with open('tables.sql') as tables:
-                cur.execute(tables.read())
-            with open('data.sql') as data_to_use:
-                cur.execute(data_to_use.read())
-            skip = False
-        
-        elif answer[0] == 'n':      
+        try:
+            cur.execute("""SELECT * FROM items""")
+            cur.fetchall()
             print('Data Refreshed To Defaults!')
             with open('refresh.sql','r') as refresh:
                 cur.execute(refresh.read())
             with open('data.sql','r') as data_to_use:
                 cur.execute(data_to_use.read())
-            skip = input('Skip Introduction?\n(y/n): ').lower().strip()
-            if skip == 'y':
+            skip = input('Skip Intro?\n(y/n):').lower()
+            if len(skip) > 0 and skip[0] =='y':
                 skip = True
             else:
                 skip = False
+        except psycopg2.Error:
+            con.rollback()
+            print('No Previous Data Detected!')
+            print('Creating Tables & Data!')
+            with open('tables.sql') as tables:
+                cur.execute(tables.read())
+            with open('data.sql') as data_to_use:
+                cur.execute(data_to_use.read())
+            print('Success!')
+            skip = False
     con.commit()
     hos = platform()
     if 'windows' in hos.lower():
         os.system('cls')
-    elif 'linux' in hos.lower():
+    else:
         os.system('clear')
     return True, con, skip
 
@@ -232,7 +236,20 @@ def roomloop(protag, con):
             else:
                 print('Not a valid command, type help for help\n')
 
-
+def introduction():
+    print('')
+    with open('intro', 'r') as intro:
+        print(intro.readline().strip())
+        for line in intro:
+            sleep(1.5)
+            print(line, end='')    
+    choice = 'No'
+    while choice.lower()[0] != 'y':
+        name = input('Can you at least tell me your name before I go? ')
+        choice = input("""*{}*\nAre you sure? (y/n): """.format(name))
+        if len(choice) < 1:
+            choice = ' '
+    return name
 
 def main(protag, con):
     while protag.death != True:
@@ -257,15 +274,16 @@ def score(protag, con):
 
 
 if __name__ == '__main__':
-    ready = startup()
-    if ready[0]:
-        if not ready[2]:
+    # Return as an actual tuple
+    ready, connection, skip_intro = startup()
+    if ready:
+        if not skip_intro:
             name = introduction()
         else:
             name = input('Name: ').strip()
         protag = Player(name)
         protag = Player('')
-        main(protag, ready[1])
+        main(protag, connection)
     else:
         print('Please install PostgreSQL 9.4.1 or later')
         print('http://www.postgresql.org/download/')
