@@ -1,7 +1,7 @@
 -- The first two static tables
 CREATE TABLE maps
 (
-    name VARCHAR(20),
+    name VARCHAR(30),
     max_x INTEGER,
     max_y INTEGER,
     description VARCHAR,
@@ -10,8 +10,8 @@ CREATE TABLE maps
 
 CREATE TABLE warp_points
 (
-    from_map VARCHAR(20),
-    to_map  VARCHAR(20),
+    from_map VARCHAR(30),
+    to_map  VARCHAR(30),
     from_point INTEGER[],
     to_point INTEGER[],
     PRIMARY KEY (from_map, to_map),
@@ -36,7 +36,7 @@ CREATE TABLE items
     name VARCHAR(20),
     x INTEGER, -- If both x and y are NULL 
     y INTEGER, -- then item must be on the ground in a room
-    map_name VARCHAR(20),
+    map_name VARCHAR(30),
     worth_type VARCHAR(20),
     -- container_id INTEGER, -- If NULL then item is on ground
     description VARCHAR,
@@ -56,7 +56,7 @@ CREATE TABLE containers
     name VARCHAR(20),
     x INTEGER, -- If x, y are NULL then container is in a room
     y INTEGER, -- Noting that rooms can also be 'containers'
-    map_name VARCHAR(20),
+    map_name VARCHAR(30),
     parent_container_id INTEGER,
     description VARCHAR,
     unlock_item_id INTEGER,
