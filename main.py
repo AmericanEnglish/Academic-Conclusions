@@ -2,9 +2,9 @@ import psycopg2
 from getpass import getpass
 from player import *
 from time import sleep
-from introduction import introduction
 from platform import platform
 import os
+import logging
 
 directions = {
                     'north': (0,1),
@@ -93,6 +93,7 @@ def maploop(protag, con):
             if len(action) > 1:
                 action = [action[0], ' '.join(action[1:])]
             if len(action) < 1:
+                print('Not a valid command, type help for help.')
                 print()
             
             elif  action[0].lower() == 'quit':
@@ -179,6 +180,7 @@ def roomloop(protag, con):
                 action = [action[0], ' '.join(action[1:])]
             
             if len(action) < 1:
+                print('Not a valid command, type help for help.')
                 print()
 
             elif action[0] == 'pack':
@@ -284,7 +286,12 @@ if __name__ == '__main__':
             name = input('Name: ').strip()
         protag = Player(name)
         protag = Player('')
-        main(protag, connection)
+        try:
+            logging.basicConfig(filename='error.txt', level=logging.DEBUG)
+            logging.debug('Logged Message:')            
+            main(protag, connection)
+        except:
+            logging.exception('Some error, who knows')
     else:
         print('Please install PostgreSQL 9.4.1 or later')
         print('http://www.postgresql.org/download/')
