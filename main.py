@@ -232,8 +232,8 @@ def score(protag, con):
         placeholder = 0
         if final != []:    
             for value in final:
-                placeholder += int(value[0])
-        print('Final Score: {}'.format(int(placeholder)))
+                placeholder += value[0]
+        print('Final Score: {}'.format(placeholder)
 
 
 if __name__ == '__main__':
