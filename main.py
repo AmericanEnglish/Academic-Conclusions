@@ -140,7 +140,7 @@ def maploop(protag, con):
                     print("> Youre Already Outside! <")
                     print()
                 else:
-                    protag.room = None
+                    protag.room == None
                     print('> You Exit {} <'.format(protag.room[1]))
                     print()
 
