@@ -43,7 +43,7 @@ def startup():
         print('Connnected! Ready for use!')
     except psycopg2.Error as problem:
         print(problem)
-        return False
+        return False, None, False
     with con.cursor() as cur:
         try:
             cur.execute("""SELECT * FROM items""")
@@ -85,8 +85,7 @@ def maploop(protag, con):
     Mapp object. The protag is stored in the global frame and is then
     used and mutated in relation to the Mapp object and the commands that
     are input by the user."""
-    inmap = True
-    while inmap and not protag.death and protag.room == None:
+    while not protag.death::
         action = input('={}=> '.format(protag.map))
         action = action.lower().strip().split()
         with con.cursor() as cur:
@@ -98,12 +97,16 @@ def maploop(protag, con):
             
             elif  action[0].lower() == 'quit':
                 if input('Are you sure? (y/n): ').lower() == 'y':
-                    return True
+                    protag.death = True
             
             elif action[0] in directions:
-                protag.move(action[0], cur)
-                protag.look(cur)
-                protag.ground(cur)
+                if protag.room == None:
+                    protag.move(action[0], cur)
+                    protag.look(cur)
+                    protag.ground(cur)
+                else: 
+                    print('> You Are In A Room & Cannot Move <')
+                    print()
 
             elif action[0] == 'pack':
                 protag.pack_view(cur)
@@ -119,29 +122,54 @@ def maploop(protag, con):
             
             elif action[0] == 'examine' and len(action) == 2:
                 # check to make sure item / room / door in question is in the area
-                protag.examine(action[1], cur)
+                if protag.room == None:
+                    protag.examine(action[1], cur)
+                else:
+                    protag.room_examine(action[1], cur)
 
             elif action[0] == 'enter' and len(action) > 1:
                 # Player can enter map or room
-                protag.enter(action[1], cur)
+                if protag.room == None:
+                    protag.enter(action[1], cur)
+                else:
+                    print('> Youre Already In {} <'.format(protag.room[1]))
+                    print()
 
             elif action[0] == 'exit':
-                print("> Youre Already Outside! <")
-                print()
+                if protag.room == None:
+                    print("> Youre Already Outside! <")
+                    print()
+                else:
+                    protag.room = None
+                    print('> You Exit {} <'.format(protag.room[1]))
+                    print()
 
             elif action[0] == 'look':
-                protag.look(cur)
-                protag.ground(cur)
+                if protag.room == None:
+                    protag.look(cur)
+                    protag.ground(cur)
+                else:
+                    protag.room_look(cur)
+                    protag.room_ground(cur)
 
             elif action[0] == 'ground':
-                protag.ground(cur)
+                if protag.room == None:
+                    protag.ground(cur)
+                else:
+                    protag.room_ground(cur)
 
             elif action[0] == 'pickup' and len(action) == 2:
-                protag.pickup(action[1], cur)
+                if protag.room == None:
+                    protag.pickup(action[1], cur)
+                else:
+                    protag.room_pickup(action[1], cur)
 
             elif action[0] == 'drop' and len(action) == 2:
-                protag.drop(action[1], cur)
-            
+                if protag.room == None:
+                    protag.drop(action[1], cur)
+                else:
+                    protag.room_drop(action[1], cur)
+
             elif action[0] == 'talk' and len(action) == 2:
                 protag.talk(action[1], cur)
 
@@ -153,91 +181,23 @@ def maploop(protag, con):
                     action = [action[0],
                             ' '.join(action[1:action.index('from')]),
                             ' '.join(action[action.index('from') + 1:])]
-                    protag.take(action[1:], cur)
+                    if protag.room == None:
+                        protag.take(action[1:], cur)
+                    else:
+                        protag.room_take(action[1:], cur)
+
                 else:
                     print('Not a valid command, type help for help\n')
             
             elif action[0] == 'help' and len(action) == 2:
                 help(action[1], cur)
+            
             elif action[0]== 'help':
                 help('all', cur)
+            
             else:
                 print('Not a valid command, type help for help\n')
             con.commit()
-
-
-def roomloop(protag, con):
-    """(Player, Room) -> None
-
-    This function is used for a player's interaction with the room and its 
-    contents. Although some 'action' words are the same the objects some
-    interactions are not exactly the same."""
-    with con.cursor() as cur:
-        while protag.room != None and protag.death != True:
-            action = input('={}=> '.format(protag.room[1]))
-            action = action.lower().strip().split()
-            if len(action) > 1:
-                action = [action[0], ' '.join(action[1:])]
-            
-            if len(action) < 1:
-                print('Not a valid command, type help for help.')
-                print()
-
-            elif action[0] == 'pack':
-                protag.pack_view(cur)
-            
-            elif action[0] == 'me':
-                protag.person_view(cur)
-            
-            elif action[0] == 'put' and len(action) == 2:
-                protag.put(action[1], cur)
-            
-            elif action[0] == 'pull' and len(action) == 2:
-                protag.pull(action[1], cur)
-            
-            elif action[0] == 'examine' and len(action) == 2:
-                protag.room_examine(action[1], cur)
-            
-            elif action[0] == 'enter' and len(action) == 2:
-                print("> Youre Already In The {} <".format(protag.room[1]))
-                print()
-            
-            elif action[0] == 'exit':
-                print("> You Exit The {} <".format(protag.room[1]))
-                print()
-                protag.room = None
-
-            elif action[0] == 'look':
-                protag.room_look(cur)
-                protag.room_ground(cur)
-            
-            elif action[0] == 'ground':
-                protag.room_ground(cur)
-
-            elif action[0] == 'pickup' and len(action)== 2:
-                protag.room_pickup(action[1], cur)
-
-            elif action[0] == 'drop' and len(action) == 2:
-                protag.room_drop(action[1], cur)
-            
-            elif action[0] == 'take' and len(action) > 1:
-                # take requires a second marker called from. This requiers action
-                # to be reconfigured
-                if 'from' in action[1]:
-                    action = ' '.join(action).split()
-                    action = [action[0],
-                            ' '.join(action[1:action.index('from')]),
-                            ' '.join(action[action.index('from') + 1:])]
-                    protag.room_take(action[1:], cur)
-            
-            elif action[0] == 'talk' and len(action) == 2:
-                # if user types wrong name somevar will help print a newline
-                protag.talk(action[1], cur)
-            elif action[0] == 'help' and len(action) == 2:
-                help(action[1], cur)
-            
-            else:
-                print('Not a valid command, type help for help\n')
 
 def introduction():
     print('')
@@ -285,7 +245,6 @@ if __name__ == '__main__':
         else:
             name = input('Name: ').strip()
         protag = Player(name)
-        protag = Player('')
         try:
             logging.basicConfig(filename='error.txt', level=logging.DEBUG)
             logging.debug('Logged Message:')            
