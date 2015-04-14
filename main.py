@@ -85,7 +85,7 @@ def maploop(protag, con):
     Mapp object. The protag is stored in the global frame and is then
     used and mutated in relation to the Mapp object and the commands that
     are input by the user."""
-    while not protag.death::
+    while not protag.death:
         action = input('={}=> '.format(protag.map))
         action = action.lower().strip().split()
         with con.cursor() as cur:
@@ -233,7 +233,7 @@ def score(protag, con):
         if final != []:    
             for value in final:
                 placeholder += value[0]
-        print('Final Score: {}'.format(placeholder)
+        print('Final Score: {}'.format(placeholder))
 
 
 if __name__ == '__main__':
