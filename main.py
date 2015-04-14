@@ -141,7 +141,7 @@ def maploop(protag, con):
                     print()
                 else:
                     protag.room == None
-                    print('> You Exit {} <'.format(protag.room[1]))
+                    print('> You Exit The {} <'.format(protag.room[1]))
                     print()
 
             elif action[0] == 'look':
@@ -200,7 +200,7 @@ def maploop(protag, con):
             con.commit()
 
 def introduction():
-    print('')
+    print()
     with open('intro', 'r') as intro:
         print(intro.readline().strip())
         for line in intro:
