@@ -16,10 +16,12 @@ This program was coded in python3.4 and uses the following additional packages:
     * All maploop functions are bugless
     * All roomloop functions are written
     * All roomloop functions are bugless
-    * Look now displays everything from npcs to wwarp_points
+    * Look now displays everything from npcs to warp_points
+    * Talk method now works
+    * All SQL handled by player.py
 - To Do
-    * Write talk method.
-    * Maps.py will be eliminated and all functionality moved to player.py
+    * Add some serious documentation via docstrings and comments
+    
 
 ## Finally . . .
 To run the program simply:
@@ -32,6 +34,7 @@ Functions:
 - help
     - help *action*
     - Displays the functionality of an action command and the needed syntax for correct execution
+    - typing 'help' will also display a list of all functions possible
 - m
     - m *direction*
     - This function only works outside of rooms, typing this inside of a room while \nresult in an invalid command. You can move North, East, South, and West.
