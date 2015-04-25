@@ -44,10 +44,12 @@ class Player:
         cur.execute("""SELECT max_x, max_y FROM maps
                     WHERE name = %s""", [self.map])
         mapmax = cur.fetchall()[0]
+        # Changes coordinates
         if motion.lower() in directions:
             x = self.pos[0] + directions[motion.lower()][0]
             y = self.pos[1] + directions[motion.lower()][1]
             # Checks if player ignore the turn back warning
+            # Checks your pos compared to map boundaries
             if x < -1 or x > mapmax[0] + 1 or y < -1 or y > mapmax[1] + 1:
                 print('>Dead<\n')
                 self.death = True
@@ -79,7 +81,7 @@ class Player:
             return
 
         thing = thing.lower().title()
-        #Checks to make sure item exists and pulls the id
+        # Checks to make sure item exists and pulls the id
         cur.execute("""SELECT inventory.item_id FROM inventory, items
             WHERE inventory.item_id = items.id AND items.name = %s AND 
                 backpack = TRUE""", [thing])
@@ -101,7 +103,7 @@ class Player:
         """
 
         thing = thing.lower().title()
-        #Checks to make sure item exists and pulls the item_id
+        # Checks to make sure item exists and pulls the item_id
         cur.execute("""SELECT inventory.item_id FROM inventory, items
             WHERE inventory.item_id = items.id AND items.name = %s AND 
             inventory.name IS NULL AND backpack = FALSE""", [thing])
@@ -522,18 +524,24 @@ class Player:
                 else:
                     print('-{}\n++{}'.format(thing, personal_query[0][0]))
             else:
+                # Locked checks if item id is present or None
                 locked = container_query[0][2] != None
                 if locked:
+                    # Check inventory for the key
                     cur.execute("""SELECT * FROM inventory
                         WHERE item_id = %s AND backpack = FALSE AND name IS NULL""",
                         [container_query[0][2]])
                     unlocking = cur.fetchall()
+                    # Means you can't unlock it
                     if unlocking == []:
                         print('-{}\n-Locked: {}\n++{}'.format(thing, locked, container_query[0][1]))
+                    # If the list isn't empty you have the key
                     else:
+                        # Calls the unlocking method
                         self.unlock(container_query[0][0], container_query[0][2], cur)
                         print('-{}\n-Locked: False\n++{}'.format(thing, container_query[0][1]))
                         print('> Inside You See <')
+                        # Pulls chest contents
                         cur.execute("""SELECT name FROM items
                             WHERE items.container_id = %s""", [container_query[0][0]])
                         contents = cur.fetchall()
@@ -564,6 +572,7 @@ class Player:
     def talk(self, npc_name, cur):
         npc_name = npc_name.lower().title()
         if self.room == None:
+            # Pulls NPCs current talk counter and total dialogue number
             cur.execute("""SELECT npcs.counter_value, COUNT(*) FROM npc_dialogue
                 INNER JOIN npcs ON npcs.name = npc_dialogue.npc_name
                 WHERE name = %s AND x = %s AND y = %s
@@ -571,64 +580,82 @@ class Player:
                 [npc_name, self.pos[0], self.pos[1]])
             counters = cur.fetchall()
             
+            # Pull down their conditions
             cur.execute("""SELECT condition, action FROM npc_conditionals, npcs
                 WHERE npc_name = %s AND x = %s AND y = %s AND npc_name = name""",
                 [npc_name, self.pos[0], self.pos[1]])
             conditionals = cur.fetchall()
             
+            # Then their dialogue
             cur.execute("""SELECT counter, dialogue FROM npc_dialogue
                 INNER JOIN npcs ON npc_dialogue.npc_name = npcs.name
                 WHERE npc_name = %s AND x = %s AND y = %s""",
                 [npc_name, self.pos[0], self.pos[1]])
             dialogue = cur.fetchall()
         else:
+            # If not outside then they must be in a room
+            # Pulls down current talk counter and dialogue total
             cur.execute("""SELECT npcs.counter_value, COUNT(*) FROM npc_dialogue
                 INNER JOIN npcs ON npcs.name = npc_dialogue.npc_name
                 WHERE npc_name = %s AND room_id = %s
                 GROUP BY npcs.name""",
                 [npc_name, self.room[0]])
             counters = cur.fetchall()
-            
+            # Pulls down NPC's conditionals
             cur.execute("""SELECT condition, action FROM npc_conditionals, npcs
                 WHERE npc_name = %s AND room_id = %s AND name = npc_name""",
                 [npc_name, self.room[0]])
             conditionals = cur.fetchall()
-            
+            # Pulls down NPC counter and dialogue
             cur.execute("""SELECT counter, dialogue FROM npc_dialogue, npcs
                 WHERE npc_name = %s AND room_id = %s AND npc_name = name""",
                 [npc_name, self.room[0]])
             dialogue = cur.fetchall()
+        # This means the target NPC is not at location
         if counters == []:
             print('Not a valid command, type help for help')
             print()
             return 
+        # Sets counters to the current counter value
         counters = counters[0]
+        # Prevent same dialgue from printing twice
         duplication = False
+        # Begins combing through conditionals
         for item_id, condition in conditionals:
+            # Conditionals are labeled and split by blank space
             condition = condition.split()
+            # Checks that you have the needed item for the conditional
             if self.has(npc_name, item_id, cur):
                 duplication = True
+                # Stops you from trigger conditionals that are dialogue based
                 if counters[0] < counters[1] - len(conditionals):
                     counters = (counters[1] - len(conditionals), counters[1])
+                # If conditional is triggered, allows you keep trigger if needed
                 elif counters[0] < counters[1] - 1:
                     counters = (counters[0] + 1, counters[1])
+                # Updates the current talk counter in the database
                 cur.execute("""UPDATE npcs 
                     SET counter_value = %s
                     WHERE name = %s""", [counters[0], npc_name])
+                # Prints dialogue you are currently on
                 for value, phrase in dialogue:
                     if value == counters[0]:
                         print(phrase)
+                # Allows you to win
                 if condition[0] == 'score()':
                     self.victory = True
                     self.death = True
+                # Gives you items
                 elif condition[0] == 'give':
                     self.give(int(condition[1]), cur)
+        # Prints the most recent phrase conditional/non-conditional you are on
         for value, phrase in dialogue:
             if value == counters[0] and duplication:
                 duplication = False
             elif value == counters[0] and not duplication:
                 print(phrase)
-
+        # Allows for an infinite number of conditionals by keeps the counter
+        # In line with conditional number while preventing overflow
         if counters[0] < counters[1] - len(conditionals) - 1:
             cur.execute("""UPDATE npcs
                 SET counter_value = counter_value + 1
@@ -641,6 +668,7 @@ class Player:
         filler = cur.fetchall()
         if filler == []:
             return False
+        # Removes item from inventory to the npc's inventory
         else:
             cur.execute("""UPDATE inventory 
                 SET name = %s
@@ -648,9 +676,11 @@ class Player:
             return True
 
     def give(self, item_id, cur):
+        # Moves item to your inventory
         cur.execute("""UPDATE inventory
             SET name = NULL
             WHERE item_id = %s""", [item_id])
+        # Displays the moving of item
         cur.execute("""SELECT name FROM items
             WHERE id = %s""", [item_id])
         thing = cur.fetchall()[0][0]
