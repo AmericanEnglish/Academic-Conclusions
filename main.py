@@ -1,4 +1,4 @@
-import psycopg2
+import sqlite3
 from getpass import getpass
 from player import *
 from time import sleep
@@ -25,23 +25,10 @@ def startup():
     Startup will then go through and insert all data if the user hasn't
     played before, or refresh the data if the user wants a new game.
     """
-    default = input('Use default server login?\n(y/n): ').lower()
-    if default[0] == 'n':
-        zhost = input('PostgreSQL Host IP: ')
-        zdatabase = input('PostgreSQL Database Name: ')
-        zuser = input('Username: ')
-        zpass = getpass('Password: ')
-    else:
-        zhost='localhost'
-        zdatabase='cs350'
-        zuser='student'
-        zpass='student'
-    print('Connecting . . .')
-    
     try:
-        con = psycopg2.connect(host=zhost, database=zdatabase, user=zuser, password=zpass)
+        con = sqlite3.connect(database="database.db")
         print('Connnected! Ready for use!')
-    except psycopg2.Error as problem:
+    except sqlite3.Error as problem:
         print(problem)
         return False, None, False
     with con.cursor() as cur:
@@ -58,7 +45,7 @@ def startup():
                 skip = True
             else:
                 skip = False
-        except psycopg2.Error:
+        except sqlite3.Error:
             con.rollback()
             print('No Previous Data Detected!')
             print('Creating Tables & Data!')
@@ -75,7 +62,6 @@ def startup():
     else:
         os.system('clear')
     return True, con, skip
-
 
 
 def maploop(protag, con):
@@ -185,7 +171,6 @@ def maploop(protag, con):
                         protag.take(action[1:], cur)
                     else:
                         protag.room_take(action[1:], cur)
-
                 else:
                     print('Not a valid command, type help for help\n')
             
@@ -199,41 +184,34 @@ def maploop(protag, con):
                 print('Not a valid command, type help for help\n')
             con.commit()
 
+
 def introduction():
     print()
     with open('intro', 'r') as intro:
         print(intro.readline().strip())
         for line in intro:
             sleep(1.5)
-            print(line, end='')    
-    choice = 'No'
+            print(line, end='')
+    choice = None
     while choice.lower()[0] != 'y':
         name = input('Can you at least tell me your name before I go? ')
         choice = input("""*{}*\nAre you sure? (y/n): """.format(name))
         if len(choice) < 1:
-            choice = ' '
+            choice = None
     return name
+
 
 def main(protag, con):
     while protag.death != True:
-        while protag.death != True and protag.room == None:    
+        while protag.death != True and protag.room == None:
             maploop(protag, con)
         while protag.death != True and protag.room != None:
             roomloop(protag, con)
     score(protag, con)
 
+
 def score(protag, con):
-    with con.cursor() as cur:
-        cur.execute("""SELECT value FROM inventory
-            INNER JOIN items ON items.id = inventory.item_id
-            INNER JOIN worth ON worth.name = items.worth_type
-            WHERE inventory.name IS NULL""")
-        final = cur.fetchall()
-        placeholder = 0
-        if final != []:    
-            for value in final:
-                placeholder += value[0]
-        print('Final Score: {}'.format(placeholder))
+    pass
 
 
 if __name__ == '__main__':
