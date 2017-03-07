@@ -7,11 +7,11 @@ import os
 import logging
 
 directions = {
-                    'north': (0,1),
-                    'south':(0,-1), 
-                    'east':(1, 0), 
-                    'west':(-1, 0)
-                    }
+    'north': {'x': 0, 'y': 1},
+    'south': {'x': 0, 'y': -1},
+    'east': {'x': 1, 'y': 0},
+    'west': {'x': -1, 'y': 0}
+    }
 
 def startup():
     """(None) -> Bool
@@ -72,117 +72,80 @@ def maploop(protag, con):
     used and mutated in relation to the Mapp object and the commands that
     are input by the user."""
     while not protag.death:
-        action = input('={}=> '.format(protag.map))
+        # Display Input
+        if protag.room is not None:
+            action = input("={}=> ".format(protag.room))
+        else:
+            action = input('={}=> '.format(protag.map))
         action = action.lower().strip().split()
-        with con.cursor() as cur:
-            if len(action) > 1:
-                action = [action[0], ' '.join(action[1:])]
-            if len(action) < 1:
-                print('Not a valid command, type help for help.')
-                print()
-            
-            elif  action[0].lower() == 'quit':
-                if input('Are you sure? (y/n): ').lower() == 'y':
-                    protag.death = True
-            
-            elif action[0] in directions:
-                if protag.room == None:
-                    protag.move(action[0], cur)
-                    protag.look(cur)
-                    protag.ground(cur)
-                else: 
-                    print('> You Are In A Room & Cannot Move <')
-                    print()
-
-            elif action[0] == 'pack':
-                protag.pack_view(cur)
-            
-            elif action[0] == 'me':
-                protag.person_view(cur)
-            
-            elif action[0] == 'put'  and len(action) == 2:
-                protag.put(action[1], cur)
-            
-            elif action[0] == 'pull' and len(action) == 2:
-                protag.pull(action[1], cur)
-            
-            elif action[0] == 'examine' and len(action) == 2:
-                # check to make sure item / room / door in question is in the area
-                if protag.room == None:
-                    protag.examine(action[1], cur)
-                else:
-                    protag.room_examine(action[1], cur)
-
-            elif action[0] == 'enter' and len(action) > 1:
-                # Player can enter map or room
-                if protag.room == None:
-                    protag.enter(action[1], cur)
-                else:
-                    print('> Youre Already In {} <'.format(protag.room[1]))
-                    print()
-
-            elif action[0] == 'exit':
-                if protag.room == None:
-                    print("> Youre Already Outside! <")
-                    print()
-                else:
-                    protag.room == None
-                    print('> You Exit The {} <'.format(protag.room[1]))
-                    print()
-
-            elif action[0] == 'look':
-                if protag.room == None:
-                    protag.look(cur)
-                    protag.ground(cur)
-                else:
-                    protag.room_look(cur)
-                    protag.room_ground(cur)
-
-            elif action[0] == 'ground':
-                if protag.room == None:
-                    protag.ground(cur)
-                else:
-                    protag.room_ground(cur)
-
-            elif action[0] == 'pickup' and len(action) == 2:
-                if protag.room == None:
-                    protag.pickup(action[1], cur)
-                else:
-                    protag.room_pickup(action[1], cur)
-
-            elif action[0] == 'drop' and len(action) == 2:
-                if protag.room == None:
-                    protag.drop(action[1], cur)
-                else:
-                    protag.room_drop(action[1], cur)
-
-            elif action[0] == 'talk' and len(action) == 2:
-                protag.talk(action[1], cur)
-
-            elif action[0] == 'take' and len(take) > 1:
-                # take requires a second marker called from. This requiers action
-                # to be reconfigured
-                if 'from' in action[1]:
-                    action = ' '.join(action).split()
-                    action = [action[0],
-                            ' '.join(action[1:action.index('from')]),
-                            ' '.join(action[action.index('from') + 1:])]
-                    if protag.room == None:
-                        protag.take(action[1:], cur)
-                    else:
-                        protag.room_take(action[1:], cur)
-                else:
-                    print('Not a valid command, type help for help\n')
-            
-            elif action[0] == 'help' and len(action) == 2:
-                help(action[1], cur)
-            
-            elif action[0]== 'help':
-                help('all', cur)
-            
+        # Prescreen Action
+        if len(action) > 1:
+            action = [action[0], ' '.join(action[1:])]
+        if len(action) < 1:
+            print('Not a valid command, type help for help.')
+        # Process Action
+        elif action[0].lower() == 'quit':
+            if input('Are you sure? (y/n): ').lower() == 'y':
+                protag.kill()
+        elif action[0] in directions: # done
+            protag.move(action[0], directions)
+        elif action[0] == 'pack': # done
+            protag.pack_view()
+        elif action[0] == 'me': # done
+            protag.onhand()
+        elif action[0] == 'put' and len(action) == 2: # done
+            protag.put(action[1])
+        elif action[0] == 'pull' and len(action) == 2: # done
+            protag.pull(action[1])
+        elif action[0] == 'examine': # done
+            protag.examine(action)
+        elif action[0] == 'enter' and len(action) > 1: # update for Mapp's
+            # Player can enter map or room
+            if protag.room is None:
+                protag.enter(action[1])
             else:
-                print('Not a valid command, type help for help\n')
-            con.commit()
+                print('> Youre Already In {} <'.format(protag.room[1]))
+        elif action[0] == 'exit': # done
+            protag.exit()
+        elif action[0] == 'look': # done
+            protag.look()
+        # elif action[0] == 'ground':
+        #     if protag.room is None:
+        #         protag.ground()
+        #     else:
+        #         protag.room_ground()
+        elif action[0] == 'pickup' and len(action) == 2:
+            if protag.room is None:
+                protag.pickup(action[1])
+            else:
+                protag.room_pickup(action[1])
+        elif action[0] == 'drop' and len(action) == 2:
+            if protag.room is None:
+                protag.drop(action[1])
+            else:
+                protag.room_drop(action[1])
+        elif action[0] == 'talk' and len(action) == 2:
+            protag.talk(action[1])
+        elif action[0] == 'take' and len(action) > 1:
+            # take requires a second marker called from. This requiers action
+            # to be reconfigured
+            if 'from' in action[1]:
+                action = ' '.join(action).split()
+                action = [action[0],
+                        ' '.join(action[1:action.index('from')]),
+                        ' '.join(action[action.index('from') + 1:])]
+                if protag.room is None:
+                    protag.take(action[1:])
+                else:
+                    protag.room_take(action[1:])
+            else:
+                print('Not a valid command, type help for help')
+        elif action[0] == 'help' and len(action) == 2:
+            help(action[1])
+        elif action[0]== 'help':
+            help('all')
+        else:
+            print('Not a valid command, type help for help\n')
 
 
 def introduction():

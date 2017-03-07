@@ -6,16 +6,40 @@ class Player:
     def __init__(self, name):
         """(Player, str, list of nums, tuple of nums)"""
         self.name = name
-        self.pos = [0, 1]
-        self.map = 'Small Town'
+        self.pos = {'x': 0, 'y': 1}
+        self.map = None
         self.room = None
         self.totalmoves = 0
         self.death = False
         self.victory = False
         self.backpack = []
         self.onhands = []
+        self.capacity = {"backpack": 25, "hands": 10}
 
-    def move(self, motion, cur):
+    def exit(self):
+        if self.room is None:
+            print("> You cannot exit {} like that! <".format(self.map))
+        else:
+            print("> You exit {} <".format(self.room))
+            self.room = None
+
+    def kill(self):
+        self.death = True
+
+    def OffGrid(self):
+        """Checks play position and determines if they've left the map"""
+        if self.pos['x'] == -1 or self.pos['x'] == self.map.x + 1:
+            return 0
+        elif self.pos['y'] == -1 or self.pos['y'] == self.map.y + 1:
+            return 0
+        elif self.pos['y'] < -1 or self.pos['x'] < -1:
+            return 1
+        elif self.pos['y'] > self.map.y + 1 or self.pos['x'] > self.map.x + 1:
+            return 1
+        else:
+            return -1
+
+    def move(self, cmd, motion):
         """(str) -> None
 
         Moves the player in one direction:
@@ -27,75 +51,88 @@ class Player:
 
         All other input is ignored
         """
-
-        self.totalmoves += 1
-        if self.totalmoves == 300:
-            print('>Dead<\n')
-            self.death = True
-            return
-
-        directions = {
-                    'north': (0, 1),
-                    'south': (0, -1),
-                    'east': (1, 0),
-                    'west': (-1, 0)
-                    }
-        x = self.pos[0]
-        y = self.pos[1]
-
-        # Pulls down the max x,y for the current map
-        cur.execute("""SELECT max_x, max_y FROM maps
-                    WHERE name = %s""", [self.map])
-        mapmax = cur.fetchall()[0]
-        # Changes coordinates
-        if motion.lower() in directions:
-            x = self.pos[0] + directions[motion.lower()][0]
-            y = self.pos[1] + directions[motion.lower()][1]
-            # Checks if player ignore the turn back warning
-            # Checks your pos compared to map boundaries
-            if x < -1 or x > mapmax[0] + 1 or y < -1 or y > mapmax[1] + 1:
-                print('>Dead<\n')
+        if self.room is None:
+            self.totalmoves += 1
+            # if self.totalmoves == 300:
+            #     print('>Dead<\n')
+            #     self.death = True
+            #     return
+            # Changes coordinates
+            self.pos['x'] += motion['x']
+            self.pos['y'] += motion['y']
+                # Checks if player ignore the turn back warning
+                # Checks your pos compared to map boundaries
+            if self.OffGrid() == 0:
+                print("Consider moving back the way you came!")
+            elif self.OffGrid() == 1:
                 self.death = True
+                print('> Dead <')
                 return
-            self.pos = x, y
-            print('You have moved {}\n'.format(motion))
+            else:
+                print('You have moved {}!'.format(cmd.lower()))
+                self.look()
 
-        # Sends a turn back warning if player leaves the map boundaries
-            if not (0 <= self.pos[0] <= mapmax[0]) or not (0 <= self.pos[1] <= mapmax[1]):
-                print("-You see the torch flicker and the wind begins to pick up any further and you might not be going back.\n")
-
+            # print("-You see the torch flicker and the wind begins to pick up any further and you might not be going back.\n")
         else:
-            print('Not a valid command, type help for help\n')
+            print('> You are aleady in a room! Try "exit"! <')
 
-    def pull(self, thing, cur):
+    def pull(self, thing):
         """(str) -> Obj
 
         Checks if the item.name is in the pack and if it is then returns
         the Obj in question. Else returns None meaning item not present
         """
-        if len(capacity) >= 10:
-            print('You attempt to use your pack but you fumble your items. \
-                You cant carry anymore in your hands, consider putting \
-                something away')
-            return
-        print('Youve pulled {} from your pack!'.format(thing))
-        print()
+        # Find item in backpack first, user should use the index
+        if not thing.isnumeric():
+            print("> Refer to items by their number! <")
+        else:
+            thing = int(thing)
+            if len(self.backpack) - 1 < thing:
+                print("> No such item exists! <")
+            else:
+                thing = self.backpack.pop(thing)
+                # Attempt to pull from pack
+                if len(self.onhands) >= self.capacity["hands"]:
+                    print('> You attempt to use your pack but you fumble your \
+                        items. You cant carry anymore in your hands, consider \
+                        putting something away... <')
+                    # Drop it to the ground!
+                    if self.room is None:
+                        self.map.give(thing)
+                    else:
+                        self.room.give(thing)
+                    print("> You dropped {} to the floor! <".format(thing))
+                else:
+                    print('Youve pulled {} from your pack!'.format(thing))
+                    self.onhands.append(thing)
 
-    def put(self, thing, cur):
+    def put(self, thing):
         """(str) -> str
 
         Takes item off of player's person and put it into backpack
         """
 
-        thing = thing.lower().title()
-        # Checks to make sure item exists and pulls the item_id
+        if not thing.isnumeric():
+            print("> Refer to items by number! <")
+        else:
+            thing = int(thing)
+            if len(self.onhands) - 1 < thing:
+                print("> No such item exists! <")
+            else:
+                thing = self.onhands.pop(thing)
+                if len(self.backpack) >= self.capcity["backpack"]:
+                    print("> You fumble around with the items in your \
+                            pack. It appears to be full! <")
+                    if self.room is None:
+                        self.map.give(thing)
+                    else:
+                        self.room.give(thing)
+                    print("> You drop {} to the ground! <".format(thing))
+                else:
+                    print("> You put {} into your backpack! <".format(thing))
+                    self.backpack.append(thing)
 
-        # Item not in inventory
-        # else put it in pack
-        # print('Youve put {} in your pack!\n'.format(thing))
-
-
-    def pack_view(self, cur):
+    def pack_view(self):
         """(Backpack)
 
         Displays a sort list of backpack contents
@@ -108,122 +145,71 @@ class Player:
         if self.backpack == []:
             print('-Empty-')
         else:
-            for items in self.backpack:
-                print('-{}'.format(items[0]))
-        print()
+            # Just index the items!
+            for index, item in self.backpack:
+                print("-{}-| {}".format(index + 1, item))
 
-    def onhand(self, cur):
+    def onhand(self):
         # Selects items that are on person and collects their names'
-        
         # Displays information in uniform fashion
         print('> You Hold <')
         if self.hands == []:
             print('-Nothing-')
         else:
-            for item in self.hands:
-                print('-{}'.format(item[0]))
-        print()
+            for index, item in self.hands:
+                print("-{}-| {}".format(index + 1, item))
 
-    def look(self, cur):
-        
+    def look(self):
         # Gathers the names of surrounding containers
-        cur.execute("""SELECT name FROM containers
-                WHERE map_name = %s AND x = %s AND y = %s""",
-                [self.map, self.pos[0], self.pos[1]])
-        containers = cur.fetchall()
-        containers.sort()
-
-        cur.execute("""SELECT name FROM npcs
-            WHERE map_name = %s AND x = %s AND y = %s""",
-            [self.map, self.pos[0], self.pos[1]])
-        npcs_query = cur.fetchall()
-
-        cur.execute("""SELECT to_map FROM warp_points
-            WHERE from_map = %s AND from_point = '{%s, %s}'""",
-            [self.map, self.pos[0], self.pos[1]])
-        warp_points = cur.fetchall()
-        #Display information in uniform fashion
+        # Display information in uniform fashion
         print('> Around You See <')
-        if containers == [] and npcs_query == [] and warp_points == []:
-            print('-Nothing-')
+        if self.room is not None:
+            self.map.reveal()
         else:
-            if warp_points != []:
-                for points in warp_points:
-                    print('*{}'.format(points[0]))
-            if npcs_query != []:
-                for people in npcs_query:
-                    print(':{}'.format(people[0]))
-            if containers != []:
-                for items in containers:
-                    print('#{}'.format(items[0]))
-        print()
-
-    def ground(self, cur):
-        # Gathers the names of ground items
-        cur.execute("""SELECT name FROM items
-            WHERE items.map_name = %s AND
-                items.x = %s AND items.y = %s""",
-                [self.map, self.pos[0], self.pos[1]])
-        ground = cur.fetchall()
-        ground.sort()
-
-        # Displays information in uniform fashion
-        print('> On Ground You See <')
-        if ground == []:
-            print('-Nothing-')
-        else:
-            for items in ground:
-                print('-{}'.format(items[0]))
-        print()
+            self.room.reveal()
 
     def pickup(self, thing, cur):
         thing = thing.lower().title()
         # Selecting item from items
-        cur.execute("""SELECT id FROM items
-            WHERE items.map_name = %s AND
-                items.name = %s AND
-                items.x = %s AND items.y =%s""",
-                [self.map, thing, self.pos[0], self.pos[1]])
-        items_query = cur.fetchall()
-        if items_query == []:
-            print('Not a valid command, type help for help.')
-        else:
-            # Puts item into personal inventory
-            cur.execute("""INSERT INTO inventory VALUES (NULL, %s, FALSE)""",
-                items_query[0])
-            # 'Removes' item from map
-            cur.execute("""UPDATE items 
-                SET x = NULL, y = NULL, map_name = NULL
-                WHERE id = %s""", items_query[0])
-            print('> You Picked Up <\n{}'.format(thing))
-        print()
+        # 'Removes' item from map
+        pass
 
     def drop(self, thing, cur):
-        thing = thing.lower().title()
-        cur.execute("""SELECT items.id FROM inventory, items
-            WHERE items.name = %s AND items.id = inventory.item_id AND 
-            backpack = FALSE AND inventory.name IS NULL""", [thing])
-        dropped = cur.fetchall()
-        if dropped == []:
-            print('Not a valid command, type help for help')
-        else:
-            cur.execute("""DELETE FROM inventory WHERE item_id = %s""", dropped[0])
-            cur.execute("""UPDATE items 
-                        SET x = %s, y = %s, map_name = %s
-                        WHERE id = %s""", 
-                        [self.pos[0], self.pos[1], self.map, dropped[0][0]])
-            print('Youve dropped {} to the ground'.format(thing))
-        print()
+        pass
 
-    def examine(self, thing, location=None):
+    def examine(self, action):
         # Examine spans items, npcs, and containers
         # Starting with the smaller relation first
-        thing = thing.lower().title()
-
-        # Check for npcs
-        # Check for containers
-        # Check onhands
-        # Check backpack
+        if len(action) == 1:
+            if self.room is None:
+                self.look()
+            else:
+                self.room.examine_inside()
+        else:
+            if action[1][0] not in symbols.values():
+                print("> Use the Symbol and Number for examine! <")
+                print("> +0 -0 $0 #0 <")
+            elif not action[1][1:].isnumeric():
+                print("> Use the Symbol and Number for examine! <")
+                print("> +0 -0 $0 #0 <")
+            else:
+                tocheck = action[1][0]
+                checknum = action[1][1:]
+                # Cannot examine "Items" not in your hands
+                # Maybe fix by saying onhands checks omit the "-"
+                if tocheck[0] == "-":
+                    # Check hands
+                    if len(self.onhands) - 1 < checknum:
+                        print("> You are not holding such an item! <")
+                    else:
+                        self.onhands[checknum].examine()
+                else:
+                    for cat in symbols.keys():
+                        if cat == tocheck:
+                            if self.room is None:
+                                self.map.examine(checknum, cat)
+                            else:
+                                self.room.examine(checknum, cat)
 
     def take(self, combo, cur):
         item = combo[0]
@@ -234,28 +220,34 @@ class Player:
         print('> You took {} from {} <'.format(item, container))
         print('-The {} Is Locked, Consider Unlocking-'.format(container))
         print('Not a valid command, type help for help.')
-    
-    def enter(self, room_name, cur):
-        room_name = room_name.lower().title()
-        # If it isn't a room it must be a warp_point
-        # Prints the map description
-        print('> You Have Entered The {} <'.format(self.map))
-        print('++{}'.format(cur.fetchall()[0][0]))
-        print('> You Attempt To Unlock The Building <')
-        print('- To No Resolve, You Dont Have The Key -')
-        print('- Success! The Lock & Key Vanish! -')
-        print('> You Enter The {} <'.format(self.room[1]))
+
+    def enter(self, room_name):
+        # Only works for Rooms. Must be updated to work for Mapp's
+        if self.room is not None:
+            print("> You are already in a room! <")
+        else:
+            if not room_name.isnumeric():
+                print("> Refer to rooms by their number! <")
+            else:
+                room_name = int(room_name)
+                if len(self.map.contents["Rooms"]) - 1 < room_name:
+                    print("> No such room exists! <")
+                else:
+                    entering = self.map.contents["Rooms"][room_name]
+                    if entering.islocked:
+                        success = self.unlock(entering)
+                        if success:
+                            self.room = entering
+                            print("> You enter {}! <".format(entering))
+                        else:
+                            print("> {} is locked! Find a key? <\
+                                    ".format(entering))
+                    else:
+                        self.room = entering
+                        print("> You enter {}! <".format(entering))
 
     def unlock(self, container_id, unlock_item_id, cur):
         pass
-
-    def room_look(self, cur):
-        print('> Around You See <')
-        print('-Nothing-')
-
-    def room_ground(self, cur):
-        print('> On The Ground You See <')
-        print('-Nothing-')
 
     def room_take(self, combo, cur):
         print('Not a valid command, type help for help')
